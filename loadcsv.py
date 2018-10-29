@@ -4,7 +4,6 @@ from words.models import Word, Language, WordEntry
 
 path = "/home/main/typometry-api"
 os.chdir(path)
-settings.configue()
 
 
 with open('wordlist.csv') as csvfile:
