@@ -22,7 +22,7 @@ class WordEntry(models.Model):
 
 
 class Language(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, unique=True, db_index=True)
     words = models.ManyToManyField(Word, through='WordEntry')
 
     def __str__(self):
