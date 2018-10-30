@@ -1,6 +1,6 @@
 import csv
 import os
-from words.models import Word, Language, WordEntry
+from words.models import Word, Language
 
 path = "/home/main/typometry-api"
 os.chdir(path)
@@ -8,12 +8,18 @@ os.chdir(path)
 
 with open('wordlist.csv') as csvfile:
     reader = csv.DictReader(csvfile)
-    for row in reader:
-        word = Word(text=row['Word'])
-        lang, created = Language.objects.get_or_create(name="english")
-        word.save()
-        if created:
-            lang.save()
-        entry = WordEntry(word=word, language=lang, ranking=row['Rank'], frequency=row['Frequency'])
-        entry.save()
 
+    english, new = Language.objects.get_or_create(name='english')
+    if new:
+        english.save()
+    words = []
+
+    for row in reader:
+        word, created = Word.objects.get_or_create(text=row['Word'], language=english)
+        if created:
+            word.frequency = row['Frequency']
+            words.append(word)
+        else:
+            word.frequency += row['Frequency']
+
+    Word.objects.bulk_create(words)
