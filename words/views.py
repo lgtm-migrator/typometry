@@ -11,4 +11,6 @@ def word_list(request):
         english = Language.objects.all()[0]
         words = english.get_samples(100, 5000)
         serializer = WordSerializer(words, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        data = serializer.data
+        data = data.values()
+        return JsonResponse(data, safe=False)
