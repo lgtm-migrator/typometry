@@ -10,7 +10,5 @@ def word_list(request):
         # TODO: Make this language-agnostic
         english = Language.objects.all()[0]
         words = english.get_samples(100, 5000)
-        serializer = WordSerializer(words, many=True)
-        data = serializer.data
-        data = data.values()
-        return JsonResponse(data, safe=False)
+        words = [word.text for word in words]
+        return JsonResponse(words, safe=False)
