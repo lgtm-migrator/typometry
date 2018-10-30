@@ -13,17 +13,16 @@ with open('wordlist.csv') as csvfile:
     english, new = Language.objects.get_or_create(name='english')
     if new:
         english.save()
-    words = []
+    words = {}
 
     for row in reader:
         word = Word(text=row['Word'], language=english, frequency=row['Frequency'])
-        words.append(word)
+        if word.text not in words:
+            words[word.text] = word
+        else:
+            words[word.text].frequency += word.frequency
 
-    freq_map = defaultdict(int)
-    for word in words:
-        freq_map[word.text] += word.frequency
-
-    print(freq_map)
+    words = words.items()
     words = sorted(words, key=lambda w: w.frequency, reverse=True)
     for i in range(len(words)):
         words[i].rank = i + 1
