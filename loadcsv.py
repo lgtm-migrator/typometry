@@ -16,7 +16,7 @@ with open('wordlist.csv') as csvfile:
     words = {}
 
     for row in reader:
-        word = Word(text=row['Word'], language=english, frequency=row['Frequency'])
+        word = Word(text=row['Word'], language=english, frequency=int(row['Frequency']))
         if word.text not in words:
             words[word.text] = word
         else:
