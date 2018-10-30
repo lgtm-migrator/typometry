@@ -15,7 +15,7 @@ with open('wordlist.csv') as csvfile:
     words = []
 
     for row in reader:
-        word, created = Word.objects.get_or_create(text=row['Word'], language=english, frequency=0, rank=0)
+        word, created = Word.objects.get_or_create(text=row['Word'], language=english, frequency=row['Frequency'], rank=row['Rank'])
         if created:
             word.frequency = row['Frequency']
             words.append(word)
