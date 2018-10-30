@@ -5,7 +5,7 @@ from words.models import Word, Language
 class WordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
-        fields = ('rank', 'text', 'frequency', 'language')
+        fields = 'text'
 
 
 class LanguageSerializer(serializers.ModelSerializer):
