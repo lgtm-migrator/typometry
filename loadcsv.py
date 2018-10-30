@@ -1,7 +1,6 @@
 import csv
 import os
 from words.models import Word, Language
-from collections import defaultdict
 
 path = "/home/main/typometry-api"
 os.chdir(path)
