@@ -1,8 +1,5 @@
-from django.http import HttpResponse, JsonResponse
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from words.models import Word, Language
-from words.serializers import WordSerializer
+from django.http import JsonResponse
+from words.models import Language
 
 
 def word_list(request):
