@@ -4,9 +4,11 @@ from rest_framework.parsers import JSONParser
 from words.models import Word, Language
 from words.serializers import WordSerializer
 
+
 def word_list(request):
     if request.method == 'GET':
         # TODO: Make this language-agnostic
         english = Language.objects.all()[0]
-        words = english.get_words(100)
-
+        words = english.get_samples(100, 5000)
+        serializer = WordSerializer(words, many=True)
+        return JsonResponse(serializer.data, safe=False)
