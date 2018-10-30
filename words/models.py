@@ -1,5 +1,5 @@
 from django.db import models
-import numpy.random as rand
+import numpy as np
 from sklearn.preprocessing import normalize
 
 
@@ -17,8 +17,8 @@ class Language(models.Model):
     def get_samples(self, num_samples, top_n=None):
         words = self.get_words(top_n)
         words_freq = list(words.values_list('frequency', flat=True))
-        probabilities = normalize(words_freq, norm='l1')
-        return rand.choice(words, num_samples, p=probabilities)
+        probabilities = normalize(words_freq[:, np.newaxis], axis=0, norm='l1').ravel()
+        return np.random.choice(words, num_samples, p=probabilities)
 
 
 class Word(models.Model):
