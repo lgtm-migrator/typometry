@@ -17,7 +17,7 @@ class Language(models.Model):
         words = self.get_words(top_n)
         words_freq = list(words.values_list('frequency', flat=True))
         probabilities = words_freq / np.linalg.norm(words_freq, ord=1)
-        return np.random.choice(words, num_samples, p=probabilities)
+        return list(np.random.choice(words, num_samples, p=probabilities))
 
 
 class Word(models.Model):
