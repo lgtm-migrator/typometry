@@ -16,7 +16,7 @@ class Language(models.Model):
 
     def get_samples(self, num_samples, top_n=None):
         words = self.get_words(top_n)
-        probabilities = normalize_list(words.values_list('frequency', flat=True))
+        probabilities = normalize_list(list(words.values_list('frequency', flat=True)))
         return rand.choice(words, num_samples, p=probabilities)
 
 
