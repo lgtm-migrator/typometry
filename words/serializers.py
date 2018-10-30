@@ -1,0 +1,14 @@
+from rest_framework import serializers
+from words.models import Word, Language
+
+
+class WordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Word
+        fields = ('rank', 'text', 'frequency', 'language')
+
+
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = 'name'
