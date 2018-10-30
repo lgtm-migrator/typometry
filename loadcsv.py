@@ -20,7 +20,7 @@ with open('wordlist.csv') as csvfile:
         if word.text not in words:
             words[word.text] = word
         else:
-            words[word.text].frequency += word.frequency
+            words[word.text].frequency += int(word.frequency)
 
     words = words.values()
 
