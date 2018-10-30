@@ -22,7 +22,8 @@ with open('wordlist.csv') as csvfile:
         else:
             words[word.text].frequency += word.frequency
 
-    words = words.items()
+    words = words.values()
+    print(words)
     words = sorted(words, key=lambda w: w.frequency, reverse=True)
     for i in range(len(words)):
         words[i].rank = i + 1
