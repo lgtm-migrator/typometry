@@ -23,6 +23,7 @@ with open('wordlist.csv') as csvfile:
             word.frequency += row['Frequency']
 
     words = sorted(words, key=lambda w: w.frequency, reverse=True)
+    print(words)
     for i in range(len(words)):
         words[i].rank = i + 1
     Word.objects.bulk_create(words)
