@@ -15,11 +15,15 @@ with open('wordlist.csv') as csvfile:
     words = []
 
     for row in reader:
-        word, created = Word.objects.get_or_create(text=row['Word'], language=english, frequency=row['Frequency'], rank=row['Rank'])
-        if created:
+        word = Word(text=row['Word'], language=english)
+        if word not in words:
             word.frequency = row['Frequency']
             words.append(word)
         else:
             word.frequency += row['Frequency']
 
+    words = sorted(words, key=lambda w: w.frequency, reverse=True)
+    for i in range(len(words)):
+        words[i].rank = i + 1
     Word.objects.bulk_create(words)
+
