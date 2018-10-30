@@ -1,4 +1,6 @@
 from django.db import models
+import numpy.random as rand
+from words.utilities import normalize_list
 
 
 class Language(models.Model):
@@ -11,6 +13,11 @@ class Language(models.Model):
         if not top_n:
             return self.words.all()
         return self.words.filter(ranking__lte=top_n)
+
+    def get_samples(self, num_samples, top_n=None):
+        words = self.get_words(top_n)
+        probabilities = normalize_list(words.values('frequency'))
+        return rand.choice(words, num_samples, p=probabilities)
 
 
 class Word(models.Model):
