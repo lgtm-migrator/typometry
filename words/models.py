@@ -1,6 +1,6 @@
 from django.db import models
 import numpy.random as rand
-from words.utilities import normalize_list
+from sklearn.preprocessing import normalize
 
 
 class Language(models.Model):
@@ -16,7 +16,8 @@ class Language(models.Model):
 
     def get_samples(self, num_samples, top_n=None):
         words = self.get_words(top_n)
-        probabilities = normalize_list(list(words.values_list('frequency', flat=True)))
+        words_freq = list(words.values_list('frequency', flat=True))
+        probabilities = normalize(words_freq, norm='l1')
         return rand.choice(words, num_samples, p=probabilities)
 
 
