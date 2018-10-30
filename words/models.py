@@ -12,7 +12,7 @@ class Language(models.Model):
     def get_words(self, top_n=None):
         if not top_n:
             return self.words.all()
-        return self.words.filter(ranking__lte=top_n)
+        return self.words.filter(rank__lte=top_n)
 
     def get_samples(self, num_samples, top_n=None):
         words = self.get_words(top_n)
