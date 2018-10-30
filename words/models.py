@@ -15,7 +15,7 @@ class Language(models.Model):
 
 class Word(models.Model):
     text = models.CharField(max_length=64, unique=True, db_index=True)
-    frequency = models.PositiveIntegerField()
+    frequency = models.PositiveIntegerField(default=0)
     rank = models.PositiveIntegerField(unique=True, db_index=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE, blank=False, related_name='words')
 
