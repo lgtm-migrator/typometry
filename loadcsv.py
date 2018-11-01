@@ -24,7 +24,7 @@ with open('wordlist.csv') as csvfile:
     words = words.values()
     words = sorted(words, key=lambda w: w['frequency'], reverse=True)
 
-    raw_words = [word['text'] for word in words]
+    raw_words = [Word(text=word['text']) for word in words]
     for i in range(len(words)):
         words[i]['rank'] = i + 1
     for word in words:
