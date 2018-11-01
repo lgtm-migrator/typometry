@@ -37,5 +37,8 @@ class WordEntry(models.Model):
     frequency = models.PositiveIntegerField(default=0)
     rank = models.PositiveIntegerField(default=0)
 
+    def __str__(self):
+        return str(self.language) + ' - ' + str(self.word)
+
     class Meta:
         unique_together = ('rank', 'language')
