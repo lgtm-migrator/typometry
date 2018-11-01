@@ -25,10 +25,9 @@ class Language(models.Model):
 
     def get_samples(self, num_samples, top_n=None):
         word_entries = self.get_word_entries(top_n)
-        words = [word.word for word in word_entries]
         words_freq = list(word_entries.values_list('frequency', flat=True))
         probabilities = words_freq / np.linalg.norm(words_freq, ord=1)
-        return list(np.random.choice(words, num_samples, p=probabilities))
+        return list(np.random.choice(word_entries, num_samples, p=probabilities))
 
 
 class WordEntry(models.Model):

@@ -7,5 +7,5 @@ def word_list(request):
         # TODO: Make this language-agnostic
         english = Language.objects.all()[0]
         words = english.get_samples(100, 5000)
-        words = [word.text for word in words]
+        words = [word.word.text for word in words]
         return JsonResponse(words, safe=False)
