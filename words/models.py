@@ -18,16 +18,16 @@ class Language(models.Model):
     def __str__(self):
         return self.name
 
-    def get_words(self, top_n=None):
+    def get_word_entries(self, top_n=None):
         if not top_n:
-            return self.words.all()
-        return self.words.filter(rank__lte=top_n)
+            return WordEntry.objects.filter(language__name=self.name)
+        return WordEntry.objects.filter(language__name=self.name).filter(rank__lte=top_n)
 
     def get_samples(self, num_samples, top_n=None):
-        words = self.get_words(top_n)
-        words_freq = list(words.values_list('frequency', flat=True))
+        words_entries = self.get_word_entries(top_n)
+        words_freq = list(words_entries.values_list('frequency', flat=True))
         probabilities = words_freq / np.linalg.norm(words_freq, ord=1)
-        return list(np.random.choice(words, num_samples, p=probabilities))
+        return list(np.random.choice(words_entries.word, num_samples, p=probabilities))
 
 
 class WordEntry(models.Model):
