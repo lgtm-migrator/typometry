@@ -13,15 +13,16 @@ class Word(models.Model):
 
 class Language(models.Model):
     name = models.CharField(max_length=32, unique=True, db_index=True)
+    display_name = models.CharField(max_length=64, unique=True)
     words = models.ManyToManyField(Word, through='WordEntry')
 
     def __str__(self):
-        return self.name
+        return self.display_name
 
     def get_word_entries(self, top_n=None):
         if not top_n:
-            return WordEntry.objects.filter(language__name=self.name)
-        return WordEntry.objects.filter(language__name=self.name).filter(rank__lte=top_n)
+            return WordEntry.objects.get(language=self)
+        return WordEntry.objects.filter(language=self).filter(rank__lte=top_n)
 
     def get_samples(self, num_samples, top_n=None):
         word_entries = self.get_word_entries(top_n)
