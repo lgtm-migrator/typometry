@@ -1,6 +1,6 @@
 import csv
 import os
-from words.models import Word, Language
+from words.models import Word, Language, WordEntry
 
 path = "/home/main/typometry-api"
 os.chdir(path)
@@ -27,7 +27,14 @@ with open('wordlist.csv') as csvfile:
         print(word.text, word.frequency)
 
     words = sorted(words, key=lambda w: w.frequency, reverse=True)
+    raw_words = [word.text for word in words]
     for i in range(len(words)):
         words[i].rank = i + 1
-    Word.objects.bulk_create(words)
+    Word.objects.bulk_create(raw_words)
+    word_entries = []
 
+    for word in words:
+        word_entry = WordEntry(word=word, language=english, frequency=word.frequency, rank=word.rank)
+        word_entries.append(word_entry)
+
+    WordEntry.objects.bulk_create(word_entries)

@@ -2,8 +2,18 @@ from django.db import models
 import numpy as np
 
 
+class Word(models.Model):
+    text = models.CharField(max_length=64, unique=True, db_index=True)
+    # Metadata about user's typing can be stored here, so that it will be
+    # carried over to other languages containing the same words.
+
+    def __str__(self):
+        return self.text
+
+
 class Language(models.Model):
     name = models.CharField(max_length=32, unique=True, db_index=True)
+    words = models.ManyToManyField(Word, through='WordEntry')
 
     def __str__(self):
         return self.name
@@ -20,11 +30,11 @@ class Language(models.Model):
         return list(np.random.choice(words, num_samples, p=probabilities))
 
 
-class Word(models.Model):
-    text = models.CharField(max_length=64, unique=True, db_index=True)
+class WordEntry(models.Model):
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE)
     frequency = models.PositiveIntegerField(default=0)
-    rank = models.PositiveIntegerField(unique=True, db_index=True)
-    language = models.ForeignKey(Language, on_delete=models.CASCADE, blank=False, related_name='words')
+    rank = models.PositiveIntegerField(default=0)
 
-    def __str__(self):
-        return self.text
+    class Meta:
+        unique_together = ('rank', 'language')
