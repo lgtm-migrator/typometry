@@ -24,11 +24,11 @@ with open('wordlist.csv') as csvfile:
     words = words.values()
     words = sorted(words, key=lambda w: w['frequency'], reverse=True)
 
-    for word in words:
-        print(word['rank'], word['text'], word['frequency'])
     raw_words = [word['text'] for word in words]
     for i in range(len(words)):
         words[i]['rank'] = i + 1
+    for word in words:
+        print(word['rank'], word['text'], word['frequency'])
     Word.objects.bulk_create(raw_words)
     word_entries = []
 
