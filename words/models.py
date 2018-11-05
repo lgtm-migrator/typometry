@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 import numpy as np
 
 
@@ -42,3 +45,30 @@ class WordEntry(models.Model):
 
     class Meta:
         unique_together = ('rank', 'language')
+
+
+class Bigram(models.Model):
+    bigram = models.CharField(max_length=2, unique=True, db_index=True)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bigram_scores = models.ManyToManyField(Bigram, through='BigramScore')
+
+
+class BigramScore(models.Model):
+    bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    count = models.PositiveIntegerField()
+    average_time = models.PositiveIntegerField()
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
