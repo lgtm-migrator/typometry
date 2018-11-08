@@ -54,13 +54,7 @@ class Bigram(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bigram_scores = models.ManyToManyField(Bigram, through='BigramScore')
-
-
-class BigramScore(models.Model):
-    bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    count = models.PositiveIntegerField()
-    average_time = models.PositiveIntegerField()
+    word_scores = models.ManyToManyField(Word, through='WordScore')
 
 
 @receiver(post_save, sender=User)
@@ -72,3 +66,17 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
+class BigramScore(models.Model):
+    bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    count = models.PositiveIntegerField()
+    average_time = models.PositiveIntegerField()
+
+
+class WordScore(models.Model):
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    typos = models.PositiveIntegerField()
+    average_time = models.PositiveIntegerField()
