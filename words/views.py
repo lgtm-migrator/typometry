@@ -3,6 +3,10 @@ from words.models import Language
 
 
 def word_list(request):
+    """
+    Returns a JSON response containing a list of 100 random words of English, sampled from a distribution representing
+    their frequency of use.
+    """
     if request.method == 'GET':
         # TODO: Make this language-agnostic
         # modify session, test
