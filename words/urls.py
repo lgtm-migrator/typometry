@@ -4,5 +4,5 @@ from words import views
 
 urlpatterns = [
     path('', views.word_list),
-    path('metrics/', views.record_scores),
+    path('metrics/', views.RecordScores.as_view()),
 ]
