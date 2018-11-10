@@ -17,7 +17,6 @@ def word_list(request):
         english = Language.objects.first()
         words = english.get_samples(100, 5000)
         words = [word.word.text for word in words]
-        words.append(request.session['test'])
         return JsonResponse(words, safe=False)
 
 
