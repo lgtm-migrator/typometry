@@ -25,7 +25,7 @@ class RecordScores(APIView):
     """
     Record word and bigram scores in the session
     """
-    def put(self, request):
+    def post(self, request):
         request.data['word_scores']['user'] = request.user
         request.data['bigram_scores']['user'] = request.user
         word_score_serializer = WordScoreSerializer(data=request.data['word_scores'])
