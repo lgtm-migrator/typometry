@@ -25,9 +25,8 @@ class RecordScores(APIView):
     Record word and bigram scores in the session
     """
     def post(self, request):
-        return Response(request.data)
-        request.data['word_scores']['user'] = request.user
-        request.data['bigram_scores']['user'] = request.user
+        request.data['_content']['word_scores']['user'] = request.user
+        request.data['_content']['bigram_scores']['user'] = request.user
         word_score_serializer = WordScoreSerializer(data=request.data['word_scores'])
         bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'])
         if word_score_serializer.is_valid() and bigram_score_serializer.is_valid():
