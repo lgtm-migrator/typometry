@@ -3,6 +3,6 @@ from words import views
 
 
 urlpatterns = [
-    path('', views.word_list),
+    path('words/', views.word_list),
     path('metrics/', views.RecordScores.as_view()),
 ]
