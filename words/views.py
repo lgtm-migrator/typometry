@@ -1,5 +1,9 @@
 from django.http import JsonResponse
 from words.models import Language
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from words.serializers import WordScoreSerializer, BigramScoreSerializer
 
 
 def word_list(request):
@@ -10,9 +14,25 @@ def word_list(request):
     if request.method == 'GET':
         # TODO: Make this language-agnostic
         # modify session, test
-        request.session['test'] = 'test09090'
         english = Language.objects.first()
         words = english.get_samples(100, 5000)
         words = [word.word.text for word in words]
         words.append(request.session['test'])
         return JsonResponse(words, safe=False)
+
+
+class RecordScores(APIView):
+    """
+    Record word and bigram scores in the session
+    """
+    def put(self, request):
+        request.data['word_scores']['user'] = request.user
+        request.data['bigram_scores']['user'] = request.user
+        word_score_serializer = WordScoreSerializer(data=request.data['word_scores'])
+        bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'])
+        if word_score_serializer.is_valid() and bigram_score_serializer.is_valid():
+            word_score_serializer.save()
+            bigram_score_serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        errors = [word_score_serializer.errors, bigram_score_serializer.errors]
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
