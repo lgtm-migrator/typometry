@@ -50,11 +50,17 @@ class WordEntry(models.Model):
 class Bigram(models.Model):
     bigram = models.CharField(max_length=2, unique=True, db_index=True)
 
+    def __str__(self):
+        return str(self.bigram)
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bigram_scores = models.ManyToManyField(Bigram, through='BigramScore')
     word_scores = models.ManyToManyField(Word, through='WordScore')
+
+    def __str__(self):
+        return str(self.user) + '\'s profile'
 
 
 @receiver(post_save, sender=User)
@@ -74,9 +80,15 @@ class BigramScore(models.Model):
     count = models.PositiveIntegerField()
     average_time = models.PositiveIntegerField()
 
+    def __str__(self):
+        return str(self.bigram) + ' - ' + str(self.average_time) + 'ms (' + str(self.count) + ' trials)'
+
 
 class WordScore(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     typos = models.PositiveIntegerField()
     average_time = models.PositiveIntegerField()
+
+    def __str__(self):
+        return str(self.word) + ' - ' + str(self.average_time) + 'ms'
