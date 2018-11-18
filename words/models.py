@@ -13,6 +13,9 @@ class Word(models.Model):
     def __str__(self):
         return self.text
 
+    def split_into_component_bigrams(self):
+        pass
+
 
 class Language(models.Model):
     name = models.CharField(max_length=32, unique=True, db_index=True)
