@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
+import json
 
 
 def word_list(request):
@@ -25,13 +26,21 @@ class RecordScores(APIView):
     Record word and bigram scores in the session
     """
     def post(self, request):
-        request.data['_content']['word_scores']['user'] = request.user
-        request.data['_content']['bigram_scores']['user'] = request.user
-        word_score_serializer = WordScoreSerializer(data=request.data['word_scores'])
-        bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'])
-        if word_score_serializer.is_valid() and bigram_score_serializer.is_valid():
-            word_score_serializer.save()
-            bigram_score_serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        errors = [word_score_serializer.errors, bigram_score_serializer.errors]
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        if not request.user.is_authenticated:
+            if 'word_scores' not in request.session or not isinstance(request.session['word_scores'], list):
+                request.session['word_scores'] = []
+            request.session['word_scores'].extend(request.data['word_scores'])
+
+            if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
+                request.session['bigram_scores'] = []
+            request.session['bigram_scores'].extend(request.data['bigram_scores'])
+            return Response(request.session, status=status.HTTP_200_OK)
+        else:
+            word_score_serializer = WordScoreSerializer(data=request.data['word_scores'], many=True)
+            bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'], many=True)
+            if all([word_score_serializer.is_valid(), bigram_score_serializer.is_valid()]):
+                word_score_serializer.save()
+                bigram_score_serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            errors = [word_score_serializer.errors, bigram_score_serializer.errors]
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
