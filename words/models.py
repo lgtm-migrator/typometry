@@ -13,6 +13,10 @@ class Word(models.Model):
     def __str__(self):
         return self.text
 
+    @staticmethod
+    def get_word(text):
+        return Word.objects.filter(text=text).first()
+
     def split_into_component_bigrams(self):
         pass
 
