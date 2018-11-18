@@ -60,6 +60,10 @@ class Bigram(models.Model):
     def __str__(self):
         return str(self.bigram)
 
+    @staticmethod
+    def get_bigram(bigram):
+        return Bigram.objects.filter(bigram=bigram).first()
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
