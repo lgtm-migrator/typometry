@@ -38,17 +38,13 @@ class RecordScores(APIView):
             # User is logged in, store scores in their profile
             for word_score in request.data['word_scores']:
                 try:
-                    word_score['user'] = request.user.Profile
-                    word_text = word_score['word']
-                    word_score['word'] = Word.get_word(word_text)
+                    word_score['user'] = request.user
                 except KeyError:
                     print('KeyError while parsing word scores, continuing...')
                     continue
             for bigram_score in request.data['bigram_scores']:
                 try:
-                    bigram_score['user'] = request.user.Profile
-                    bigram_text = bigram_score['bigram']
-                    bigram_score['bigram'] = Bigram.get_bigram(bigram_text)
+                    bigram_score['user'] = request.user
                 except KeyError:
                     print('KeyError while parsing bigram scores, continuing...')
             word_score_serializer = WordScoreSerializer(data=request.data['word_scores'], many=True)
