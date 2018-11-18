@@ -6,16 +6,12 @@ import numpy as np
 
 
 class Word(models.Model):
-    text = models.CharField(max_length=64, unique=True, db_index=True)
+    text = models.CharField(max_length=64, unique=True, db_index=True, primary_key=True)
     # Metadata about user's typing can be stored here, so that it will be
     # carried over to other languages containing the same words.
 
     def __str__(self):
         return self.text
-
-    @staticmethod
-    def get_word(text):
-        return Word.objects.filter(text=text).first()
 
     def split_into_component_bigrams(self):
         pass
@@ -55,14 +51,10 @@ class WordEntry(models.Model):
 
 
 class Bigram(models.Model):
-    bigram = models.CharField(max_length=2, unique=True, db_index=True)
+    bigram = models.CharField(max_length=2, unique=True, db_index=True, primary_key=True)
 
     def __str__(self):
         return str(self.bigram)
-
-    @staticmethod
-    def get_bigram(bigram):
-        return Bigram.objects.filter(bigram=bigram).first()
 
 
 class Profile(models.Model):
