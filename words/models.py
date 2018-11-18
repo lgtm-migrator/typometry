@@ -79,6 +79,7 @@ class BigramScore(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     count = models.PositiveIntegerField()
     average_time = models.PositiveIntegerField()
+    date = models.DateField()
 
     def __str__(self):
         return str(self.bigram) + ' - ' + str(self.average_time) + 'ms (' + str(self.count) + ' trials)'
@@ -89,6 +90,7 @@ class WordScore(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     typos = models.PositiveIntegerField()
     average_time = models.PositiveIntegerField()
+    date = models.DateField()
 
     def __str__(self):
         return str(self.word) + ' - ' + str(self.average_time) + 'ms'

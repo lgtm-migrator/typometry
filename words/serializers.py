@@ -23,10 +23,10 @@ class BigramSerializer(serializers.ModelSerializer):
 class BigramScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = BigramScore
-        fields = ['bigram', 'user', 'count', 'average_time']
+        fields = ['bigram', 'user', 'count', 'average_time', 'date']
 
 
 class WordScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = WordScore
-        fields = ['word', 'user', 'typos', 'average_time']
+        fields = ['word', 'user', 'typos', 'average_time', 'date']
