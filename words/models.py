@@ -5,29 +5,95 @@ from django.dispatch import receiver
 import numpy as np
 
 
+class Bigram(models.Model):
+    bigram = models.CharField(max_length=2, unique=True, db_index=True, primary_key=True)
+
+    def __str__(self):
+        return str(self.bigram)
+
+
 class Word(models.Model):
     text = models.CharField(max_length=64, unique=True, db_index=True, primary_key=True)
+    bigram_weights = models.ManyToManyField(Bigram, through='WordBigramWeight')
     # Metadata about user's typing can be stored here, so that it will be
     # carried over to other languages containing the same words.
 
     def __str__(self):
         return self.text
 
+    @staticmethod
+    def create_all_bigrams():
+        existing = set(bigram.bigram for bigram in Bigram.objects.all())
+        bigram_set = set()
+        all_bigrams = []
+        all_words = Word.objects.all()
+        for word in all_words:
+            bigrams = word.split_into_component_bigrams().keys()
+            bigram_set.update(bigrams)
+
+        all_bigrams = [Bigram(bigram=bigram) for bigram in bigram_set if bigram not in existing]
+        Bigram.objects.bulk_create(all_bigrams)
+        print('Created %s bigrams.' % str(len(all_bigrams)))
+
     def split_into_component_bigrams(self):
-        pass
+        last_char = ' '
+        bigrams = []
+        bigram_dict = {}
+        for char in self.text:
+            bigram = last_char + char
+            last_char = char
+            bigrams.append(bigram)
+        bigrams.append(last_char + ' ')
+
+        for bigram in bigrams:
+            if bigram in bigram_dict:
+                bigram_dict[bigram] += 1
+            else:
+                bigram_dict[bigram] = 1
+
+        return bigram_dict
+
+    def calculate_bigram_weights(self):
+        bigrams = self.split_into_component_bigrams()
+        total_bigrams = sum([count for bigram, count in bigrams.items()])
+        for bigram, count in bigrams.items():
+            weight = count / total_bigrams
+            print('Bigram: "%s"' % bigram)
+            bigram_instance, created = Bigram.objects.get_or_create(bigram=bigram)
+            print(bigram_instance)
+            bigram_weight = WordBigramWeight(word=self, bigram=bigram_instance, weight=weight)
+            bigram_weight.save()
+
+    @staticmethod
+    def calculate_all_bigram_weights():
+        for word in Word.objects.all():
+            word.calculate_bigram_weights()
+
+
+class WordBigramWeight(models.Model):
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
+    weight = models.DecimalField(max_digits=5, decimal_places=5)
+
+    class Meta:
+        unique_together = ('word', 'bigram')
+
+    def __str__(self):
+        return self.word.text + ' - (' + self.bigram.bigram + ', ' + str(self.weight) + ')'
 
 
 class Language(models.Model):
     name = models.CharField(max_length=32, unique=True, db_index=True)
     display_name = models.CharField(max_length=64, unique=True)
     words = models.ManyToManyField(Word, through='WordEntry')
+    bigrams = models.ManyToManyField(Bigram, through='BigramEntry')
 
     def __str__(self):
-        return self.display_name
+         return self.display_name
 
     def get_word_entries(self, top_n=None):
         if not top_n:
-            return WordEntry.objects.get(language=self)
+            return WordEntry.objects.filter(language=self)
         return WordEntry.objects.filter(language=self).filter(rank__lte=top_n)
 
     def get_samples(self, num_samples, top_n=None):
@@ -50,11 +116,17 @@ class WordEntry(models.Model):
         unique_together = ('rank', 'language')
 
 
-class Bigram(models.Model):
-    bigram = models.CharField(max_length=2, unique=True, db_index=True, primary_key=True)
+class BigramEntry(models.Model):
+    bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE)
+    frequency = models.PositiveIntegerField(default=0)
+    rank = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return str(self.bigram)
+        return str(self.language) + ' - ' + str(self.bigram)
+
+    class Meta:
+        unique_together = ('rank', 'language')
 
 
 class Profile(models.Model):
