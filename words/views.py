@@ -36,6 +36,10 @@ class RecordScores(APIView):
             return Response(request.data['word_scores'], status=status.HTTP_200_OK)
         else:
             # User is logged in, store scores in their profile
+            if 'word_scores' not in request.data or 'bigram_scores' not in request.data:
+                return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
+            if not isinstance(request.data['word_scores'], list) or not isinstance(request.data['bigram_scores'], list):
+                return Response("Word scores or bigram scores not list")
             for word_score in request.data['word_scores']:
                 try:
                     word_score['user'] = request.user
