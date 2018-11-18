@@ -1,10 +1,9 @@
 from django.http import JsonResponse
-from words.models import Language, Word
+from words.models import Language, Word, Bigram
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
-import json
 
 
 def word_list(request):
@@ -43,8 +42,15 @@ class RecordScores(APIView):
                     word_text = word_score['word']
                     word_score['word'] = Word.get_word(word_text)
                 except KeyError:
-                    print('KeyError, continuing...')
+                    print('KeyError while parsing word scores, continuing...')
                     continue
+            for bigram_score in request.data['bigram_scores']:
+                try:
+                    bigram_score['user'] = request.user.Profile
+                    bigram_text = bigram_score['bigram']
+                    bigram_score['bigram'] = Bigram.get_bigram(bigram_text)
+                except KeyError:
+                    print('KeyError while parsing bigram scores, continuing...')
             word_score_serializer = WordScoreSerializer(data=request.data['word_scores'], many=True)
             bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'], many=True)
             if all([word_score_serializer.is_valid(), bigram_score_serializer.is_valid()]):
