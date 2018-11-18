@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from words.models import Language
+from words.models import Language, Word
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -34,8 +34,17 @@ class RecordScores(APIView):
             if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
                 request.session['bigram_scores'] = []
             request.session['bigram_scores'].extend(request.data['bigram_scores'])
-            return Response(request.session, status=status.HTTP_200_OK)
+            return Response(request.data['word_scores'], status=status.HTTP_200_OK)
         else:
+            # User is logged in, store scores in their profile
+            for word_score in request.data['word_scores']:
+                try:
+                    word_score['user'] = request.user.Profile
+                    word_text = word_score['word']
+                    word_score['word'] = Word.get_word(word_text)
+                except KeyError:
+                    print('KeyError, continuing...')
+                    continue
             word_score_serializer = WordScoreSerializer(data=request.data['word_scores'], many=True)
             bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'], many=True)
             if all([word_score_serializer.is_valid(), bigram_score_serializer.is_valid()]):
