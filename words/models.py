@@ -58,7 +58,7 @@ class Bigram(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     bigram_scores = models.ManyToManyField(Bigram, through='BigramScore')
     word_scores = models.ManyToManyField(Word, through='WordScore')
 
