@@ -67,6 +67,7 @@ class Word(models.Model):
 
     @staticmethod
     def calculate_all_bigram_weights():
+        Bigram.create_all_bigrams()
         for word in Word.objects.all():
             word.calculate_bigram_weights()
 
