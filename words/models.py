@@ -112,9 +112,6 @@ class Language(models.Model):
         bigram_weights = list(bigram_words.values_list('weight', flat=True))
         bigram_weights = [float(weight) for weight in bigram_weights]
         probabilities = bigram_weights / np.linalg.norm(bigram_weights, ord=1)
-        bigram_probabilities = zip(bigram_words, probabilities)
-        for prob in bigram_probabilities:
-            print(prob)
         return list(np.random.choice(bigram_words, num_samples, p=probabilities))
 
 
