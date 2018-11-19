@@ -131,19 +131,6 @@ class WordEntry(models.Model):
         unique_together = ('rank', 'language')
 
 
-class BigramEntry(models.Model):
-    bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, on_delete=models.CASCADE)
-    frequency = models.PositiveIntegerField(default=0)
-    rank = models.PositiveIntegerField(default=0)
-
-    def __str__(self):
-        return str(self.language) + ' - ' + str(self.bigram)
-
-    class Meta:
-        unique_together = ('rank', 'language')
-
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     bigram_scores = models.ManyToManyField(Bigram, through='BigramScore')
