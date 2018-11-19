@@ -81,7 +81,7 @@ class WordBigramWeight(models.Model):
         unique_together = ('word', 'bigram')
 
     def __str__(self):
-        return self.word.text + ' - (' + self.bigram.bigram + ', ' + str(self.weight) + ')'
+        return self.word.text + ' - ("' + self.bigram.bigram + '", ' + str(self.weight) + ')'
 
 
 class Language(models.Model):
