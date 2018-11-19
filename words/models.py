@@ -11,10 +11,25 @@ class Bigram(models.Model):
     def __str__(self):
         return str(self.bigram)
 
+    @staticmethod
+    def create_all_bigrams():
+        existing = set(bigram.bigram for bigram in Bigram.objects.all())
+        bigram_set = set()
+        all_bigrams = []
+        all_words = Word.objects.all()
+        for word in all_words:
+            bigrams = word.split_into_component_bigrams().keys()
+            bigram_set.update(bigrams)
+
+        all_bigrams = [Bigram(bigram=bigram) for bigram in bigram_set if bigram not in existing]
+        Bigram.objects.bulk_create(all_bigrams)
+        print('Created %s bigrams.' % str(len(all_bigrams)))
+
 
 class Word(models.Model):
     text = models.CharField(max_length=64, unique=True, db_index=True, primary_key=True)
     bigram_weights = models.ManyToManyField(Bigram, through='WordBigramWeight')
+
     # Metadata about user's typing can be stored here, so that it will be
     # carried over to other languages containing the same words.
 
@@ -90,7 +105,7 @@ class Language(models.Model):
     def get_samples_for_bigram(self, bigram, num_samples):
         bigram_words = WordBigramWeight.objects.filter(bigram=bigram)\
                                                .filter(word__in=self.words.all())\
-                                               .filter(weight__gte=0.125)\
+                                               .filter(weight__gte=0.A125)\
                                                .order_by('weight')\
                                                .reverse()[:50]
         bigram_weights = list(bigram_words.values_list('weight', flat=True))
