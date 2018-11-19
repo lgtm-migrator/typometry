@@ -105,7 +105,7 @@ class Language(models.Model):
     def get_samples_for_bigram(self, bigram, num_samples):
         bigram_words = WordBigramWeight.objects.filter(bigram=bigram)\
                                                .filter(word__in=self.words.all())\
-                                               .filter(weight__gte=0.A125)\
+                                               .filter(weight__gte=0.125)\
                                                .order_by('weight')\
                                                .reverse()[:50]
         bigram_weights = list(bigram_words.values_list('weight', flat=True))
