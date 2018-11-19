@@ -21,20 +21,6 @@ class Word(models.Model):
     def __str__(self):
         return self.text
 
-    @staticmethod
-    def create_all_bigrams():
-        existing = set(bigram.bigram for bigram in Bigram.objects.all())
-        bigram_set = set()
-        all_bigrams = []
-        all_words = Word.objects.all()
-        for word in all_words:
-            bigrams = word.split_into_component_bigrams().keys()
-            bigram_set.update(bigrams)
-
-        all_bigrams = [Bigram(bigram=bigram) for bigram in bigram_set if bigram not in existing]
-        Bigram.objects.bulk_create(all_bigrams)
-        print('Created %s bigrams.' % str(len(all_bigrams)))
-
     def split_into_component_bigrams(self):
         last_char = ' '
         bigrams = []
@@ -86,10 +72,9 @@ class Language(models.Model):
     name = models.CharField(max_length=32, unique=True, db_index=True)
     display_name = models.CharField(max_length=64, unique=True)
     words = models.ManyToManyField(Word, through='WordEntry')
-    bigrams = models.ManyToManyField(Bigram, through='BigramEntry')
 
     def __str__(self):
-         return self.display_name
+        return self.display_name
 
     def get_word_entries(self, top_n=None):
         if not top_n:
@@ -97,10 +82,24 @@ class Language(models.Model):
         return WordEntry.objects.filter(language=self).filter(rank__lte=top_n)
 
     def get_samples(self, num_samples, top_n=None):
-        word_entries = self.get_word_entries(top_n)
+        word_entries = self.get_word_entries(top_n).order_by('frequency')
         words_freq = list(word_entries.values_list('frequency', flat=True))
         probabilities = words_freq / np.linalg.norm(words_freq, ord=1)
         return list(np.random.choice(word_entries, num_samples, p=probabilities))
+
+    def get_samples_for_bigram(self, bigram, num_samples):
+        bigram_words = WordBigramWeight.objects.filter(bigram=bigram)\
+                                               .filter(word__in=self.words.all())\
+                                               .filter(weight__gte=0.125)\
+                                               .order_by('weight')\
+                                               .reverse()[:50]
+        bigram_weights = list(bigram_words.values_list('weight', flat=True))
+        bigram_weights = [float(weight) for weight in bigram_weights]
+        probabilities = bigram_weights / np.linalg.norm(bigram_weights, ord=1)
+        bigram_probabilities = zip(bigram_words, probabilities)
+        for prob in bigram_probabilities:
+            print(prob)
+        return list(np.random.choice(bigram_words, num_samples, p=probabilities))
 
 
 class WordEntry(models.Model):
