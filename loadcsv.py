@@ -53,3 +53,5 @@ with open('wordlist.csv') as csvfile:
     else:
         print("Updating word entries not yet implemented!")
         print("Language not modified!")
+
+    Word.calculate_all_bigram_weights()
