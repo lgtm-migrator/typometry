@@ -25,6 +25,11 @@ class RecordScores(APIView):
     Record word and bigram scores in the session
     """
     def post(self, request):
+        if 'word_scores' not in request.data or 'bigram_scores' not in request.data\
+                or not isinstance(request.data['word_scores'], list)\
+                or not isinstance(request.data['bigram_scores'], list):
+            return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
+
         if not request.user.is_authenticated:
             if 'word_scores' not in request.session or not isinstance(request.session['word_scores'], list):
                 request.session['word_scores'] = []
@@ -36,10 +41,6 @@ class RecordScores(APIView):
             return Response(request.data['word_scores'], status=status.HTTP_200_OK)
         else:
             # User is logged in, store scores in their profile
-            if 'word_scores' not in request.data or 'bigram_scores' not in request.data:
-                return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
-            if not isinstance(request.data['word_scores'], list) or not isinstance(request.data['bigram_scores'], list):
-                return Response("Word scores or bigram scores not list")
             for word_score in request.data['word_scores']:
                 try:
                     word_score['user'] = request.user
