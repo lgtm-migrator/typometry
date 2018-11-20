@@ -163,6 +163,7 @@ class WordScore(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     typos = models.PositiveIntegerField()
+    count = models.PositiveIntegerField()
     average_time = models.PositiveIntegerField()
     date = models.DateField()
 
