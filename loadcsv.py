@@ -1,8 +1,9 @@
 import csv
 import os
+from decouple import config
 from words.models import Word, Language, WordEntry
 
-path = "/home/main/typometry-api"
+path = config('CSV_DATA_DIR')
 os.chdir(path)
 
 
