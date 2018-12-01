@@ -36,7 +36,7 @@ class BigramScoreSerializer(serializers.ModelSerializer):
             }
         )
         if not created:
-            # A WordScore already exists for this date; update it instead
+            # A BigramScore already exists for this date; update it instead
             old_avg_time = bigram_score.average_time
             old_count = bigram_score.count
             new_avg_time = validated_data.get('average_time')
