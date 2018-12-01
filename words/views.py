@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
+from datetime import date
 
 
 def word_list(request):
@@ -24,12 +25,15 @@ class RecordScores(APIView):
     """
     Record word and bigram scores in the session
     """
+
     def post(self, request):
         if 'word_scores' not in request.data or 'bigram_scores' not in request.data\
                 or not isinstance(request.data['word_scores'], list)\
                 or not isinstance(request.data['bigram_scores'], list):
             return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
+        print(request.user)
+        print(request.auth)
         if not request.user.is_authenticated:
             if 'word_scores' not in request.session or not isinstance(request.session['word_scores'], list):
                 request.session['word_scores'] = []
@@ -41,22 +45,33 @@ class RecordScores(APIView):
             return Response(request.data['word_scores'], status=status.HTTP_200_OK)
         else:
             # User is logged in, store scores in their profile
+            today = date.today()
             for word_score in request.data['word_scores']:
                 try:
                     word_score['user'] = request.user
+                    word_score['typos'] = 0
+                    word_score['date'] = today
+                    word_score['average_time'] = int(word_score['average_time'])
                 except KeyError:
                     print('KeyError while parsing word scores, continuing...')
                     continue
             for bigram_score in request.data['bigram_scores']:
                 try:
                     bigram_score['user'] = request.user
+                    bigram_score['date'] = today
+                    bigram_score['average_time'] = int(bigram_score['average_time'])
                 except KeyError:
                     print('KeyError while parsing bigram scores, continuing...')
-            word_score_serializer = WordScoreSerializer(data=request.data['word_scores'], many=True)
-            bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'], many=True)
-            if all([word_score_serializer.is_valid(), bigram_score_serializer.is_valid()]):
-                word_score_serializer.save()
-                bigram_score_serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            errors = [word_score_serializer.errors, bigram_score_serializer.errors]
-            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                word_scores = request.data['word_scores']
+                bigram_scores = request.data['bigram_scores']
+                word_score_serializer = WordScoreSerializer(data=request.data['word_scores'], many=True)
+                bigram_score_serializer = BigramScoreSerializer(data=request.data['bigram_scores'], many=True)
+                if all([word_score_serializer.is_valid(), bigram_score_serializer.is_valid()]):
+                    word_score_serializer.save()
+                    bigram_score_serializer.save()
+                    return Response(status=status.HTTP_201_CREATED)
+                errors = [word_score_serializer.errors, bigram_score_serializer.errors]
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
