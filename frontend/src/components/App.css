@@ -1,0 +1,24 @@
+.App {
+  text-align: center;
+  color: #333;
+  margin: 20px;
+  padding: 20px;
+  background-color: aliceblue
+}
+
+.col-centered {
+  float: none;
+  margin: 0 auto;
+}
+
+.row-margin-20 {
+  margin-top: 20px;
+}
+
+.row-margin-10 {
+  margin-top: 10px;
+}
+
+.pad-10 {
+  padding: 10px;
+}
