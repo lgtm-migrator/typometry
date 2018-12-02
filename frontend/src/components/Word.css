@@ -1,0 +1,22 @@
+.Word {
+
+}
+.currentWord {
+    background-color: azure;
+    border-radius: 7px;
+    box-shadow: 0 0 3px powderblue;
+}
+.typo {
+    background-color: pink;
+    border-radius: 7px;
+    box-shadow: 0 0 3px red;
+}
+
+.typedCorrect {
+    color: gray
+}
+
+.typedTypo {
+    color: gray;
+    text-decoration: line-through
+}
