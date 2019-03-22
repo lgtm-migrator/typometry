@@ -285,7 +285,6 @@ class App extends React.Component {
       this.setState({ hasPendingWordsRequest: true })
       console.log('Requesting new words from API')
       axios.get(WEBSITE_API_URL + '/words/')
-
         .then(res => {
           console.log('Fetch complete')
           if (wordsArray.length === 0) {
