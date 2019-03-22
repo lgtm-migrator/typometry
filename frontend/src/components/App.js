@@ -4,7 +4,6 @@ import TypeInputBox from './TypeInputBox'
 import WordsToType from './WordsToType'
 import WPM from './WPM'
 import axios from 'axios'
-import Cookies from 'js-cookie'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
