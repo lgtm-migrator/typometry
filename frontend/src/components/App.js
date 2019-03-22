@@ -158,7 +158,10 @@ class App extends React.Component {
       return
     }
 
-    if (!containsTypo && event.key === nextChar) {
+    // Check if updated state of word has valid bigram
+    const wordFragmentCorrect = typedText === wordsArray[currentWord].slice(0, typedText.length)
+
+    if (wordFragmentCorrect && event.key === nextChar) {
       const time = window.performance.now()
 
       if (lastChar) {
