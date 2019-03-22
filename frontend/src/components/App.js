@@ -8,6 +8,8 @@ import axios from 'axios'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 
+const WEBSITE_API_URL = 'http://localhost:8000'
+
 class App extends React.Component {
   constructor (props) {
     super(props)
@@ -108,7 +110,7 @@ class App extends React.Component {
       return score
     })
     console.log('Sending scores...')
-    axios.post('http://localhost:8000/words/metrics/',
+    axios.post(WEBSITE_API_URL + '/words/metrics/',
     {
        word_scores: alteredWordScores,
        bigram_scores: alteredBigramScores
@@ -282,7 +284,8 @@ class App extends React.Component {
     if (wordsArray.length - currentWord < 60 && !hasPendingWordsRequest && newWords.length === 0) {
       this.setState({ hasPendingWordsRequest: true })
       console.log('Requesting new words from API')
-      axios.get('http://localhost:8000/words/')
+      console.log(WEBSITE_API_URL + '/words/')
+      axios.get(WEBSITE_API_URL + '/words/')
 
         .then(res => {
           console.log('Fetch complete')
