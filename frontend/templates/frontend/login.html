@@ -27,7 +27,8 @@
 	
 	<section class="container">
 	    <section class="login-form">
-		<form method="post" action="" role="login">
+		<form method="post" action="account/" role="login">
+            {% csrf_token %}
 			<div>
 				<img src="{% static "frontend/login/images/logo.png" %}" alt="" />
 				<h4>Login to your private dashboard</h4>
