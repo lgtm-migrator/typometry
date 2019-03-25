@@ -95,7 +95,7 @@ class Language(models.Model):
     def get_word_entries(self, top_n=None):
         if not top_n:
             return WordEntry.objects.filter(language=self)
-        return WordEntry.objects.filter(language=self).filter(rank__lte=top_n)
+        return WordEntry.objects.filter(language=self, rank__lte=top_n)
 
     def get_words(self, top_n=None):
         if not top_n:
