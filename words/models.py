@@ -97,6 +97,11 @@ class Language(models.Model):
             return WordEntry.objects.filter(language=self)
         return WordEntry.objects.filter(language=self).filter(rank__lte=top_n)
 
+    def get_words(self, top_n=None):
+        if not top_n:
+            return Word.objects.filter(wordentry__language=self)
+        return Word.objects.filter(language=self, wordentry__rank__lte=top_n)
+
     def get_samples(self, num_samples, top_n=None):
         word_entries = self.get_word_entries(top_n).order_by('frequency')
         words_freq = list(word_entries.values_list('frequency', flat=True))
