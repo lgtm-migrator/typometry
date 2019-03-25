@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
+from words.models import WordScore, BigramScore
+from django.contrib.auth.models import AnonymousUser
 from datetime import date
 
 
@@ -19,6 +21,31 @@ def word_list(request):
         words = english.get_samples(100, 5000)
         words = [word.word.text for word in words]
         return JsonResponse(words, safe=False)
+
+
+def smart_exercise(request):
+    """
+    Returns a JSON response with a personalized list of words. If we do not have sufficient data on the user's typing
+    in the selected language, returns a list of the most popular words in that language to gather data. Otherwise,
+    attempts to identify weaknesses in the user's typing and delivers a personalized exercise to rectify.
+    """
+    if not request.method == 'GET':
+        error = {"You've come to the wrong place."}
+        return Response(error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    # TODO: Make this language-agnostic
+    language = Language.objects.first()
+
+    # Is user logged in?
+    if not request.user == AnonymousUser:
+        user = request.user
+        # Do we have enough data on the top 200 words?
+        top_200_word_entries = language.get_word_entries(200)
+        top_200_words = top_200_word_entries
+        minimum_trials = 2
+        insufficent_data_words = WordScore.objects.filter(user=user, word__in=top_200_words, count__lt=minimum_trials)
+        if insufficent_data_words.count():
+            pass
 
 
 class RecordScores(APIView):
