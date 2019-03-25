@@ -161,7 +161,14 @@ class App extends React.Component {
     }
 
     // Check if updated state of word has valid bigram
-    const wordFragmentCorrect = typedText + event.key === wordsArray[currentWord].slice(0, typedText.length + 1)
+    // Check if word is complete (handle final space bigram)
+    const spacePressed = (event ? event.which : window.event.keyCode) === 32
+    let wordFragmentCorrect = false
+    if (typedText === wordsArray[currentWord]) { // Word is complete
+      wordFragmentCorrect = spacePressed
+    } else {
+      wordFragmentCorrect = typedText + event.key === wordsArray[currentWord].slice(0, typedText.length + 1)
+    }
 
     if (wordFragmentCorrect && event.key === nextChar) {
       const time = window.performance.now()
@@ -192,8 +199,7 @@ class App extends React.Component {
       })
     }
 
-    const key = event ? event.which : window.event.keyCode
-    if (key === 32) {
+    if (spacePressed) {
       event.preventDefault() // Don't call handleChange
       const nextWord = currentWord + 1
 
