@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -140,6 +142,24 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user) + '\'s profile'
+
+    def get_recent_scores(self, days: int):
+        min_date = datetime.date.today() - datetime.timedelta(days=days)
+        scores = WordScore.objects.filter(user=self, date__gte=min_date).order_by('word__wordentry__rank')
+        combined_scores = {}
+        for score in scores:
+            if score.word.text not in combined_scores:
+                combined_scores[score.word.text] = [score]
+            else:
+                combined_scores[score.word.text].append(score)
+
+        for word, score_list in combined_scores.items():
+            score_list = [score for score in score_list if 10 < score < 7500]
+            total_trials = sum(score.count for score in score_list)
+            weighted_score_sum = sum(score.average_time * score.count for score in score_list)
+            combined_scores[word] = weighted_score_sum / total_trials
+
+        return combined_scores
 
 
 @receiver(post_save, sender=User)
