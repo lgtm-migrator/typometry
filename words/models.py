@@ -111,8 +111,9 @@ class Language(models.Model):
         return list(np.random.choice(word_entries, num_samples, p=probabilities))
 
     def get_samples_for_bigram(self, bigram, num_samples):
+        all_words = self.get_word_entries()
         bigram_words = WordBigramWeight.objects.filter(bigram=bigram) \
-                           .filter(word__in=self.words.all()) \
+                           .filter(word__in=all_words) \
                            .filter(weight__gte=0.125) \
                            .order_by('weight') \
                            .reverse()[:50]
