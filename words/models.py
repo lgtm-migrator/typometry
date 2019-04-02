@@ -104,7 +104,7 @@ class Language(models.Model):
             return Word.objects.filter(wordentry__language=self)
         return Word.objects.filter(language=self, wordentry__rank__lte=top_n)
 
-    def get_samples(self, num_samples, top_n=None):
+    def get_samples(self, num_samples: int, top_n: int = None):
         word_entries = self.get_word_entries(top_n).order_by('frequency')
         words_freq = list(word_entries.values_list('frequency', flat=True))
         probabilities = words_freq / np.linalg.norm(words_freq, ord=1)
