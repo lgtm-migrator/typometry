@@ -6,7 +6,7 @@ from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
 from words.models import WordScore, BigramScore
 from django.contrib.auth.models import AnonymousUser
-from datetime import date
+import datetime
 
 
 def word_list(request):
@@ -72,7 +72,7 @@ class RecordScores(APIView):
             return Response(request.data['word_scores'], status=status.HTTP_200_OK)
         else:
             # User is logged in, store scores in their profile
-            today = date.today()
+            today = datetime.date.today()
             for word_score in request.data['word_scores']:
                 try:
                     word_score['user'] = request.user
