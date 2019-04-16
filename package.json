@@ -20,22 +20,26 @@
   },
   "homepage": "https://github.com/KunstDerFuge/typometry#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
     "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.4",
+    "babel-loader": "^8.0.5",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "css-loader": "^1.0.1",
-    "prop-types": "^15.6.2",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "style-loader": "^0.23.1",
-    "webpack": "^4.26.1",
-    "webpack-cli": "^3.1.2"
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "dotenv": "^7.0.0",
     "js-cookie": "^2.2.0",
-    "react-addons-css-transition-group": "^15.6.2"
+    "npm": "^6.9.0",
+    "react-addons-css-transition-group": "^15.6.2",
+    "semantic-ui": "^2.4.2",
+    "semantic-ui-react": "^0.86.0"
   }
 }
