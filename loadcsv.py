@@ -56,3 +56,4 @@ with open('wordlist.csv') as csvfile:
         print("Language not modified!")
 
     Word.calculate_all_bigram_weights()
+    english.create_bigram_entries()
