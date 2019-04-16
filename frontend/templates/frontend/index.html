@@ -1,30 +1,18 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Typometry.io</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% extends "frontend/base.html" %}
+{% block head_title %}
+    Typometry.io
+{% endblock %}
+{% block extra_head %}
   <link rel="stylesheet" href="https://use.typekit.net/zvr5yij.css">
-</head>
-
-<body>
+{% endblock %}
+{% block content %}
+  <div class="ten wide widescreen ten wide large screen sixteen wide mobile column">
   <section>
-    <div>
-      {% if user.is_authenticated %}
-        <p>{{ user.get_username }}</p>
-      {% else %}
-        <p>Not logged in</p>
-      {% endif %}
-    </div>
     <div>
           <div id="app"><!-- React --></div>
     </div>
   </section>
-</body>
+  </div>
+{% endblock %}
 
-{% load static %}
-<script src="{% static "frontend/main.js" %}"></script>
 
-</html>
