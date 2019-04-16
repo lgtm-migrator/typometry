@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block head_title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
+    />
+    <style>
+    </style>
+    {% block extra_head %}
+    {% endblock %}
+  </head>
+  <body>
+  <script>
+    window.is_logged_in = false;
+    {% if request.user.is_authenticated %}
+      window.is_logged_in = true;
+    {% endif %}
+  </script>
+    <div id="header"></div>
+    <div class="ui centered grid">
+    <div class="row"></div>
+    <div class="row"></div>
+    {% block pre_body %}
+    {% endblock %}
+    {% block body %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% load static %}
+    <script src="{% static "frontend/main.js" %}"></script>
+
+    {% endblock %}
+    {% block extra_body %}
+    {% endblock %}
+    {% block post_body %}
+    {% endblock %}
+    </div>
+  {% if messages %}
+    <div>
+      <strong>Messages:</strong>
+      <ul>
+        {% for message in messages %}
+          <li>{{message}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  </body>
+</html>
