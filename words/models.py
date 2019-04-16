@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import numpy as np
+import math
 
 
 class Bigram(models.Model):
@@ -17,7 +18,6 @@ class Bigram(models.Model):
     def create_all_bigrams():
         existing = set(bigram.bigram for bigram in Bigram.objects.all())
         bigram_set = set()
-        all_bigrams = []
         all_words = Word.objects.all()
         for word in all_words:
             bigrams = word.split_into_component_bigrams().keys()
@@ -97,12 +97,12 @@ class Language(models.Model):
 
     def get_word_entries(self, top_n=None):
         if not top_n:
-            return WordEntry.objects.filter(language=self)
+            return self.wordentry_set.all()
         return WordEntry.objects.filter(language=self, rank__lte=top_n)
 
     def get_words(self, top_n=None):
         if not top_n:
-            return Word.objects.filter(wordentry__language=self)
+            return self.words.all()
         return Word.objects.filter(language=self, wordentry__rank__lte=top_n)
 
     def get_bigram_entries(self, top_n=None):
@@ -122,16 +122,50 @@ class Language(models.Model):
         return list(np.random.choice(word_entries, num_samples, p=probabilities))
 
     def get_samples_for_bigram(self, bigram, num_samples):
-        all_words = self.get_word_entries()
+        print('getting samples for bigram: ' + bigram)
         bigram_words = WordBigramWeight.objects.filter(bigram=bigram) \
-                           .filter(word__in=all_words) \
-                           .filter(weight__gte=0.125) \
+                           .filter(bigram__language=self) \
+                           .filter(weight__gte=0.025) \
                            .order_by('weight') \
                            .reverse()[:50]
+        if not bigram_words:
+            return []
         bigram_weights = list(bigram_words.values_list('weight', flat=True))
         bigram_weights = [float(weight) for weight in bigram_weights]
         probabilities = bigram_weights / np.linalg.norm(bigram_weights, ord=1)
-        return list(np.random.choice(bigram_words, num_samples, p=probabilities))
+        bigram_words = list(np.random.choice(bigram_words, num_samples, p=probabilities))
+        return [word.word.text for word in bigram_words]
+
+    def create_bigram_entries(self):
+        words = self.get_word_entries()
+        language_bigrams = {}
+        for word in words:
+            word_bigrams = word.word.split_into_component_bigrams()
+            for bigram, count in word_bigrams.items():
+                word_bigrams[bigram] = count * word.frequency
+                if bigram not in language_bigrams:
+                    language_bigrams[bigram] = word_bigrams[bigram]
+                else:
+                    language_bigrams[bigram] += word_bigrams[bigram]
+
+        all_bigram_entries = []
+        for bigram, freq in language_bigrams.items():
+            bigram_obj = Bigram.objects.get(bigram=bigram)
+            bigram_entry = BigramEntry(bigram=bigram_obj,
+                                       language=self,
+                                       frequency=freq)
+
+            all_bigram_entries.append(bigram_entry)
+
+        all_bigram_entries = sorted(all_bigram_entries,
+                                    key=lambda x: x.frequency,
+                                    reverse=True)
+        rank = 1
+        for bigram in all_bigram_entries:
+            bigram.rank = rank
+            rank += 1
+
+        BigramEntry.objects.bulk_create(all_bigram_entries)
 
 
 class WordEntry(models.Model):
@@ -168,21 +202,60 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user) + '\'s profile'
 
-    def get_recent_scores(self, days: int):
+    def get_recent_scores(self, days: int, word_score: bool = True, weight_by_date: bool = True):
+
+        def get_weight(date: datetime.date):
+            num_days = (datetime.date.today() - date).days
+            if num_days == 0:
+                return 1
+
+            if num_days >= 16:
+                raise ValueError('Day {} passed to get_weight, would result in zero or negative weight!'
+                                 .format(num_days))
+            if num_days < 0:
+                raise ValueError('Day {} passed to get_weight, score from the future?'.format(date))
+            # Weight scores logarithmically; scores from today have weight 1, from yesterday, weight 0.5
+            # Two days ago: 0.375
+            return (4 - math.log2(num_days)) / 8
+
         min_date = datetime.date.today() - datetime.timedelta(days=days)
-        scores = WordScore.objects.filter(user=self, date__gte=min_date).order_by('word__wordentry__rank')
         combined_scores = {}
-        for score in scores:
-            if score.word.text not in combined_scores:
-                combined_scores[score.word.text] = [score]
-            else:
-                combined_scores[score.word.text].append(score)
+        if word_score:
+            min_time = 10
+            max_time = 7500
+            scores = WordScore.objects.filter(user=self, date__gte=min_date).order_by('word__wordentry__rank')
+            for score in scores:
+                if score.word.text not in combined_scores:
+                    combined_scores[score.word.text] = [score]
+                else:
+                    combined_scores[score.word.text].append(score)
+
+        else:
+            min_time = 1
+            max_time = 2500
+            scores = BigramScore.objects.filter(user=self, date__gte=min_date).order_by('bigram__bigramentry__rank')
+            for score in scores:
+                if not min_time < score.average_time < max_time:
+                    continue
+                if score.bigram.bigram not in combined_scores:
+                    combined_scores[score.bigram.bigram] = [score]
+                else:
+                    combined_scores[score.bigram.bigram].append(score)
 
         for word, score_list in combined_scores.items():
-            score_list = [score for score in score_list if 10 < score < 7500]
-            total_trials = sum(score.count for score in score_list)
-            weighted_score_sum = sum(score.average_time * score.count for score in score_list)
-            combined_scores[word] = weighted_score_sum / total_trials
+            total_trials = sum([score.count for score in score_list])
+            if total_trials == 0:  # All instances of this score were filtered out -- average time out of bounds
+                continue
+            scores = np.array([score.average_time for score in score_list])
+            counts = np.array([score.count for score in score_list])
+            if weight_by_date:
+                dates = [score.date for score in score_list]
+                weights = [get_weight(date) for date in dates]
+                weights = np.array(weights / np.linalg.norm(weights, ord=1))
+                scores = np.multiply(scores, weights)
+            scores *= counts
+            score_sum = sum(scores)
+            combined_scores[word] = score_sum / total_trials
 
         return combined_scores
 
