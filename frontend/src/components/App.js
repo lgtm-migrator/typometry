@@ -2,8 +2,9 @@ import React from 'react'
 import './App.css'
 import TypeInputBox from './TypeInputBox'
 import WordsToType from './WordsToType'
-import WPM from './WPM'
+import AppMenu from './AppMenu'
 import axios from 'axios'
+import { Segment } from 'semantic-ui-react'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -32,12 +33,16 @@ class App extends React.Component {
       typoIndices: [],
       timeAtLastTenWords: [],
       bigramScores: [],
-      wordScores: []
+      wordScores: [],
+      fontSize: 3,
+      mode: 'practice'
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.updateCurrentWord = this.updateCurrentWord.bind(this)
+    this.handleZoomClick = this.handleZoomClick.bind(this)
+    this.handleModeChange = this.handleModeChange.bind(this)
   }
 
   componentDidMount () {
@@ -284,13 +289,18 @@ class App extends React.Component {
 
     const {
       hasPendingWordsRequest,
-      newWords
+      newWords,
+      mode
     } = this.state
 
     if (wordsArray.length - currentWord < 60 && !hasPendingWordsRequest && newWords.length === 0) {
       this.setState({ hasPendingWordsRequest: true })
       console.log('Requesting new words from API')
-      axios.get(WEBSITE_API_URL + '/words/')
+      let endpoint = '/words'
+      if (mode === 'smartExercise') {
+        endpoint = '/words/smart'
+      }
+      axios.get(WEBSITE_API_URL + endpoint)
         .then(res => {
           console.log('Fetch complete')
           if (wordsArray.length === 0) {
@@ -362,36 +372,68 @@ class App extends React.Component {
     }
   }
 
+  handleZoomClick(e, { name }) {
+    const fontSize = this.state.fontSize
+    if (name === 'zoom in') {
+      this.setState({fontSize: fontSize + 0.5})
+    } else {
+      this.setState({fontSize: fontSize - 0.5})
+    }
+  }
+
+  handleModeChange(e, { name }) {
+    if (name === 'practice') {
+      this.setState({mode: 'practice'})
+    }
+    else if (name === 'smartExercise') {
+      this.setState({mode: 'smartExercise'})
+    }
+    this.setState({
+      wordsArray: [],
+      newWords: [],
+      typedText: [],
+      typoIndices: [],
+      currentWord: 0
+    }, () => {
+      this.updateCurrentWord(0)
+    })
+  }
+
   render () {
     const {
       typedText,
       wordsArray,
       containsTypo,
       currentWord,
-      currentWPM,
-      typoIndices
+      typoIndices,
+      fontSize,
+      mode,
+      hasPendingWordsRequest
     } = this.state
 
     return (
-      <div className='row-margin-20'>
-        <div className='App col-md-8 col-centered'>
-          <div className='card card-body'>
-            <WPM currentWPM={currentWPM} />
-          </div>
-          <div className='card card-body row-margin-10'>
+      <div className='App'>
+        <AppMenu
+          zoomHandler = {this.handleZoomClick}
+          modeHandler = {this.handleModeChange}
+          activeItem = {mode} />
+        <Segment attached='bottom' className='blue-background'>
+          <Segment raised>
             <WordsToType
               words={wordsArray}
               currentWord={currentWord}
               typo={containsTypo}
-              typoIndices={typoIndices} />
-          </div>
-          <div className='card row-margin-10'>
-            <TypeInputBox
-              onChange={this.handleChange}
-              onKeyDown={this.handleKeyPress}
-              value={typedText} />
-          </div>
-        </div>
+              typoIndices={typoIndices}
+              fontSize={fontSize}
+              loading={hasPendingWordsRequest && wordsArray.length === 0} />
+          </Segment>
+          <Segment>
+          <TypeInputBox
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyPress}
+            value={typedText} />
+          </Segment>
+        </Segment>
       </div>
     )
   }

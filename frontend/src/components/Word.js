@@ -1,12 +1,21 @@
 import React from 'react'
 import './Word.css'
+import { Popup } from 'semantic-ui-react'
 
 const Word = props => (
   <span
     id={props.current ? 'currentWord' : null}
-    className={whichStyle(props)}>
+    className={whichStyle(props) + ' ui simple'}>
     {props.text}
   </span>
+)
+
+const WordMetadataPopup = props => (
+  <Popup
+      trigger={<Word {...props} />}
+      content='Woot!'
+      on='click'
+  />
 )
 
 const whichStyle = function (props) {
@@ -28,4 +37,4 @@ const whichStyle = function (props) {
   return 'Word'
 }
 
-export default Word
+export default WordMetadataPopup
