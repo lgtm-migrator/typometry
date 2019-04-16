@@ -90,6 +90,7 @@ class Language(models.Model):
     name = models.CharField(max_length=32, unique=True, db_index=True)
     display_name = models.CharField(max_length=64, unique=True)
     words = models.ManyToManyField(Word, through='WordEntry')
+    bigrams = models.ManyToManyField(Bigram, through='BigramEntry')
 
     def __str__(self):
         return self.display_name
@@ -103,6 +104,16 @@ class Language(models.Model):
         if not top_n:
             return Word.objects.filter(wordentry__language=self)
         return Word.objects.filter(language=self, wordentry__rank__lte=top_n)
+
+    def get_bigram_entries(self, top_n=None):
+        if not top_n:
+            return self.bigramentry_set.all()
+        return BigramEntry.objects.filter(language=self, rank__lte=top_n)
+
+    def get_bigrams(self, top_n=None):
+        if not top_n:
+            return self.bigrams.all()
+        return Bigram.objects.filter(language=self, bigramentry__rank__lte=top_n)
 
     def get_samples(self, num_samples: int, top_n: int = None):
         word_entries = self.get_word_entries(top_n).order_by('frequency')
@@ -131,6 +142,19 @@ class WordEntry(models.Model):
 
     def __str__(self):
         return str(self.language) + ' - ' + str(self.word)
+
+    class Meta:
+        unique_together = ('rank', 'language')
+
+
+class BigramEntry(models.Model):
+    bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE)
+    frequency = models.PositiveIntegerField(default=0)
+    rank = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return str(self.language) + ' - ' + str(self.bigram)
 
     class Meta:
         unique_together = ('rank', 'language')
