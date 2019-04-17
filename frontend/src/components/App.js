@@ -181,7 +181,6 @@ class App extends React.Component {
       if (lastChar) {
         let bigramSpeed = time - lastKeyPressTime
         const bigram = lastChar + nextChar
-        console.log('Appending ' + bigram + ' from ' + wordsArray[currentWord])
         this.appendBigram(bigram, bigramSpeed)
       }
       const last = event.key
