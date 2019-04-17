@@ -21,6 +21,7 @@ class AppMenu extends React.Component {
       <Menu attached='top' size='large'>
         <Menu.Item name='practice' active={this.props.activeItem === 'practice'} onClick={modeHandler}/>
         <Menu.Item name='smartExercise' active={this.props.activeItem === 'smartExercise'} onClick={modeHandler}/>
+        <Menu.Item name='speedTest' active={this.props.activeItem === 'speedTest'} onClick={modeHandler}/>
         <Menu.Menu position='right'>
           <Dropdown item text='Language'>
             <Dropdown.Menu>

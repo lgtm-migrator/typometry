@@ -387,6 +387,9 @@ class App extends React.Component {
     else if (name === 'smartExercise') {
       this.setState({mode: 'smartExercise'})
     }
+    else if (name === 'speedTest') {
+      this.setState({mode: 'speedTest'})
+    }
     this.setState({
       wordsArray: [],
       newWords: [],
