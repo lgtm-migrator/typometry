@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 import TypeInputBox from './TypeInputBox'
 import WordsToType from './WordsToType'
+import SpeedTest from './SpeedTest'
 import AppMenu from './AppMenu'
 import axios from 'axios'
 import { Segment } from 'semantic-ui-react'
@@ -421,13 +422,23 @@ class App extends React.Component {
           activeItem = {mode} />
         <Segment attached='bottom' className='blue-background'>
           <Segment raised>
-            <WordsToType
-              words={wordsArray}
-              currentWord={currentWord}
-              typo={containsTypo}
-              typoIndices={typoIndices}
-              fontSize={fontSize}
-              loading={hasPendingWordsRequest && wordsArray.length === 0} />
+            {mode === 'speedTest' ?
+              <SpeedTest
+                words={wordsArray}
+                currentWord={currentWord}
+                typo={containsTypo}
+                typoIndices={typoIndices}
+                fontSize={fontSize}
+                loading={hasPendingWordsRequest && wordsArray.length === 0}/>
+              :
+              <WordsToType
+                words={wordsArray}
+                currentWord={currentWord}
+                typo={containsTypo}
+                typoIndices={typoIndices}
+                fontSize={fontSize}
+                loading={hasPendingWordsRequest && wordsArray.length === 0}/>
+            }
           </Segment>
           <Segment>
           <TypeInputBox
