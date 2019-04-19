@@ -429,7 +429,8 @@ class App extends React.Component {
                 typo={containsTypo}
                 typoIndices={typoIndices}
                 fontSize={fontSize}
-                loading={hasPendingWordsRequest && wordsArray.length === 0}/>
+                loading={hasPendingWordsRequest && wordsArray.length === 0}
+                typedText={typedText}/>
               :
               <WordsToType
                 words={wordsArray}
