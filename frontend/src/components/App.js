@@ -5,7 +5,7 @@ import WordsToType from './WordsToType'
 import SpeedTest from './SpeedTest'
 import AppMenu from './AppMenu'
 import axios from 'axios'
-import { Segment } from 'semantic-ui-react'
+import { Segment, Progress } from 'semantic-ui-react'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -36,7 +36,9 @@ class App extends React.Component {
       wordScores: [],
       fontSize: 3,
       mode: 'practice',
-      typingLocked: false
+      typingLocked: false,
+      showProgress: false,
+      progressPct: 0
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -50,6 +52,8 @@ class App extends React.Component {
     this.finishSpeedTest = this.finishSpeedTest.bind(this)
     this.lockTyping = this.lockTyping.bind(this)
     this.unlockTyping = this.unlockTyping.bind(this)
+    this.showProgress = this.showProgress.bind(this)
+    this.updateProgress = this.updateProgress.bind(this)
   }
 
   componentDidMount () {
@@ -416,7 +420,8 @@ class App extends React.Component {
       newWords: [],
       typedText: '',
       typoIndices: [],
-      currentWord: 0
+      currentWord: 0,
+      containsTypo: false
     }, () => {
       this.updateCurrentWord(0)
     })
@@ -448,6 +453,18 @@ class App extends React.Component {
     this.clearWords()
   }
 
+  showProgress(show) {
+    this.setState({
+      showProgress: show
+    })
+  }
+
+  updateProgress(percent) {
+    this.setState({
+      progressPct: percent
+    })
+  }
+
   render () {
     const {
       typedText,
@@ -459,7 +476,9 @@ class App extends React.Component {
       mode,
       hasPendingWordsRequest,
       numTypos,
-      numWordsTyped
+      numWordsTyped,
+      showProgress,
+      progressPct
     } = this.state
 
     return (
@@ -470,7 +489,12 @@ class App extends React.Component {
           activeItem = {mode} />
         <Segment attached='bottom' className='blue-background'>
           <Segment raised>
-            {mode === 'speedTest' ?
+            { showProgress ?
+              <Progress percent={progressPct} attached='top' />
+              :
+              ''
+            }
+            { mode === 'speedTest' ?
               <SpeedTest
                 words={wordsArray}
                 currentWord={currentWord}
@@ -482,7 +506,9 @@ class App extends React.Component {
                 numTypos={numTypos}
                 numWordsTyped={numWordsTyped}
                 startFunction={this.startSpeedTest}
-                endFunction={this.finishSpeedTest} />
+                endFunction={this.finishSpeedTest}
+                showProgress={this.showProgress}
+                updateProgress={this.updateProgress} />
               :
               <WordsToType
                 words={wordsArray}
