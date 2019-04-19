@@ -14,6 +14,7 @@ const WordMetadataPopup = props => (
   <Popup
     trigger={<span><Word {...props} /></span>}
       content='Woot!'
+      on='click'
   />
 )
 
