@@ -18,8 +18,8 @@ class SpeedTest extends Component {
       numWordsTyped: 0
     }
     this.startTimer = this.startTimer.bind(this)
-    this.incrementTimer = this.incrementTimer.bind(this)
     this.beginTest = this.beginTest.bind(this)
+    this.finishTest = this.finishTest.bind(this)
   }
 
   startTimer() {
@@ -28,6 +28,8 @@ class SpeedTest extends Component {
       timeStarted: Date.now(),
       timerStarted: true
     })
+    console.log('Timer started')
+    this.props.showProgress(true)
     this.timer = ci.setCorrectingInterval(() => {
       const {
         totalSeconds,
@@ -47,21 +49,11 @@ class SpeedTest extends Component {
       this.setState({
         elapsedSeconds: (newElapsed <= totalSeconds ? newElapsed : totalSeconds),
       })
+      this.props.updateProgress((elapsedSeconds + 1) / totalSeconds * 100)
       if (elapsedSeconds >= totalSeconds) {
-        this.setState({
-          timerStarted: false,
-          testStarted: false,
-          testComplete: true,
-          numWordsTyped: this.props.numWordsTyped,
-          numTypos: this.props.numTypos
-        })
-        ci.clearCorrectingInterval(this.timer)
-        this.props.endFunction()
+        this.finishTest()
       }
     }, 1000)
-  }
-
-  incrementTimer() {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -85,6 +77,20 @@ class SpeedTest extends Component {
     })
   }
 
+  finishTest() {
+    this.setState({
+      timerStarted: false,
+      testStarted: false,
+      testComplete: true,
+      numWordsTyped: this.props.numWordsTyped,
+      numTypos: this.props.numTypos
+    })
+    ci.clearCorrectingInterval(this.timer)
+    this.props.showProgress(false)
+    this.props.updateProgress(0)
+    this.props.endFunction()
+  }
+
   render() {
     const {
       numWordsTyped,
@@ -105,7 +111,12 @@ class SpeedTest extends Component {
         { !this.state.testStarted ?
           <Button onClick={this.beginTest}>Start</Button>
           :
-          <WordsToType {...this.props} />
+          <ReactCSSTransitionGroup
+            transitionName='fade'
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}>
+            <WordsToType {...this.props} />
+          </ReactCSSTransitionGroup>
         }
       </div>
     )
