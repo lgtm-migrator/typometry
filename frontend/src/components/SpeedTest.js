@@ -8,21 +8,22 @@ class SpeedTest extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showWords: false,
       timerStarted: false,
+      testStarted: false,
       testComplete: false,
       totalSeconds: 60,
       elapsedSeconds: 0,
     }
     this.startTimer = this.startTimer.bind(this)
     this.incrementTimer = this.incrementTimer.bind(this)
-    this.beginTiming = this.beginTiming.bind(this)
+    this.beginTest = this.beginTest.bind(this)
   }
 
   startTimer() {
     this.setState({
       elapsedSeconds: 0,
-      timeStarted: Date.now()
+      timeStarted: Date.now(),
+      timerStarted: true
     })
     this.timer = ci.setCorrectingInterval(() => {
       const {
@@ -45,7 +46,9 @@ class SpeedTest extends Component {
       })
       if (elapsedSeconds >= totalSeconds) {
         this.setState({
-          timerStarted: false
+          timerStarted: false,
+          testStarted: false,
+          testComplete: true
         })
         ci.clearCorrectingInterval(this.timer)
       }
@@ -56,12 +59,11 @@ class SpeedTest extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.state.timerStarted !== prevState.timerStarted) {
-      if (this.state.timerStarted) {
+    if (this.props.typedText !== prevProps.typedText && !prevState.timerStarted) {
+      if (this.state.testStarted) {
         this.startTimer()
       }
     }
-    console.log('componentDidUpdate')
   }
 
   componentWillUnmount() {
@@ -69,15 +71,18 @@ class SpeedTest extends Component {
     ci.clearCorrectingInterval(this.timer)
   }
 
-  beginTiming() {
-    this.setState({timerStarted: true})
+  beginTest() {
+    this.setState({
+      testStarted: true,
+      testComplete: false
+    })
   }
 
   render() {
     return (
       <div className='SpeedTest'>
-        { !this.state.timerStarted ?
-          <Button onClick={this.beginTiming}>Start</Button>
+        { !this.state.testStarted ?
+          <Button onClick={this.beginTest}>Start</Button>
           :
           <WordsToType {...this.props} />
         }
