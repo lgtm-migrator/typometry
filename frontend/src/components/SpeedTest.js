@@ -4,6 +4,7 @@ import TestResults from './TestResults'
 import WordsToType from './WordsToType'
 import { Button } from 'semantic-ui-react'
 import * as ci from 'correcting-interval'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 class SpeedTest extends Component {
   constructor(props) {
@@ -101,15 +102,28 @@ class SpeedTest extends Component {
     return (
       <div className='SpeedTest'>
         { this.state.testComplete ?
-          <TestResults
-            wordsPerMinute={Math.round(numWordsTyped / totalSeconds * 60)}
-            numTypos={numTypos}
-            totalSeconds={totalSeconds} />
+          <ReactCSSTransitionGroup
+            transitionName='fade'
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}>
+            <TestResults
+              wordsPerMinute={Math.round(numWordsTyped / totalSeconds * 60)}
+              accuracy={Math.round(numWordsTyped / (numWordsTyped + numTypos) * 100)}
+              numTypos={numTypos}
+              totalSeconds={totalSeconds} />
+          </ReactCSSTransitionGroup>
           :
           ''
         }
         { !this.state.testStarted ?
-          <Button onClick={this.beginTest}>Start</Button>
+          <ReactCSSTransitionGroup
+            transitionName='fade'
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}>
+            <Button onClick={this.beginTest}>
+              {this.state.testComplete ? 'Restart' : 'Start'}
+            </Button>
+          </ReactCSSTransitionGroup>
           :
           <ReactCSSTransitionGroup
             transitionName='fade'
