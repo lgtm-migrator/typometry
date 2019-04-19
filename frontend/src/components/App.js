@@ -27,7 +27,6 @@ class App extends React.Component {
       lastChar: '',
       nextChar: '',
       hasPendingWordsRequest: false,
-      currentWPM: 0,
       timeStarted: null,
       numWordsTyped: 0,
       lastWordTime: null,
@@ -36,7 +35,8 @@ class App extends React.Component {
       bigramScores: [],
       wordScores: [],
       fontSize: 3,
-      mode: 'practice'
+      mode: 'practice',
+      typingLocked: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -44,10 +44,17 @@ class App extends React.Component {
     this.updateCurrentWord = this.updateCurrentWord.bind(this)
     this.handleZoomClick = this.handleZoomClick.bind(this)
     this.handleModeChange = this.handleModeChange.bind(this)
+    this.resetStats = this.resetStats.bind(this)
+    this.clearWords = this.clearWords.bind(this)
+    this.startSpeedTest = this.startSpeedTest.bind(this)
+    this.finishSpeedTest = this.finishSpeedTest.bind(this)
+    this.lockTyping = this.lockTyping.bind(this)
+    this.unlockTyping = this.unlockTyping.bind(this)
   }
 
   componentDidMount () {
     this.updateCurrentWord(0)
+    this.inputElement.focus()
   }
 
   appendBigram (bigram, speed) {
@@ -158,10 +165,11 @@ class App extends React.Component {
       numWordsTyped,
       lastWordTime,
       timeAtLastTenWords,
-      typoIndices
+      typoIndices,
+      typingLocked
     } = this.state
 
-    if (wordsArray.length === 0) {
+    if (wordsArray.length === 0 || typingLocked) {
       event.preventDefault()
       return
     }
@@ -391,15 +399,53 @@ class App extends React.Component {
     else if (name === 'speedTest') {
       this.setState({mode: 'speedTest'})
     }
+    this.clearWords()
+    this.unlockTyping()
+  }
+
+  resetStats() {
+    this.setState({
+      numTypos: 0,
+      numWordsTyped: 0
+    })
+  }
+
+  clearWords() {
     this.setState({
       wordsArray: [],
       newWords: [],
-      typedText: [],
+      typedText: '',
       typoIndices: [],
       currentWord: 0
     }, () => {
       this.updateCurrentWord(0)
     })
+  }
+
+  lockTyping() {
+    this.setState({
+      typingLocked: true,
+      typedText: ''
+    })
+  }
+
+  unlockTyping() {
+    this.setState({
+      typingLocked: false
+    })
+  }
+
+  startSpeedTest() {
+    console.log('startFunc')
+    this.resetStats()
+    this.unlockTyping()
+    this.inputElement.focus()
+  }
+
+  finishSpeedTest() {
+    console.log('endFunc')
+    this.lockTyping()
+    this.clearWords()
   }
 
   render () {
@@ -411,7 +457,9 @@ class App extends React.Component {
       typoIndices,
       fontSize,
       mode,
-      hasPendingWordsRequest
+      hasPendingWordsRequest,
+      numTypos,
+      numWordsTyped
     } = this.state
 
     return (
@@ -430,7 +478,11 @@ class App extends React.Component {
                 typoIndices={typoIndices}
                 fontSize={fontSize}
                 loading={hasPendingWordsRequest && wordsArray.length === 0}
-                typedText={typedText}/>
+                typedText={typedText}
+                numTypos={numTypos}
+                numWordsTyped={numWordsTyped}
+                startFunction={this.startSpeedTest}
+                endFunction={this.finishSpeedTest} />
               :
               <WordsToType
                 words={wordsArray}
@@ -445,7 +497,8 @@ class App extends React.Component {
           <TypeInputBox
             onChange={this.handleChange}
             onKeyDown={this.handleKeyPress}
-            value={typedText} />
+            value={typedText}
+            inputRef={el => this.inputElement = el}/>
           </Segment>
         </Segment>
       </div>
