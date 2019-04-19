@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import './SpeedTest.css'
-import { Button } from 'semantic-ui-react'
+import TestResults from './TestResults'
 import WordsToType from './WordsToType'
+import { Button } from 'semantic-ui-react'
 import * as ci from 'correcting-interval'
 
 class SpeedTest extends Component {
@@ -13,6 +14,8 @@ class SpeedTest extends Component {
       testComplete: false,
       totalSeconds: 60,
       elapsedSeconds: 0,
+      numTypos: 0,
+      numWordsTyped: 0
     }
     this.startTimer = this.startTimer.bind(this)
     this.incrementTimer = this.incrementTimer.bind(this)
@@ -48,9 +51,12 @@ class SpeedTest extends Component {
         this.setState({
           timerStarted: false,
           testStarted: false,
-          testComplete: true
+          testComplete: true,
+          numWordsTyped: this.props.numWordsTyped,
+          numTypos: this.props.numTypos
         })
         ci.clearCorrectingInterval(this.timer)
+        this.props.endFunction()
       }
     }, 1000)
   }
@@ -72,6 +78,7 @@ class SpeedTest extends Component {
   }
 
   beginTest() {
+    this.props.startFunction()
     this.setState({
       testStarted: true,
       testComplete: false
@@ -79,8 +86,22 @@ class SpeedTest extends Component {
   }
 
   render() {
+    const {
+      numWordsTyped,
+      numTypos,
+      totalSeconds
+    } = this.state
+
     return (
       <div className='SpeedTest'>
+        { this.state.testComplete ?
+          <TestResults
+            wordsPerMinute={Math.round(numWordsTyped / totalSeconds * 60)}
+            numTypos={numTypos}
+            totalSeconds={totalSeconds} />
+          :
+          ''
+        }
         { !this.state.testStarted ?
           <Button onClick={this.beginTest}>Start</Button>
           :
