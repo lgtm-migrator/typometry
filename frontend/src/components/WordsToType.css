@@ -11,10 +11,6 @@
     padding: 4px;
 }
 
-.loader {
-    font-size: 1em;
-}
-
 .fade-enter {
     opacity: 0.01;
 }
