@@ -438,13 +438,13 @@ class App extends React.Component {
     this.setState({
       typingLocked: false
     })
+    this.inputElement.focus()
   }
 
   startSpeedTest() {
     console.log('startFunc')
     this.resetStats()
     this.unlockTyping()
-    this.inputElement.focus()
   }
 
   finishSpeedTest() {
