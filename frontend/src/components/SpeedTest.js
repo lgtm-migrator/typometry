@@ -13,7 +13,7 @@ class SpeedTest extends Component {
       timerStarted: false,
       testStarted: false,
       testComplete: false,
-      totalSeconds: 60,
+      totalSeconds: 6,
       elapsedSeconds: 0,
       numTypos: 0,
       numWordsTyped: 0
@@ -50,7 +50,7 @@ class SpeedTest extends Component {
       this.setState({
         elapsedSeconds: (newElapsed <= totalSeconds ? newElapsed : totalSeconds),
       })
-      this.props.updateProgress((elapsedSeconds + 1) / totalSeconds * 100)
+      this.props.updateProgress((elapsedSeconds + 1) / totalSeconds * 100 + 2)
       if (elapsedSeconds >= totalSeconds) {
         this.finishTest()
       }
@@ -107,6 +107,7 @@ class SpeedTest extends Component {
             transitionEnterTimeout={300}
             transitionLeaveTimeout={300}>
             <TestResults
+              key='testResults'
               wordsPerMinute={Math.round(numWordsTyped / totalSeconds * 60)}
               accuracy={Math.round(numWordsTyped / (numWordsTyped + numTypos) * 100)}
               numTypos={numTypos}
@@ -116,20 +117,15 @@ class SpeedTest extends Component {
           ''
         }
         { !this.state.testStarted ?
-          <ReactCSSTransitionGroup
-            transitionName='fade'
-            transitionEnterTimeout={300}
-            transitionLeaveTimeout={300}>
-            <Button onClick={this.beginTest}>
-              {this.state.testComplete ? 'Restart' : 'Start'}
-            </Button>
-          </ReactCSSTransitionGroup>
+          <Button key='beginTest' onClick={this.beginTest}>
+            {this.state.testComplete ? 'Restart' : 'Start'}
+          </Button>
           :
           <ReactCSSTransitionGroup
             transitionName='fade'
             transitionEnterTimeout={300}
             transitionLeaveTimeout={300}>
-            <WordsToType {...this.props} />
+            <WordsToType key='wordsToType' {...this.props} />
           </ReactCSSTransitionGroup>
         }
       </div>
