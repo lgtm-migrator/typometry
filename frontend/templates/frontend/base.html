@@ -14,9 +14,13 @@
   </head>
   <body>
   <script>
-    window.is_logged_in = false;
     {% if request.user.is_authenticated %}
       window.is_logged_in = true;
+      {% if request.user.socialaccount_set.all|length > 0 %}
+      window.avatar_url = "{{ request.user.socialaccount_set.first.get_avatar_url | safe }}";
+      {% endif %}
+    {% else %}
+      window.is_logged_in = false;
     {% endif %}
   </script>
     <div id="header"></div>
