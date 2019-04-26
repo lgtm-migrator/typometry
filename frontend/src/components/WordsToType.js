@@ -10,9 +10,9 @@ const WordsToType = props => (
     { props.loading ?
       <ReactCSSTransitionGroup
         transitionName='fade'
-        transitionEnterTimeout={400}
-        transitionLeaveTimeout={400}>
-        <div>
+        transitionEnterTimeout={200}
+        transitionLeaveTimeout={200}>
+        <div key='loadingPlaceholder'>
           <Placeholder fluid style={{marginTop: '-0.3em'}}>
             <Placeholder.Line length='full'/>
             <Placeholder.Line length='full'/>
@@ -24,9 +24,9 @@ const WordsToType = props => (
       <ReactCSSTransitionGroup
         transitionName='fade'
         transitionAppear={true}
-        transitionAppearTimeout={700}
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={500}>
+        transitionAppearTimeout={500}
+        transitionEnterTimeout={250}
+        transitionLeaveTimeout={250}>
         { props.words.map((word, index) => (
           <span key={index} id={index === 0 ? 'firstWord' : null}>
             <WordMetadataPopup
