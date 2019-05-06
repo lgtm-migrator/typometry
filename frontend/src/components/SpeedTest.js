@@ -13,7 +13,7 @@ class SpeedTest extends Component {
       timerStarted: false,
       testStarted: false,
       testComplete: false,
-      totalSeconds: 6,
+      totalSeconds: 60,
       elapsedSeconds: 0,
       numTypos: 0,
       numWordsTyped: 0
