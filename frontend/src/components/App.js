@@ -350,30 +350,56 @@ class App extends React.Component {
           .then(res => {
             console.log('Fetch complete')
             console.log(res.data)
-            let newExercises = res.data.exercises
-            let exercisesCopy = exercises
             let newWordsCopy = newWords
-            console.log(newWordsCopy)
-            for (let i = 0; i < newExercises.length; ++i) {
-              console.log(newExercises[i].words)
-              newWordsCopy = newWordsCopy.concat(newExercises[i].words)
-            }
-            console.log(newWordsCopy)
-            exercisesCopy = exercisesCopy.concat(newExercises) // Extend exercise array with new ones
-            if (wordsArray.length === 0) {
-              this.setState({
-                exercises: exercisesCopy,
-                wordsArray: newWordsCopy,
-                hasPendingWordsRequest: false
-              }, () => {
-                this.updateCurrentWord(0)
-              })
+            if (res.data.type === 'gatherData') {
+              newWordsCopy = newWordsCopy.concat(res.data.words)
+              console.log(newWordsCopy)
+              if (wordsArray.length === 0) {
+                this.setState({
+                  wordsArray: newWordsCopy,
+                  hasPendingWordsRequest: false
+                }, () => {
+                  this.updateCurrentWord(0)
+                })
+              } else {
+                this.setState({
+                  newWords: newWordsCopy,
+                  hasPendingWordsRequest: false
+                })
+              }
             } else {
-              this.setState({
-                exercises: exercisesCopy,
-                newWords: newWordsCopy,
-                hasPendingWordsRequest: false
-              })
+              let newExercises = res.data.exercises
+              let firstExercise = false
+              if (exercises.length === 0) {
+                firstExercise = true
+              }
+              let exercisesCopy = exercises
+              for (let i = 0; i < newExercises.length; ++i) {
+                console.log(newExercises[i].words)
+                newWordsCopy = newWordsCopy.concat(newExercises[i].words)
+              }
+              console.log(newWordsCopy)
+              exercisesCopy = exercisesCopy.concat(newExercises) // Extend exercise array with new ones
+              if (firstExercise) {
+                this.lockTyping()
+                this.setState({ wordsArray: [] })
+              }
+              if (wordsArray.length === 0 || firstExercise) {
+                this.setState({
+                  exercises: exercisesCopy,
+                  wordsArray: newWordsCopy,
+                  hasPendingWordsRequest: false
+                }, () => {
+                  this.updateCurrentWord(0)
+                  this.unlockTyping()
+                })
+              } else {
+                this.setState({
+                  exercises: exercisesCopy,
+                  newWords: newWordsCopy,
+                  hasPendingWordsRequest: false
+                })
+              }
             }
           })
       }
