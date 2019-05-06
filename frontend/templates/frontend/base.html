@@ -17,7 +17,10 @@
     {% if request.user.is_authenticated %}
       window.is_logged_in = true;
       {% if request.user.socialaccount_set.all|length > 0 %}
-      window.avatar_url = "{{ request.user.socialaccount_set.first.get_avatar_url | safe }}";
+      window.avatar_url = "{{ request.user.socialaccount_set.first.get_avatar_url|safe }}";
+      window.name = "{{ request.user.get_full_name }}";
+      {% else %}
+      window.name = "{{ request.user.username|title }}";
       {% endif %}
     {% else %}
       window.is_logged_in = false;
