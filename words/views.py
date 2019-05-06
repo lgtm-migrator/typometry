@@ -65,6 +65,9 @@ def smart_exercise(request):
             print(practice_words)
             print(str(len(practice_words)) + ' words remain')
             print('Insufficient bigram data for smart exercise')
+            if len(practice_words) < 20:
+                practice_words *= 3
+
             response = {
                 'type': 'gatherData',
                 'words': practice_words
