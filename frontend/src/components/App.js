@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 import TypeInputBox from './TypeInputBox'
 import WordsToType from './WordsToType'
+import FingeringIndicator from './FingeringIndicator'
 import SpeedTest from './SpeedTest'
 import AppMenu from './AppMenu'
 import axios from 'axios'
@@ -38,7 +39,8 @@ class App extends React.Component {
       mode: 'practice',
       typingLocked: false,
       showProgress: false,
-      progressPct: 0
+      progressPct: 0,
+      exercises: []
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -305,30 +307,76 @@ class App extends React.Component {
       mode
     } = this.state
 
-    if (wordsArray.length - currentWord < 60 && !hasPendingWordsRequest && newWords.length === 0) {
-      this.setState({ hasPendingWordsRequest: true })
-      console.log('Requesting new words from API')
-      let endpoint = '/words'
-      if (mode === 'smartExercise') {
-        endpoint = '/words/smart'
+    if (mode === 'smartExercise') {
+      const { exercises } = this.state
+      if (exercises.length > 0 && wordsArray[currentWord] === exercises[1].words[0]) {
+        let exercisesCopy = exercises
+        exercisesCopy.shift()
+        this.setState({exercises: exercisesCopy})
       }
-      axios.get(WEBSITE_API_URL + endpoint)
-        .then(res => {
-          console.log('Fetch complete')
-          if (wordsArray.length === 0) {
-            this.setState({
-              wordsArray: res.data,
-              hasPendingWordsRequest: false
-            }, () => {
-              this.updateCurrentWord(0)
-            })
-          } else {
-            this.setState({
-              newWords: res.data,
-              hasPendingWordsRequest: false
-            })
-          }
-        })
+    }
+
+    if (wordsArray.length - currentWord < 60 && !hasPendingWordsRequest && newWords.length === 0) {
+      if (mode === 'practice') {
+        this.setState({hasPendingWordsRequest: true})
+        console.log('Requesting new words from API')
+        let endpoint = '/words'
+        axios.get(WEBSITE_API_URL + endpoint)
+          .then(res => {
+            console.log('Fetch complete')
+            if (wordsArray.length === 0) {
+              this.setState({
+                wordsArray: res.data,
+                hasPendingWordsRequest: false
+              }, () => {
+                this.updateCurrentWord(0)
+              })
+            } else {
+              this.setState({
+                newWords: res.data,
+                hasPendingWordsRequest: false
+              })
+            }
+          })
+      }
+      else if (mode === 'smartExercise') {
+        const {
+          exercises,
+          newWords
+        } = this.state
+        let endpoint = '/words/smart'
+        this.setState({hasPendingWordsRequest: true})
+        axios.get(WEBSITE_API_URL + endpoint)
+          .then(res => {
+            console.log('Fetch complete')
+            console.log(res.data)
+            let newExercises = res.data.exercises
+            let exercisesCopy = exercises
+            let newWordsCopy = newWords
+            console.log(newWordsCopy)
+            for (let i = 0; i < newExercises.length; ++i) {
+              console.log(newExercises[i].words)
+              newWordsCopy = newWordsCopy.concat(newExercises[i].words)
+            }
+            console.log(newWordsCopy)
+            exercisesCopy = exercisesCopy.concat(newExercises) // Extend exercise array with new ones
+            if (wordsArray.length === 0) {
+              this.setState({
+                exercises: exercisesCopy,
+                wordsArray: newWordsCopy,
+                hasPendingWordsRequest: false
+              }, () => {
+                this.updateCurrentWord(0)
+              })
+            } else {
+              this.setState({
+                exercises: exercisesCopy,
+                newWords: newWordsCopy,
+                hasPendingWordsRequest: false
+              })
+            }
+          })
+      }
     }
     if (wordsArray.length === 0) {
       return
@@ -417,6 +465,7 @@ class App extends React.Component {
   clearWords() {
     this.setState({
       wordsArray: [],
+      exercises: [],
       newWords: [],
       typedText: '',
       typoIndices: [],
@@ -460,6 +509,7 @@ class App extends React.Component {
   }
 
   updateProgress(percent) {
+    console.log('Progress: ' + percent + '%')
     this.setState({
       progressPct: percent
     })
@@ -478,7 +528,8 @@ class App extends React.Component {
       numTypos,
       numWordsTyped,
       showProgress,
-      progressPct
+      progressPct,
+      exercises
     } = this.state
 
     return (
@@ -490,7 +541,7 @@ class App extends React.Component {
         <Segment attached='bottom' className='blue-background'>
           <Segment raised>
             { showProgress ?
-              <Progress percent={progressPct} attached='top' />
+              <Progress percent={progressPct} attached='top'  />
               :
               ''
             }
@@ -527,6 +578,13 @@ class App extends React.Component {
             inputRef={el => this.inputElement = el}/>
           </Segment>
         </Segment>
+        { exercises.length > 0 && mode === 'smartExercise' ?
+          <FingeringIndicator
+            text={exercises[0].text}
+            fingers={exercises[0].fingering}/>
+          :
+          ''
+        }
       </div>
     )
   }
