@@ -57,3 +57,4 @@ with open('wordlist.csv') as csvfile:
 
     Word.calculate_all_bigram_weights()
     english.create_bigram_entries()
+    english.calculate_total_word_occurrences()

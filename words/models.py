@@ -91,6 +91,7 @@ class Language(models.Model):
     display_name = models.CharField(max_length=64, unique=True)
     words = models.ManyToManyField(Word, through='WordEntry')
     bigrams = models.ManyToManyField(Bigram, through='BigramEntry')
+    total_word_occurrences = models.PositiveIntegerField()
 
     def __str__(self):
         return self.display_name
@@ -166,6 +167,14 @@ class Language(models.Model):
             rank += 1
 
         BigramEntry.objects.bulk_create(all_bigram_entries)
+
+    def calculate_total_word_occurrences(self):
+        total = 0
+        for word in self.wordentry_set.all():
+            total += word.frequency
+
+        self.total_word_occurrences = total
+        self.save()
 
 
 class WordEntry(models.Model):
