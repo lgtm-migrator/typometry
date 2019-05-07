@@ -604,10 +604,17 @@ class App extends React.Component {
             inputRef={el => this.inputElement = el}/>
           </Segment>
         </Segment>
-        { exercises.length > 0 && mode === 'smartExercise' ?
+        {exercises.length > 0 && mode === 'smartExercise' ?
           <FingeringIndicator
             text={exercises[0].text}
             fingers={exercises[0].fingering}/>
+          :
+          ''
+        }
+        { mode === 'smartExercise' && exercises.length === 0 && !hasPendingWordsRequest ?
+          <div class='gatherData'>
+            More data needed for smart exercise. Continue typing...
+          </div>
           :
           ''
         }
