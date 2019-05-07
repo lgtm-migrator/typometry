@@ -1,6 +1,6 @@
 import React from 'react'
 import './AppMenu.css'
-import { Menu,  Dropdown, Icon } from 'semantic-ui-react'
+import { Menu,  Dropdown, Icon, Popup } from 'semantic-ui-react'
 
 class AppMenu extends React.Component {
   constructor(props) {
@@ -20,7 +20,13 @@ class AppMenu extends React.Component {
     return (
       <Menu attached='top' size='large'>
         <Menu.Item name='practice' active={this.props.activeItem === 'practice'} onClick={modeHandler}/>
-        <Menu.Item name='smartExercise' active={this.props.activeItem === 'smartExercise'} onClick={modeHandler}/>
+        { window.is_logged_in ?
+          <Menu.Item name='smartExercise' active={this.props.activeItem === 'smartExercise'} onClick={modeHandler}/>
+          :
+          <Popup
+            content='You must log in to enable smart exercises.'
+            trigger={ <Menu.Item disabled name='smartExercise'/> } />
+        }
         <Menu.Item name='speedTest' active={this.props.activeItem === 'speedTest'} onClick={modeHandler}/>
         <Menu.Menu position='right'>
           <Dropdown item text='Language'>
