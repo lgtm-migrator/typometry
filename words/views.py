@@ -123,7 +123,6 @@ class RecordScores(APIView):
             return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
         print(request.user)
-        print(request.auth)
         if not request.user.is_authenticated:
             if 'word_scores' not in request.session or not isinstance(request.session['word_scores'], list):
                 request.session['word_scores'] = []
