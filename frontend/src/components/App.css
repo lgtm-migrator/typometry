@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'mononoki';
+    font-family: 'mononoki', monospace;
     src: url('/static/fonts/mononoki-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
          url('/static/fonts/mononoki-Regular.woff2') format('woff2'), /* Super Modern Browsers */
          url('/static/fonts/mononoki-Regular.woff') format('woff'), /* Pretty Modern Browsers */
