@@ -317,7 +317,7 @@ class App extends React.Component {
     }
 
     if (wordsArray.length - currentWord < 60 && !hasPendingWordsRequest && newWords.length === 0) {
-      if (mode === 'practice' || 'speedTest') {
+      if (mode === 'practice' || mode === 'speedTest') {
         this.setState({hasPendingWordsRequest: true})
         console.log('Requesting new words from API')
         let endpoint = '/words'
