@@ -11,7 +11,6 @@ from django.contrib.auth.models import AnonymousUser
 import datetime
 import random
 import numpy as np
-import words.fingering
 
 
 def word_list(request):
@@ -109,6 +108,54 @@ def smart_exercise(request):
     else:
         # User not logged in
         return JsonResponse(['Please', 'log', 'in!'], safe=False)
+
+
+class GetWordStats(APIView):
+    """
+    Get statistics about a word
+    """
+
+    def get(self, request, *args, **kwargs):
+        request_word = kwargs.get('word', None)
+        if 'word' is None:
+            return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # TODO: Make this language-agnostic
+            language = Language.objects.first()
+            word = language.wordentry_set.get(word=request_word)
+            average_frequency = language.total_word_occurrences / len(language.wordentry_set.all())
+            relative_frequency = word.frequency / average_frequency
+            frequency_class = 0
+
+            if relative_frequency > 50:
+                frequency_class = 0
+            elif relative_frequency > 10:
+                frequency_class = 1
+            elif relative_frequency > 5:
+                frequency_class = 2
+            elif relative_frequency > 1:
+                frequency_class = 3
+            elif relative_frequency > 1/5:
+                frequency_class = 4
+            elif relative_frequency > 1/10:
+                frequency_class = 5
+            elif relative_frequency > 1/50:
+                frequency_class = 6
+            else:
+                frequency_class = 7
+
+            suggested_fingering = fingering.get_fingering(word.word.text)
+
+            response = {
+                'frequency': frequency_class,
+                'fingering': suggested_fingering
+            }
+
+            return JsonResponse(response, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class RecordScores(APIView):
