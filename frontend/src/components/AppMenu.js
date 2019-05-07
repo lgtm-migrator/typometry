@@ -29,13 +29,6 @@ class AppMenu extends React.Component {
         }
         <Menu.Item name='speedTest' active={this.props.activeItem === 'speedTest'} onClick={modeHandler}/>
         <Menu.Menu position='right'>
-          <Dropdown item text='Language'>
-            <Dropdown.Menu>
-              <Dropdown.Item>English</Dropdown.Item>
-              <Dropdown.Item>Russian</Dropdown.Item>
-              <Dropdown.Item>Spanish</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
           <Menu.Item
             name='zoom in'
             onClick={zoomHandler}>
