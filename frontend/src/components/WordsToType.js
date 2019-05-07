@@ -23,8 +23,6 @@ const WordsToType = props => (
       :
       <ReactCSSTransitionGroup
         transitionName='fade'
-        transitionAppear={true}
-        transitionAppearTimeout={500}
         transitionEnterTimeout={250}
         transitionLeaveTimeout={250}>
         { props.words.map((word, index) => (
