@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-SITE_ID = 3
+SITE_ID = config('SITE_ID')
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
