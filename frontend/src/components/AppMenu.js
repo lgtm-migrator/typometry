@@ -1,6 +1,6 @@
 import React from 'react'
 import './AppMenu.css'
-import { Menu,  Dropdown, Icon, Popup } from 'semantic-ui-react'
+import { Menu, Icon, Popup } from 'semantic-ui-react'
 
 class AppMenu extends React.Component {
   constructor(props) {
