@@ -478,6 +478,8 @@ class App extends React.Component {
     }
     this.clearWords()
     this.unlockTyping()
+    this.showProgress(false)
+    this.updateProgress(0)
   }
 
   resetStats() {
