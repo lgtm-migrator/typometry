@@ -7,11 +7,10 @@ import SpeedTest from './SpeedTest'
 import AppMenu from './AppMenu'
 import axios from 'axios'
 import { Segment, Progress } from 'semantic-ui-react'
+import * as constants from './constants'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
-
-const WEBSITE_API_URL = 'http://localhost:8000'
 
 class App extends React.Component {
   constructor (props) {
@@ -129,7 +128,7 @@ class App extends React.Component {
       return score
     })
     console.log('Sending scores...')
-    axios.post(WEBSITE_API_URL + '/words/metrics/',
+    axios.post(constants.WEBSITE_API_URL + '/words/metrics/',
     {
        word_scores: alteredWordScores,
        bigram_scores: alteredBigramScores
@@ -321,7 +320,7 @@ class App extends React.Component {
         this.setState({hasPendingWordsRequest: true})
         console.log('Requesting new words from API')
         let endpoint = '/words'
-        axios.get(WEBSITE_API_URL + endpoint)
+        axios.get(constants.WEBSITE_API_URL + endpoint)
           .then(res => {
             console.log('Fetch complete')
             if (wordsArray.length === 0) {
@@ -346,7 +345,7 @@ class App extends React.Component {
         } = this.state
         let endpoint = '/words/smart'
         this.setState({hasPendingWordsRequest: true})
-        axios.get(WEBSITE_API_URL + endpoint)
+        axios.get(constants.WEBSITE_API_URL + endpoint)
           .then(res => {
             console.log('Fetch complete')
             console.log(res.data)
