@@ -1,15 +1,13 @@
 from django.http import JsonResponse
 
 from words import fingering
-from words.models import Language, Word, Bigram
+from words.models import Language
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
-from words.models import WordScore, BigramScore
-from django.contrib.auth.models import AnonymousUser
+from words.models import BigramScore
 import datetime
-import random
 import numpy as np
 
 
