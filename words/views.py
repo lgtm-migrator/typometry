@@ -124,7 +124,6 @@ class GetWordStats(APIView):
             word = language.wordentry_set.get(word=request_word)
             average_frequency = language.total_word_occurrences / len(language.wordentry_set.all())
             relative_frequency = word.frequency / average_frequency
-            frequency_class = 0
 
             if relative_frequency > 50:
                 frequency_class = 0
