@@ -126,11 +126,17 @@ class Language(models.Model):
         print('getting samples for bigram: ' + bigram)
         bigram_words = WordBigramWeight.objects.filter(bigram=bigram) \
                            .filter(bigram__language=self) \
-                           .filter(weight__gte=0.025) \
+                           .filter(weight__gte=0.125) \
                            .order_by('weight') \
                            .reverse()[:50]
         if not bigram_words:
-            return []
+            bigram_words = WordBigramWeight.objects.filter(bigram=bigram) \
+                           .filter(bigram__language=self) \
+                           .filter(weight__gte=0.025) \
+                           .order_by('weight') \
+                           .reverse()[:50]
+            if not bigram_words:
+                return []
         bigram_weights = list(bigram_words.values_list('weight', flat=True))
         bigram_weights = [float(weight) for weight in bigram_weights]
         probabilities = bigram_weights / np.linalg.norm(bigram_weights, ord=1)
