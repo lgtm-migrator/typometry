@@ -82,8 +82,6 @@ def smart_exercise(request):
             iqr = q3 - q1
             upper_bound = q3 + (1.2 * iqr)
 
-            # Find outliers
-            practice_words = []
             # Create bigram exercise
             practice_bigrams = [bigram for bigram, speed in recent_scores.items() if speed > upper_bound]
             practice_bigrams = practice_bigrams[:5]
