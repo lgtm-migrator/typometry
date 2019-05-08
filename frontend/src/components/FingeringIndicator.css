@@ -96,7 +96,7 @@
      */
     border-radius: 3px;
     color: #fff;
-    --shadow-radius: 20px;
+    --shadow-radius: 0.3em;
 }
 
 .b1 {
