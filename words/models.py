@@ -128,13 +128,13 @@ class Language(models.Model):
                            .filter(bigram__language=self) \
                            .filter(weight__gte=0.125) \
                            .order_by('weight') \
-                           .reverse()[:50]
+                           .reverse()[:20]
         if not bigram_words:
             bigram_words = WordBigramWeight.objects.filter(bigram=bigram) \
-                           .filter(bigram__language=self) \
-                           .filter(weight__gte=0.025) \
-                           .order_by('weight') \
-                           .reverse()[:50]
+                               .filter(bigram__language=self) \
+                               .filter(weight__gte=0.025) \
+                               .order_by('weight') \
+                               .reverse()[:20]
             if not bigram_words:
                 return []
         bigram_weights = list(bigram_words.values_list('weight', flat=True))
