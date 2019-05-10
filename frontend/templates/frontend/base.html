@@ -1,4 +1,5 @@
 {% load analytical %}
+{% load avatar_tags %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -20,8 +21,12 @@
   <script>
     {% if request.user.is_authenticated %}
       window.is_logged_in = true;
+      const parser = new DOMParser
+      const parse = parser.parseFromString("{% avatar_url user %}", 'text/html')
+      const decodedURL = parse.body.textContent;
+      window.avatar_url = decodedURL;
       {% if request.user.socialaccount_set.all|length > 0 %}
-      window.avatar_url = "{{ request.user.socialaccount_set.first.get_avatar_url|safe }}";
+      //window.avatar_url = "{{ request.user.socialaccount_set.first.get_avatar_url|safe }}";
       window.name = "{{ request.user.get_full_name }}";
       {% else %}
       window.name = "{{ request.user.username|title }}";
