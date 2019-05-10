@@ -1,5 +1,6 @@
 import React from 'react'
 import './WordStats.css'
+import FingeringIndicator from './FingeringIndicator'
 import './FingeringIndicator.css'
 
 const WordStats = props => (
@@ -14,6 +15,10 @@ const WordStats = props => (
         </span>
       )) }
     </div>
+    <FingeringIndicator
+      fingers={ props.fingering }
+      text={ props.word }
+      showWord={ false } />
   </div>
 )
 
