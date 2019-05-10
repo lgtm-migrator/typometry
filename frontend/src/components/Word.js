@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import './Word.css'
-import { Popup } from 'semantic-ui-react'
+import './WordStats.css'
+import { Popup, Placeholder } from 'semantic-ui-react'
 import axios from 'axios'
 import * as constants from './constants'
 import WordStats from './WordStats'
@@ -44,9 +45,21 @@ class WordMetadataPopup extends Component {
     return (
       <Popup
         trigger={<span><Word {...this.props} /></span>}
+        position='bottom center'
         content={
           loading ?
-            'Loading...'
+            <div className='popup-placeholder'>
+              <Placeholder>
+                <Placeholder.Line />
+                <Placeholder.Line />
+              </Placeholder>
+              <div className='fingering-container-placeholder'>
+                <Placeholder>
+                  <Placeholder.Line />
+                </Placeholder>
+                <Placeholder style={{height: 161, width: 280 }}/>
+              </div>
+            </div>
             :
           <WordStats
             word={this.props.text}

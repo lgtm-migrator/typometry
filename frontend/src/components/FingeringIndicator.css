@@ -14,9 +14,10 @@
     background-size: 100%;
     background-repeat: no-repeat;
     max-width: 750px;
+    min-width: 280px;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 431px;
+    padding-top: 57.46%;
 }
 
 .finger {

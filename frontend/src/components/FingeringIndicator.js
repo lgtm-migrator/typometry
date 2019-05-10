@@ -8,18 +8,22 @@ class FingeringIndicator extends Component {
     return (
       <div className='hands-container'>
         <div className='hands'>
-          <div className='bigram-container'>
-            <ReactCSSTransitionGroup
-              transitionName='fade'
-              transitionEnterTimeout={250}
-              transitionLeaveTimeout={250}>
-              { this.props.fingers.map((finger, index) => (
-                <span key={index} className={'bigram b' + finger}>
-                  { this.props.text[index] === ' ' ? '␣' : this.props.text[index] }
+          { this.props.showWord ?
+            <div className='bigram-container'>
+              <ReactCSSTransitionGroup
+                transitionName='fade'
+                transitionEnterTimeout={250}
+                transitionLeaveTimeout={250}>
+                {this.props.fingers.map((finger, index) => (
+                  <span key={index} className={'bigram b' + finger}>
+                  {this.props.text[index] === ' ' ? '␣' : this.props.text[index]}
                 </span>
-              )) }
-            </ReactCSSTransitionGroup>
-          </div>
+                ))}
+              </ReactCSSTransitionGroup>
+            </div>
+            :
+            ''
+          }
           <ReactCSSTransitionGroup
             transitionName='fade'
             transitionEnterTimeout={250}

@@ -20,3 +20,7 @@
     color: gray;
     text-decoration: line-through
 }
+
+.popup-placeholder {
+    width: 280px;
+}
