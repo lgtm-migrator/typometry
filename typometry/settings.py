@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.github',
     'corsheaders',
-    'analytical'
 ]
 
 SITE_ID = config('SITE_ID')
@@ -62,8 +61,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 LOGIN_REDIRECT_URL = '/'
-PIWIK_DOMAIN_PATH = 'matomo.typometry.io'
-PIWIK_SITE_ID = '1'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

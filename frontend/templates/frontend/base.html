@@ -1,8 +1,6 @@
-{% load analytical %}
 <!DOCTYPE html>
 <html>
   <head>
-  {% analytical_head_top %}
     <title>{% block head_title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link
@@ -13,10 +11,8 @@
     </style>
     {% block extra_head %}
     {% endblock %}
-  {% analytical_head_bottom %}
   </head>
   <body>
-  {% analytical_body_top %}
   <script>
     {% if request.user.is_authenticated %}
       window.is_logged_in = true;
@@ -61,6 +57,5 @@
     </div>
   {% endif %}
 
-  {% analytical_body_bottom %}
   </body>
 </html>
