@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.github',
     'corsheaders',
-    'analytical'
+    'analytical',
+    'avatar'
 ]
 
 SITE_ID = config('SITE_ID')
@@ -64,6 +65,15 @@ ACCOUNT_USERNAME_REQUIRED = True
 LOGIN_REDIRECT_URL = '/'
 PIWIK_DOMAIN_PATH = 'matomo.typometry.io'
 PIWIK_SITE_ID = '1'
+
+AVATAR_PROVIDERS = (
+    'avatar.providers.PrimaryAvatarProvider',
+    'avatar.providers.GravatarAvatarProvider',
+    'avatar.providers.DefaultAvatarProvider'
+)
+
+AVATAR_GRAVATAR_DEFAULT = 'retro'
+AVATAR_GRAVATAR_FIELD = 'email'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
