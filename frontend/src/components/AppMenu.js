@@ -18,7 +18,7 @@ class AppMenu extends React.Component {
     } = this.state
 
     return (
-      <Menu attached='top' size='large'>
+      <Menu stackable attached='top' size='large'>
         <Menu.Item name='practice' active={this.props.activeItem === 'practice'} onClick={modeHandler}/>
         { window.is_logged_in ?
           <Menu.Item name='smartExercise' active={this.props.activeItem === 'smartExercise'} onClick={modeHandler}/>
