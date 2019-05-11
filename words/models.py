@@ -217,7 +217,7 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user) + '\'s profile'
 
-    def get_recent_scores(self, days: int, word_score: bool = True, weight_by_date: bool = True):
+    def get_recent_scores(self, days: int, word_score: bool = True, weight_by_date: bool = True, top_n = None):
 
         def get_weight(date: datetime.date):
             num_days = (datetime.date.today() - date).days
@@ -238,7 +238,14 @@ class Profile(models.Model):
         if word_score:
             min_time = 10
             max_time = 7500
-            scores = WordScore.objects.filter(user=self, date__gte=min_date).order_by('word__wordentry__rank')
+            if top_n:
+                # TODO: Make this language-agnostic
+                language = Language.objects.first()
+                top_n_words = language.get_words(top_n)
+                scores = WordScore.objects.filter(user=self, date__gte=min_date, word__in=top_n_words)\
+                                          .order_by('word__wordentry__rank')
+            else:
+                scores = WordScore.objects.filter(user=self, date__gte=min_date).order_by('word__wordentry__rank')
             for score in scores:
                 if score.word.text not in combined_scores:
                     combined_scores[score.word.text] = [score]
@@ -248,7 +255,14 @@ class Profile(models.Model):
         else:
             min_time = 1
             max_time = 2500
-            scores = BigramScore.objects.filter(user=self, date__gte=min_date).order_by('bigram__bigramentry__rank')
+            if top_n:
+                # TODO: Make this language-agnostic
+                language = Language.objects.first()
+                top_n_bigrams = language.get_bigrams(top_n)
+                scores = BigramScore.objects.filter(user=self, date__gte=min_date, bigram__in=top_n_bigrams)\
+                                            .order_by('bigram__bigramentry__rank')
+            else:
+                scores = BigramScore.objects.filter(user=self, date__gte=min_date).order_by('bigram__bigramentry__rank')
             for score in scores:
                 if not min_time < score.average_time < max_time:
                     continue
