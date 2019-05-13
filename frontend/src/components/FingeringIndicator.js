@@ -16,8 +16,8 @@ class FingeringIndicator extends Component {
                 transitionLeaveTimeout={250}>
                 {this.props.fingers.map((finger, index) => (
                   <span key={index} className={'bigram b' + finger}>
-                  {this.props.text[index] === ' ' ? '␣' : this.props.text[index]}
-                </span>
+                    {this.props.text[index] === ' ' ? '␣' : this.props.text[index]}
+                  </span>
                 ))}
               </ReactCSSTransitionGroup>
             </div>
