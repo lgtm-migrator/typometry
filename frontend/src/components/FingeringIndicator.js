@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import './FingeringIndicator.css'
-import { Container, Image } from 'semantic-ui-react'
 
 class FingeringIndicator extends Component {
   render() {
