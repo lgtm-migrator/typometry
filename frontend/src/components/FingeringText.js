@@ -51,7 +51,8 @@ const renderModGroup = function(modGroup) {
   return (
     <span>
       <span className={'mod mod-start b' + modGroup.modFinger}>
-        { modGroup.modName + ' ' }
+        { modGroup.modName }
+        &nbsp;
       </span>
       { modGroup.fingering.map((finger, index) => (
         <span key={index} className={'bigram b' + getFingerNumber(finger)}>
