@@ -65,7 +65,7 @@ class WordMetadataPopup extends Component {
             word={this.props.text}
             loading={loading}
             frequency={statsObject.frequency}
-            fingering={statsObject.fingering} />
+            fingeringObject={statsObject.fingering} />
         }
         on='click'
         onOpen={this.getWordStats}/>
