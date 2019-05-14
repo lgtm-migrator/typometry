@@ -35,7 +35,10 @@ const renderFingeredText = function(text) {
   if (Array.isArray(text)) {
     return (
       <span className={'bigram b' + getFingerNumber(text)}>
-        { text[0] }
+        { text[0] === ' ' ?
+          '␣'
+          :
+          text[0] }
       </span>
     )
   }
