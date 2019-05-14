@@ -608,7 +608,7 @@ class App extends React.Component {
         {exercises.length > 0 && mode === 'smartExercise' ?
           <FingeringIndicator
             text={exercises[0].text}
-            fingers={exercises[0].fingering}
+            fingeringObject={exercises[0].fingering}
             showWord={true}/>
           :
           ''

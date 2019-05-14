@@ -1,6 +1,7 @@
 import React from 'react'
 import './WordStats.css'
 import FingeringIndicator from './FingeringIndicator'
+import FingeringText from './FingeringText'
 import './FingeringIndicator.css'
 
 const WordStats = props => (
@@ -8,15 +9,12 @@ const WordStats = props => (
     <div>
       This word is {common(props.frequency)} in this language.
     </div>
-    <div className='fingering-container'>
-      { props.fingering.map((finger, index) => (
-        <span key={index} className={'bigram b' + finger}>
-          { props.word[index] === ' ' ? '␣' : props.word[index] }
-        </span>
-      )) }
-    </div>
+    <FingeringText
+      fingeringObject={ props.fingeringObject }
+      text={ props.word }
+      standAlone={ true }/>
     <FingeringIndicator
-      fingers={ props.fingering }
+      fingeringObject={ props.fingeringObject }
       text={ props.word }
       showWord={ false } />
   </div>
