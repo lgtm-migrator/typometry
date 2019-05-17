@@ -321,7 +321,7 @@ class App extends React.Component {
       if (mode === 'practice' || mode === 'speedTest') {
         this.setState({hasPendingWordsRequest: true})
         console.log('Requesting new words from API')
-        let endpoint = '/words'
+        let endpoint = '/words/'
         axios.get(constants.WEBSITE_API_URL + endpoint)
           .then(res => {
             console.log('Fetch complete')
@@ -345,7 +345,7 @@ class App extends React.Component {
           exercises,
           newWords
         } = this.state
-        let endpoint = '/words/smart'
+        let endpoint = '/words/smart/'
         this.setState({hasPendingWordsRequest: true})
         axios.get(constants.WEBSITE_API_URL + endpoint)
           .then(res => {
