@@ -36,6 +36,7 @@ class App extends React.Component {
       wordScores: [],
       fontSize: 3,
       mode: 'practice',
+      modeText: 'Random Words',
       typingLocked: false,
       showProgress: false,
       progressPct: 0,
@@ -55,6 +56,7 @@ class App extends React.Component {
     this.unlockTyping = this.unlockTyping.bind(this)
     this.showProgress = this.showProgress.bind(this)
     this.updateProgress = this.updateProgress.bind(this)
+    this.handleLongText = this.handleLongText.bind(this)
   }
 
   componentDidMount () {
@@ -466,16 +468,23 @@ class App extends React.Component {
     }
   }
 
-  handleModeChange(e, { name }) {
-    if (name === 'practice') {
-      this.setState({mode: 'practice'})
-    }
-    else if (name === 'smartExercise') {
-      this.setState({mode: 'smartExercise'})
-    }
-    else if (name === 'speedTest') {
-      this.setState({mode: 'speedTest'})
-    }
+  handleModeChange(e, { name, text }) {
+    this.setState({
+      mode: name,
+      modeText: text
+    })
+    this.clearWords()
+    this.unlockTyping()
+    this.showProgress(false)
+    this.updateProgress(0)
+  }
+
+  handleLongText(e, { name }) {
+    this.setState({
+      longText: name,
+      mode: 'longText',
+      modeText: 'Long Text'
+    })
     this.clearWords()
     this.unlockTyping()
     this.showProgress(false)
@@ -551,12 +560,14 @@ class App extends React.Component {
       typoIndices,
       fontSize,
       mode,
+      modeText,
       hasPendingWordsRequest,
       numTypos,
       numWordsTyped,
       showProgress,
       progressPct,
-      exercises
+      exercises,
+      longText
     } = this.state
 
     return (
@@ -564,7 +575,10 @@ class App extends React.Component {
         <AppMenu
           zoomHandler = {this.handleZoomClick}
           modeHandler = {this.handleModeChange}
-          activeItem = {mode} />
+          longTextHandler = {this.handleLongText}
+          activeItem = {mode}
+          modeText = {modeText}
+          longText = {longText} />
         <Segment attached='bottom' className='blue-background'>
           <Segment raised>
             { showProgress ?
