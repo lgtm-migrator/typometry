@@ -321,3 +321,10 @@ class WordScore(models.Model):
 
     def __str__(self):
         return str(self.word) + ' - ' + str(self.average_time) + 'ms'
+
+
+class LongText(models.Model):
+    title = models.TextField(max_length=128)
+    author = models.TextField(max_length=64)
+    text = models.TextField()
+    languages = models.ManyToManyField(Language)
