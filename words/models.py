@@ -329,3 +329,4 @@ class LongText(models.Model):
     author = models.TextField(max_length=64)
     text = models.TextField()
     languages = models.ManyToManyField(Language)
+    download_link = models.CharField(max_length=128)
