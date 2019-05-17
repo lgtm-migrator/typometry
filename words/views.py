@@ -108,6 +108,17 @@ def smart_exercise(request):
         return JsonResponse(['Please', 'log', 'in!'], safe=False)
 
 
+def long_text(request):
+    """
+    Takes a request for a long text with paragraph number and returns text beginning at that paragraph.
+    """
+    if not request.method == 'GET':
+        error = {"You've come to the wrong place."}
+        return Response(error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    pass
+
+
 class GetWordStats(APIView):
     """
     Get statistics about a word
