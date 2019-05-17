@@ -46,7 +46,7 @@ class WordMetadataPopup extends Component {
       <Popup
         trigger={<span><Word {...this.props} /></span>}
         position='bottom center'
-        content={
+        children={
           loading ?
             <div className='popup-placeholder'>
               <Placeholder>
