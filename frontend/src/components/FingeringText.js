@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import './FingeringIndicator.css'
 
 const FingeringText = props => (
@@ -7,16 +6,10 @@ const FingeringText = props => (
     props.standAlone ?
     'fingering-container'
     :
-    'bigram-container'
-  }>
-    <ReactCSSTransitionGroup
-      transitionName='fade'
-      transitionEnterTimeout={250}
-      transitionLeaveTimeout={250}>
-      { props.fingeringObject.fingering.map((finger, index) => (
-        renderFingeredText(finger)
-      )) }
-    </ReactCSSTransitionGroup>
+    'bigram-container' }>
+    { props.fingeringObject.fingering.map((finger, index) => (
+      renderFingeredText(finger, index)
+    )) }
   </div>
 )
 
@@ -29,12 +22,10 @@ const getFingerNumber = function(fingering) {
   }
 }
 
-const renderFingeredText = function(text) {
-  console.log('Rendering: ')
-  console.log(text)
+const renderFingeredText = function(text, index) {
   if (Array.isArray(text)) {
     return (
-      <span className={'bigram b' + getFingerNumber(text)}>
+      <span key={index} className={'bigram b' + getFingerNumber(text)}>
         { text[0] === ' ' ?
           '␣'
           :
@@ -43,13 +34,13 @@ const renderFingeredText = function(text) {
     )
   }
   else {
-    return renderModGroup(text)
+    return renderModGroup(text, index)
   }
 }
 
-const renderModGroup = function(modGroup) {
+const renderModGroup = function(modGroup, index) {
   return (
-    <span>
+    <span key={index}>
       <span className={'mod mod-start b' + modGroup.modFinger}>
         { modGroup.modName }
         &nbsp;
