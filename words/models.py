@@ -324,6 +324,7 @@ class WordScore(models.Model):
 
 
 class LongText(models.Model):
+    codeName = models.CharField(max_length=32, primary_key=True)
     title = models.TextField(max_length=128)
     author = models.TextField(max_length=64)
     text = models.TextField()
