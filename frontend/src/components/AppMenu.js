@@ -39,7 +39,7 @@ class AppMenu extends React.Component {
                   <Dropdown.Menu>
                     <Dropdown.Item text='Alice in Wonderland' name='aliceInWonderland' active={this.props.longText === 'aliceInWonderland'} onClick={longTextHandler}/>
                     <Dropdown.Item text='Metamorphosis' name='metamorphosis' active={this.props.longText === 'metamorphosis'} onClick={longTextHandler}/>
-                    <Dropdown.Item text='Tom Sawyer' name='tomSawyer' active={this.props.longText === 'tomSawyer'} onClick={longTextHandler}/>
+                    <Dropdown.Item text='The Adventures of Tom Sawyer' name='tomSawyer' active={this.props.longText === 'tomSawyer'} onClick={longTextHandler}/>
                   </Dropdown.Menu>
                 </Dropdown>
               </Dropdown.Menu>
