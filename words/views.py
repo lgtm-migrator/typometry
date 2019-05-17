@@ -126,7 +126,7 @@ class GetWordStats(APIView):
 
     def get(self, request, *args, **kwargs):
         request_word = kwargs.get('word', None)
-        if 'word' is None:
+        if request_word is None:
             return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
         try:
