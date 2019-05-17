@@ -28,6 +28,7 @@ const WordsToType = props => (
         { props.words.map((word, index) => (
           <span key={index} id={index === 0 ? 'firstWord' : null}>
             <WordMetadataPopup
+              id={index+word}
               text={word}
               typed={index < props.currentWord}
               typo={props.typoIndices.includes(index)}
