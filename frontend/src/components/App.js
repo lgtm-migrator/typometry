@@ -579,7 +579,7 @@ class App extends React.Component {
           activeItem = {mode}
           modeText = {modeText}
           longText = {longText} />
-        <Segment attached='bottom' className='blue-background'>
+        <Segment attached='bottom' className={ window.dark_theme ? 'blue-background-dark' : 'blue-background' }>
           <Segment raised>
             { showProgress ?
               <Progress percent={progressPct} attached='top'  />
