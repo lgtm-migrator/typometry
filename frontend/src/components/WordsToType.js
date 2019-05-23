@@ -6,7 +6,12 @@ import { Placeholder } from 'semantic-ui-react'
 
 const WordsToType = props => (
 
-  <div className='WordsToType' style={{fontSize: (props.fontSize + 'em')}}>
+  <div className={
+    props.mode === 'longText' ?
+      'WordsToType enlarged-height'
+      :
+      'WordsToType normal-height'
+  } style={{fontSize: (props.fontSize + 'em')}}>
     { props.loading ?
       <ReactCSSTransitionGroup
         transitionName='fade'

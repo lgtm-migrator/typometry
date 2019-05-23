@@ -37,6 +37,8 @@ class App extends React.Component {
       fontSize: 3,
       mode: 'practice',
       modeText: 'Random Words',
+      longText: '',
+      longTextCurrentParagraph: 0,
       typingLocked: false,
       showProgress: false,
       progressPct: 0,
@@ -301,7 +303,7 @@ class App extends React.Component {
 
   updateCurrentWord (currentWord, wordsAfterPrune = null) {
     const wordsArray = wordsAfterPrune || this.state.wordsArray
-
+    console.log('Updating current word to ' + currentWord)
     const {
       hasPendingWordsRequest,
       newWords,
@@ -335,6 +337,32 @@ class App extends React.Component {
             } else {
               this.setState({
                 newWords: res.data,
+                hasPendingWordsRequest: false
+              })
+            }
+          })
+      }
+      else if (mode === 'longText') {
+        const {
+          longText,
+          longTextCurrentParagraph
+        } = this.state
+        let endpoint = '/words/long-text/' + longText + '/' + longTextCurrentParagraph + '/'
+        axios.get(constants.WEBSITE_API_URL + endpoint)
+          .then(res => {
+            console.log('Fetch complete')
+            if (wordsArray.length === 0) {
+              this.setState({
+                wordsArray: res.data.words,
+                longTextCurrentParagraph: res.data.newParagraph,
+                hasPendingWordsRequest: false
+              }, () => {
+                this.updateCurrentWord(0)
+              })
+            } else {
+              this.setState({
+                newWords: res.data.words,
+                longTextCurrentParagraph: res.data.newParagraph,
                 hasPendingWordsRequest: false
               })
             }
@@ -603,6 +631,7 @@ class App extends React.Component {
                 updateProgress={this.updateProgress} />
               :
               <WordsToType
+                mode={mode}
                 words={wordsArray}
                 currentWord={currentWord}
                 typo={containsTypo}

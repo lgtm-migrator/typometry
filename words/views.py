@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
-from words.models import BigramScore
+from words.models import BigramScore, LongText
 import datetime
 import numpy as np
 
@@ -108,15 +108,40 @@ def smart_exercise(request):
         return JsonResponse(['Please', 'log', 'in!'], safe=False)
 
 
-def long_text(request):
+class GetLongText(APIView):
     """
     Takes a request for a long text with paragraph number and returns text beginning at that paragraph.
     """
-    if not request.method == 'GET':
-        error = {"You've come to the wrong place."}
-        return Response(error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    pass
+    def get(self, request, *args, **kwargs):
+        request_text = kwargs.get('text', None)
+        request_paragraph = kwargs.get('paragraph', None)
+        if request_text is None or request_paragraph is None:
+            print('Text requested: ' + request_text)
+            print('Paragraph requested: ' + request_paragraph)
+            return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            text_obj = LongText.objects.get(codeName=request_text)
+            if text_obj is None:
+                print('No text found for request: ' + request_text)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            paragraphs = text_obj.text.split('\n')
+            text_fragment = '\n'.join(paragraphs[request_paragraph:request_paragraph + 3])
+            newCurrentParagraph = request_paragraph + 3
+            words = text_fragment.split(' ')
+            response = {
+                'words': words,
+                'newParagraph': newCurrentParagraph
+            }
+            print("Words: ")
+            print(response['words'])
+            return JsonResponse(response, safe=False)
+
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class GetWordStats(APIView):
