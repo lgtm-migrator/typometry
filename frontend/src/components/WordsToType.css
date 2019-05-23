@@ -7,12 +7,20 @@
     -webkit-font-feature-settings: "kern";
     font-feature-settings: "kern";
     font-size: 3em;
-    line-height: 1.5em;
-    height: 3em;
     line-break: normal;
     overflow: hidden;
     display: block;
     padding: 4px;
+}
+
+.normal-height {
+    line-height: 1.5em;
+    height: 3em;
+}
+
+.enlarged-height {
+    line-height: 1.5em;
+    height: 4.5em;
 }
 
 .fade-enter {
