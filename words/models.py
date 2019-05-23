@@ -91,7 +91,7 @@ class Language(models.Model):
     display_name = models.CharField(max_length=64, unique=True)
     words = models.ManyToManyField(Word, through='WordEntry')
     bigrams = models.ManyToManyField(Bigram, through='BigramEntry')
-    total_word_occurrences = models.PositiveIntegerField()
+    total_word_occurrences = models.PositiveIntegerField(null=True)
 
     def __str__(self):
         return self.display_name
