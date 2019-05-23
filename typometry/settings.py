@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.github',
     'corsheaders',
     'analytical',
-    'avatar'
+    'avatar',
+    'django_extensions'
 ]
 
 SITE_ID = config('SITE_ID')
