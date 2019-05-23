@@ -18,6 +18,10 @@
   background-color: aliceblue !important;
 }
 
+.blue-background-dark {
+    background-color: aliceblue !important;
+}
+
 .col-centered {
   float: none;
   margin: 0 auto;
