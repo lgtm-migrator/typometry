@@ -48,7 +48,7 @@ function Header(props) {
               name={window.name}
               openSettings={handleOpenSettings}/>
             :
-            <Button href='/accounts/login'>Log in</Button>
+            <Button className={classes.whiteText} href='/accounts/login'>Log in</Button>
           }
         </Toolbar>
       </AppBar>
