@@ -1,7 +1,7 @@
 import React from 'react'
 import './AppMenu.css'
 import { Menu } from 'semantic-ui-react'
-import { AppBar, Toolbar, IconButton, Select, MenuItem } from '@material-ui/core'
+import {AppBar, Toolbar, IconButton, Select, MenuItem, Tooltip} from '@material-ui/core'
 import Icon from '@mdi/react'
 import { mdiFormatFontSizeDecrease, mdiFormatFontSizeIncrease } from '@mdi/js'
 import { withStyles } from '@material-ui/core'
@@ -66,7 +66,15 @@ function ModeDropdown(props) {
             id: 'modePicker'
           }}>
           <MenuItem value='practice'>Random Words</MenuItem>
-          <MenuItem value='smartExercise'>Smart Exercise</MenuItem>
+          { window.is_logged_in ?
+            <MenuItem value='smartExercise'>Smart Exercise</MenuItem>
+            :
+            <Tooltip title={'You must log in to enable smart exercises'}>
+              <span>
+                <MenuItem value='smartExercise' disabled>Smart Exercise</MenuItem>
+              </span>
+            </Tooltip>
+          }
           <MenuItem value='speedTest'>Speed Test</MenuItem>
           <MenuItem value='longText'>Long Texts</MenuItem>
         </Select>
