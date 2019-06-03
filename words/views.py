@@ -9,6 +9,7 @@ from words.serializers import WordScoreSerializer, BigramScoreSerializer
 from words.models import BigramScore, LongText
 import datetime
 import numpy as np
+import json
 
 
 def word_list(request):
@@ -106,6 +107,36 @@ def smart_exercise(request):
     else:
         # User not logged in
         return JsonResponse(['Please', 'log', 'in!'], safe=False)
+
+
+class UserSettings(APIView):
+    """
+    Manages user settings for consistency across sessions
+    """
+
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return Response('Not logged in', status=status.HTTP_401_UNAUTHORIZED)
+
+        settings_dict = json.loads(request.user.profile.settings)
+        return JsonResponse(settings_dict, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return Response('Not logged in', status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            # Manually verify fields
+            assert type(request.data['darkMode']) == bool
+            assert len(request.data.items() == 1)
+
+            # Update saved settings post verification
+            request.user.profile.settings = json.dumps(request.data)
+            request.user.profile.save()
+
+        except Exception as e:
+            print(e)
+            return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
 
 
 class GetLongText(APIView):
