@@ -1,25 +1,29 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './FingeringIndicator.css'
 import FingeringText from './FingeringText'
+import { Fade } from '@material-ui/core'
+import { useTheme } from '@material-ui/styles'
 
 
-class FingeringIndicator extends Component {
-  render() {
-    return (
+function FingeringIndicator(props) {
+  const theme = useTheme()
+  const darkTheme = theme.palette.type === 'dark'
+  return (
+    <Fade in>
       <div className='hands-container'>
-        <div className='hands'>
-          { this.props.showWord ?
-            <FingeringText {...this.props} />
+        <div className={darkTheme ? 'hands-dark' : 'hands'}>
+          { props.showWord ?
+            <FingeringText {...props} />
             :
             ''
           }
-          { this.props.fingeringObject.fingerSet.map((finger, index) => (
-            <div key={index} className={'finger f' + finger} />
+          { props.fingeringObject.fingerSet.map((finger, index) => (
+            <div key={index} className={'finger f' + finger + (darkTheme ? ' finger-dark' : '')} />
           )) }
         </div>
       </div>
-    )
-  }
+    </Fade>
+  )
 }
 
 export default FingeringIndicator

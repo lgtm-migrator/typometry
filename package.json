@@ -39,14 +39,19 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.0.1",
+    "@material-ui/icons": "^4.0.1",
+    "@material-ui/styles": "^4.0.1",
+    "@mdi/js": "^3.6.95",
+    "@mdi/react": "^1.1.1",
     "axios": "^0.18.0",
     "correcting-interval": "^2.0.0",
     "dotenv": "^7.0.0",
-    "fomantic-ui": "^2.7.5",
-    "fstream": "^1.0.12",
+    "gulp": "^4.0.2",
     "js-cookie": "^2.2.0",
     "npm": "^6.9.0",
     "react-addons-css-transition-group": "^15.6.2",
+    "react-helmet": "^5.2.1",
     "semantic-ui-react": "^0.87.1",
     "tar": "^4.4.8"
   }

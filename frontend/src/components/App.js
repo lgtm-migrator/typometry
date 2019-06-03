@@ -6,11 +6,36 @@ import FingeringIndicator from './FingeringIndicator'
 import SpeedTest from './SpeedTest'
 import AppMenu from './AppMenu'
 import axios from 'axios'
-import { Segment, Progress } from 'semantic-ui-react'
+import { Progress } from 'semantic-ui-react'
+import { Paper, Grid, Fade } from '@material-ui/core'
+import { withStyles } from '@material-ui/core'
 import * as constants from './constants'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
+
+const styles = theme => ({
+  '@global': {
+    body: {
+      background: theme.palette.primary.background
+    }
+  },
+  root: {
+    padding: theme.spacing(1.6),
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    backgroundColor: theme.palette.secondaryPaper.primary.main
+  },
+  words: {
+    padding: theme.spacing(1.5),
+    marginBottom: theme.spacing(1.6),
+    backgroundColor: theme.palette.primaryPaper.primary.main
+  },
+  input: {
+    padding: '-10px',
+    backgroundColor: theme.palette.primaryPaper.primary.main
+  }
+})
 
 class App extends React.Component {
   constructor (props) {
@@ -487,19 +512,21 @@ class App extends React.Component {
     }
   }
 
-  handleZoomClick(e, { name }) {
+  handleZoomClick(zoom) {
+    console.log('zoomHandler')
+    console.log(this.state.fontSize + 'em')
     const fontSize = this.state.fontSize
-    if (name === 'zoom in') {
+    if (zoom === 'zoomIn') {
       this.setState({fontSize: fontSize + 0.5})
     } else {
       this.setState({fontSize: fontSize - 0.5})
     }
   }
 
-  handleModeChange(e, { name, text }) {
+  handleModeChange(name) {
     this.setState({
       mode: name,
-      modeText: text
+      modeText: name
     })
     this.clearWords()
     this.unlockTyping()
@@ -507,7 +534,7 @@ class App extends React.Component {
     this.updateProgress(0)
   }
 
-  handleLongText(e, { name }) {
+  handleLongText(name) {
     this.setState({
       longText: name,
       mode: 'longText',
@@ -595,8 +622,11 @@ class App extends React.Component {
       showProgress,
       progressPct,
       exercises,
-      longText
+      longText,
+      showSettings
     } = this.state
+
+    const { classes, theme } = this.props
 
     return (
       <div className='App'>
@@ -606,48 +636,58 @@ class App extends React.Component {
           longTextHandler = {this.handleLongText}
           activeItem = {mode}
           modeText = {modeText}
-          longText = {longText} />
-        <Segment attached='bottom' className={ window.dark_theme ? 'blue-background-dark' : 'blue-background' }>
-          <Segment raised>
-            { showProgress ?
-              <Progress percent={progressPct} attached='top'  />
-              :
-              ''
-            }
-            { mode === 'speedTest' ?
-              <SpeedTest
-                words={wordsArray}
-                currentWord={currentWord}
-                typo={containsTypo}
-                typoIndices={typoIndices}
-                fontSize={fontSize}
-                loading={hasPendingWordsRequest && wordsArray.length === 0}
-                typedText={typedText}
-                numTypos={numTypos}
-                numWordsTyped={numWordsTyped}
-                startFunction={this.startSpeedTest}
-                endFunction={this.finishSpeedTest}
-                showProgress={this.showProgress}
-                updateProgress={this.updateProgress} />
-              :
-              <WordsToType
-                mode={mode}
-                words={wordsArray}
-                currentWord={currentWord}
-                typo={containsTypo}
-                typoIndices={typoIndices}
-                fontSize={fontSize}
-                loading={hasPendingWordsRequest && wordsArray.length === 0}/>
-            }
-          </Segment>
-          <Segment>
-          <TypeInputBox
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyPress}
-            value={typedText}
-            inputRef={el => this.inputElement = el}/>
-          </Segment>
-        </Segment>
+          longText = {longText}
+          openSettings = {this.showSettings} />
+        <Paper
+          className={classes.root}>
+          <Grid>
+            <Grid item>
+              <Paper className={classes.words} elevation={4}>
+                { showProgress ?
+                  <Progress percent={progressPct} attached='top'  />
+                  :
+                  ''
+                }
+                { mode === 'speedTest' ?
+                  <SpeedTest
+                    words={wordsArray}
+                    currentWord={currentWord}
+                    typo={containsTypo}
+                    typoIndices={typoIndices}
+                    fontSize={fontSize}
+                    loading={hasPendingWordsRequest && wordsArray.length === 0}
+                    typedText={typedText}
+                    numTypos={numTypos}
+                    numWordsTyped={numWordsTyped}
+                    startFunction={this.startSpeedTest}
+                    endFunction={this.finishSpeedTest}
+                    showProgress={this.showProgress}
+                    updateProgress={this.updateProgress} />
+                  :
+                  <Fade in={true}>
+                    <WordsToType
+                      mode={mode}
+                      words={wordsArray}
+                      currentWord={currentWord}
+                      typo={containsTypo}
+                      typoIndices={typoIndices}
+                      fontSize={fontSize}
+                      loading={hasPendingWordsRequest && wordsArray.length === 0} />
+                  </Fade>
+                }
+              </Paper>
+            </Grid>
+            <Grid item>
+              <Paper className={classes.input}>
+                <TypeInputBox
+                  onChange={this.handleChange}
+                  onKeyDown={this.handleKeyPress}
+                  value={typedText}
+                  inputRef={el => this.inputElement = el}/>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Paper>
         {exercises.length > 0 && mode === 'smartExercise' ?
           <FingeringIndicator
             text={exercises[0].text}
@@ -668,4 +708,4 @@ class App extends React.Component {
   }
 }
 
-export default App
+export default withStyles(styles, { withTheme: true })(App)
