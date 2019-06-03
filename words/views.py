@@ -79,6 +79,7 @@ def smart_exercise(request):
             # Get typing info from the last 14 days
             top_n = 113  # Top 113 bigrams represent 80% of bigrams by usage in US English
             recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
+            recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
 
             q1, q3 = np.percentile(list(recent_scores.values()), [25, 75])
             iqr = q3 - q1
@@ -87,7 +88,7 @@ def smart_exercise(request):
             # Create bigram exercise
             practice_bigrams = [bigram for bigram, speed in recent_scores.items() if speed > upper_bound]
             print('Found ' + str(len(practice_bigrams)) + ' bigrams to be practiced')
-            practice_bigrams = practice_bigrams[:5]
+            practice_bigrams = practice_bigrams[:7]
 
             exercises = []
 
@@ -95,7 +96,7 @@ def smart_exercise(request):
                 exercises.append({
                     'text': bigram,
                     'fingering': fingering.get_fingering(bigram),
-                    'words': language.get_samples_for_bigram(bigram, 40)
+                    'words': language.get_samples_for_bigram(bigram, 30)
                 })
 
             response = {
