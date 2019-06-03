@@ -44,7 +44,7 @@
     "@material-ui/styles": "^4.0.1",
     "@mdi/js": "^3.6.95",
     "@mdi/react": "^1.1.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "correcting-interval": "^2.0.0",
     "dotenv": "^7.0.0",
     "gulp": "^4.0.2",
