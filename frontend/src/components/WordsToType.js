@@ -1,8 +1,8 @@
 import React from 'react'
 import './WordsToType.css'
 import WordMetadataPopup from './Word'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import { Placeholder } from 'semantic-ui-react'
+import { Fade } from '@material-ui/core'
+import DelayedProgressCircle from './DelayedProgressCircle'
 
 const WordsToType = props => (
 
@@ -11,25 +11,10 @@ const WordsToType = props => (
       'WordsToType enlarged-height'
       :
       'WordsToType normal-height'
-  } style={{fontSize: (props.fontSize + 'em')}}>
-    { props.loading ?
-      <ReactCSSTransitionGroup
-        transitionName='fade'
-        transitionEnterTimeout={200}
-        transitionLeaveTimeout={200}>
-        <div key='loadingPlaceholder'>
-          <Placeholder fluid style={{marginTop: '-0.3em'}}>
-            <Placeholder.Line length='full'/>
-            <Placeholder.Line length='full'/>
-          </Placeholder>
-          <br/>
-        </div>
-      </ReactCSSTransitionGroup>
-      :
-      <ReactCSSTransitionGroup
-        transitionName='fade'
-        transitionEnterTimeout={250}
-        transitionLeaveTimeout={250}>
+      } style={{fontSize: (props.fontSize + 'em')}}>
+      <Fade
+        in={!(props.words.length === 0)}>
+        <span>
         { props.words.map((word, index) => (
           <span key={index} id={index === 0 ? 'firstWord' : null}>
             <WordMetadataPopup
@@ -43,8 +28,8 @@ const WordsToType = props => (
           <Space />
         </span>
         )) }
-      </ReactCSSTransitionGroup>
-    }
+        </span>
+      </Fade>
   </div>
 )
 

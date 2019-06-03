@@ -12,6 +12,17 @@
     box-shadow: 0 0 3px red;
 }
 
+.currentWord-dark {
+    background-color: #475866;
+    border-radius: 7px;
+    box-shadow: 0 0 3px #3d4d4d;
+}
+.typo-dark {
+    background-color: #66474e;
+    border-radius: 7px;
+    box-shadow: 0 0 3px #4d3a3e;
+}
+
 .typedCorrect {
     color: gray
 }

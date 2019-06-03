@@ -1,72 +1,139 @@
 import React from 'react'
 import './AppMenu.css'
-import { Menu, Icon, Popup, Dropdown } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
+import { AppBar, Toolbar, IconButton, Select, MenuItem } from '@material-ui/core'
+import Icon from '@mdi/react'
+import { mdiFormatFontSizeDecrease, mdiFormatFontSizeIncrease } from '@mdi/js'
+import { withStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { useTheme } from '@material-ui/styles'
+import FormControl from '@material-ui/core/FormControl'
 
-class AppMenu extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      zoomHandler: this.props.zoomHandler,
-      modeHandler: this.props.modeHandler,
-      longTextHandler: this.props.longTextHandler,
+const styles = theme => ({
+  root: {
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+  },
+  spacer: {
+    flexGrow: 1
+  },
+  whiteText: {
+    color: theme.palette.text
+  }
+})
+
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    marginRight: theme.spacing(2),
+    minWidth: 120,
+  }
+}))
+
+function ModeDropdown(props) {
+  const classes = useStyles()
+  const [values, setValues] = React.useState({
+    mode: 'practice',
+    selectedText: 'metamorphosis'
+  })
+
+  function handleChange(event) {
+    console.log('handleChange')
+    setValues(oldValues => ({
+      ...oldValues,
+      [event.target.name]: event.target.value
+    }))
+    if (event.target.name === 'mode') {
+      modeHandler(event.target.value)
+    }
+    if (event.target.name === 'selectedText') {
+      longTextHandler(event.target.value)
     }
   }
 
-  render() {
-    const {
-      zoomHandler,
-      modeHandler,
-      longTextHandler,
-    } = this.state
+  const {
+    modeHandler,
+    longTextHandler
+  } = props
 
-    return (
-      <Menu attached='top' size='large'>
-        <Dropdown item text={this.props.modeText}>
-          <Dropdown.Menu>
-            <Dropdown.Item name='practice' text='Random Words' active={this.props.activeItem === 'practice'} onClick={modeHandler}/>
-            { window.is_logged_in ?
-              <Dropdown.Item name='smartExercise' text='Smart Exercise' active={this.props.activeItem === 'smartExercise'} onClick={modeHandler}/>
-              :
-              <Popup
-                position='right center'
-                content='You must log in to enable smart exercises.'
-                trigger={ <span><Dropdown.Item disabled text='Smart Exercise'/></span> } />
-            }
-            <Dropdown.Item name='speedTest' text='Speed Test' active={this.props.activeItem === 'speedTest'} onClick={modeHandler}/>
-            <Dropdown item text='Long Texts'>
-              <Dropdown.Menu>
-                <Dropdown item text='Books'>
-                  <Dropdown.Menu>
-                    <Dropdown.Item text='Alice in Wonderland' name='aliceInWonderland' active={this.props.longText === 'aliceInWonderland'} onClick={longTextHandler}/>
-                    <Dropdown.Item text='Metamorphosis' name='metamorphosis' active={this.props.longText === 'metamorphosis'} onClick={longTextHandler}/>
-                    <Dropdown.Item text='The Adventures of Tom Sawyer' name='tomSawyer' active={this.props.longText === 'tomSawyer'} onClick={longTextHandler}/>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Dropdown.Menu>
-        </Dropdown>
-        <Menu.Menu position='right'>
-          <Menu.Item
-            name='zoom in'
-            onClick={zoomHandler}>
-            <Icon.Group>
-              <Icon name='font' />
-              <Icon corner='top right' name='plus' />
-            </Icon.Group>
-          </Menu.Item>
-          <Menu.Item
-            name='zoom out'
-            onClick={zoomHandler}>
-            <Icon.Group>
-              <Icon name='font' />
-              <Icon corner='top right' name='minus' />
-            </Icon.Group>
-          </Menu.Item>
-        </Menu.Menu>
-      </Menu>
-    )
-  }
+  return (
+    <form autoComplete='off'>
+      <FormControl className={classes.formControl}>
+        <Select
+          value={values.mode}
+          onChange={handleChange}
+          inputProps={{
+            name: 'mode',
+            id: 'modePicker'
+          }}>
+          <MenuItem value='practice'>Random Words</MenuItem>
+          <MenuItem value='smartExercise'>Smart Exercise</MenuItem>
+          <MenuItem value='speedTest'>Speed Test</MenuItem>
+          <MenuItem value='longText'>Long Texts</MenuItem>
+        </Select>
+      </FormControl>
+      {
+        values.mode === 'longText' ?
+        <FormControl className={classes.formControl}>
+          <Select
+            value={values.selectedText}
+            onChange={handleChange}
+            inputProps={{
+              name: 'selectedText',
+              id: 'selectLongText'
+            }}>
+            <MenuItem value={'metamorphosis'}>The Metamorphosis</MenuItem>
+            <MenuItem value={'aliceInWonderland'}>Alice in Wonderland</MenuItem>
+            <MenuItem value={'tomSawyer'}>The Adventures of Tom Sawyer</MenuItem>
+          </Select>
+        </FormControl>
+        :
+        ''
+      }
+    </form>
+  )
 }
 
-export default AppMenu
+function AppMenu(props) {
+  const theme = useTheme()
+  const {
+    zoomHandler,
+    modeHandler,
+    longTextHandler,
+    classes,
+    activeItem,
+    modeText,
+    longText
+  } = props
+
+  const darkTheme = theme.palette.type === 'dark'
+
+  return (
+    <AppBar position='static' className={classes.root} elevation={2}>
+      <Toolbar variant='dense'>
+      <ModeDropdown {...props}/>
+      <div className={classes.spacer}/>
+      <Menu.Menu position='right'>
+        <IconButton
+          name='zoom in'
+          onClick={() => zoomHandler('zoomIn')}>
+          <Icon
+            color={ darkTheme ? '#fff' : '#000'}
+            path={mdiFormatFontSizeIncrease}
+            size={1}/>
+        </IconButton>
+        <IconButton
+          edge='end'
+          name='zoom out'
+        onClick={() => zoomHandler('zoomOut')}>
+          <Icon
+            path={mdiFormatFontSizeDecrease}
+            color={ darkTheme ? '#fff' : '#000'}
+            size={1}/>
+        </IconButton>
+      </Menu.Menu>
+      </Toolbar>
+    </AppBar>
+  )
+}
+
+export default withStyles(styles)(AppMenu)
