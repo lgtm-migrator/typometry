@@ -337,7 +337,7 @@ class App extends React.Component {
 
     if (mode === 'smartExercise') {
       const { exercises } = this.state
-      if (exercises.length > 0 && wordsArray[currentWord] === exercises[1].words[0]) {
+      if (exercises.length > 1 && wordsArray[currentWord] === exercises[1].words[0]) {
         let exercisesCopy = exercises
         exercisesCopy.shift()
         this.setState({exercises: exercisesCopy})
