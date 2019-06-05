@@ -99,6 +99,12 @@ def smart_exercise(request):
                     'words': language.get_samples_for_bigram(bigram, 30)
                 })
 
+            if not exercises:
+                response = {
+                    'type': 'noExercise'
+                }
+                return JsonResponse(response, safe=False)
+
             response = {
                 'type': 'bigramExercise',
                 'exercises': exercises
