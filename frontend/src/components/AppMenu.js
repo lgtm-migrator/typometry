@@ -1,6 +1,5 @@
 import React from 'react'
 import './AppMenu.css'
-import { Menu } from 'semantic-ui-react'
 import {AppBar, Toolbar, IconButton, Select, MenuItem, Tooltip} from '@material-ui/core'
 import Icon from '@mdi/react'
 import { mdiFormatFontSizeDecrease, mdiFormatFontSizeIncrease } from '@mdi/js'
@@ -122,9 +121,8 @@ function AppMenu(props) {
   return (
     <AppBar position='static' className={classes.root} elevation={2}>
       <Toolbar variant='dense'>
-      <ModeDropdown {...props}/>
-      <div className={classes.spacer}/>
-      <Menu.Menu position='right'>
+        <ModeDropdown {...props}/>
+        <div className={classes.spacer}/>
         <IconButton
           name='zoom in'
           onClick={() => zoomHandler('zoomIn')}>
