@@ -38,6 +38,10 @@ function ModeDropdown(props) {
 
   function handleChange(event) {
     console.log('handleChange')
+    if (!window.is_logged_in && event.target.value === undefined) {
+      console.log('Clicked smart exercise but not logged in')
+      return // do nothing if disabled option selected
+    }
     setValues(oldValues => ({
       ...oldValues,
       [event.target.name]: event.target.value
@@ -76,7 +80,7 @@ function ModeDropdown(props) {
             </Tooltip>
           }
           <MenuItem value='speedTest'>Speed Test</MenuItem>
-          <MenuItem value='longText'>Long Texts</MenuItem>
+          {/*<MenuItem value='longText'>Long Texts</MenuItem>*/}
         </Select>
       </FormControl>
       {
@@ -138,7 +142,6 @@ function AppMenu(props) {
             color={ darkTheme ? '#fff' : '#000'}
             size={1}/>
         </IconButton>
-      </Menu.Menu>
       </Toolbar>
     </AppBar>
   )

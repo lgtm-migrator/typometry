@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import './SpeedTest.css'
 import TestResults from './TestResults'
 import WordsToType from './WordsToType'
-import { Button } from 'semantic-ui-react'
+import { Button } from '@material-ui/core'
 import * as ci from 'correcting-interval'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
