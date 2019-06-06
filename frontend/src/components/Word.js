@@ -35,7 +35,7 @@ function WordMetadataPopup(props) {
   function handleClick(event) {
     ReactGA.event({
       category: 'Interaction',
-      action: 'Viewed word stats for ' + props.text
+      action: 'Viewed word stats for \'' + props.text + '\''
     })
     setAnchorEl(anchorEl ? null : event.currentTarget)
     getWordStats()
