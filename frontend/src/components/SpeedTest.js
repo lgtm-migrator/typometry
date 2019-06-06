@@ -5,6 +5,7 @@ import WordsToType from './WordsToType'
 import { Button } from '@material-ui/core'
 import * as ci from 'correcting-interval'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import ReactGA from 'react-ga'
 
 class SpeedTest extends Component {
   constructor(props) {
@@ -28,6 +29,10 @@ class SpeedTest extends Component {
       elapsedSeconds: 0,
       timeStarted: Date.now(),
       timerStarted: true
+    })
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Started speed test'
     })
     console.log('Timer started')
     this.props.showProgress(true)
@@ -71,6 +76,10 @@ class SpeedTest extends Component {
   }
 
   beginTest() {
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Clicked \'Start speed test\''
+    })
     this.props.startFunction()
     this.setState({
       testStarted: true,
@@ -90,6 +99,10 @@ class SpeedTest extends Component {
     this.props.showProgress(false)
     this.props.updateProgress(0)
     this.props.endFunction()
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Completed speed test'
+    })
   }
 
   render() {
