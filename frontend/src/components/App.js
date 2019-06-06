@@ -612,20 +612,12 @@ class App extends React.Component {
   }
 
   startSpeedTest() {
-    ReactGA.event({
-      category: 'Interaction',
-      action: 'Started speed test'
-    })
     console.log('startFunc')
     this.resetStats()
     this.unlockTyping()
   }
 
   finishSpeedTest() {
-    ReactGA.event({
-      category: 'Interaction',
-      action: 'Completed speed test'
-    })
     console.log('endFunc')
     this.lockTyping()
     this.clearWords()
