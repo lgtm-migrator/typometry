@@ -10,6 +10,7 @@ import { Progress } from 'semantic-ui-react'
 import { Paper, Grid, Fade } from '@material-ui/core'
 import { withStyles } from '@material-ui/core'
 import * as constants from './constants'
+import ReactGA from 'react-ga'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -67,7 +68,8 @@ class App extends React.Component {
       typingLocked: false,
       showProgress: false,
       progressPct: 0,
-      exercises: []
+      exercises: [],
+      noMoreExercises: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -257,6 +259,19 @@ class App extends React.Component {
       let newNumTypos = numTypos
       let newNumWordsTyped = numWordsTyped
       let newTimeAtLastTenWords = timeAtLastTenWords
+      if (newNumWordsTyped === 1) {
+        ReactGA.event({
+          category: 'Typing',
+          action: 'Typed first word',
+          value: 1
+        })
+      } else if (newNumWordsTyped % 10 === 0) {
+        ReactGA.event({
+          category: 'Typing',
+          action: 'Typed ' + newNumWordsTyped.toString() + ' words',
+          value: newNumWordsTyped
+        })
+      }
 
       if (containsTypo || !isCompleteWord) {
         newNumTypos++
@@ -421,7 +436,10 @@ class App extends React.Component {
                   hasPendingWordsRequest: false
                 })
               }
+            } else if (res.data.type === 'noExercise') {
+              this.setState({noMoreExercises: true})
             } else {
+              this.setState({noMoreExercises: false})
               let newExercises = res.data.exercises
               let firstExercise = false
               if (exercises.length === 0) {
@@ -515,6 +533,11 @@ class App extends React.Component {
   handleZoomClick(zoom) {
     console.log('zoomHandler')
     console.log(this.state.fontSize + 'em')
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Set font size to ' + fontSize + 'em',
+      value: fontSize
+    })
     const fontSize = this.state.fontSize
     if (zoom === 'zoomIn') {
       this.setState({fontSize: fontSize + 0.5})
@@ -527,6 +550,10 @@ class App extends React.Component {
     this.setState({
       mode: name,
       modeText: name
+    })
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Changed mode to ' + mode
     })
     this.clearWords()
     this.unlockTyping()
@@ -582,12 +609,20 @@ class App extends React.Component {
   }
 
   startSpeedTest() {
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Started speed test'
+    })
     console.log('startFunc')
     this.resetStats()
     this.unlockTyping()
   }
 
   finishSpeedTest() {
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Completed speed test'
+    })
     console.log('endFunc')
     this.lockTyping()
     this.clearWords()
@@ -637,7 +672,7 @@ class App extends React.Component {
           activeItem = {mode}
           modeText = {modeText}
           longText = {longText}
-          openSettings = {this.showSettings} />
+          openSettings = {showSettings} />
         <Paper
           className={classes.root}>
           <Grid>
