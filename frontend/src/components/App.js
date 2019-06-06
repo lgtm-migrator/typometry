@@ -536,12 +536,12 @@ class App extends React.Component {
   handleZoomClick(zoom) {
     console.log('zoomHandler')
     const fontSize = this.state.fontSize
-    console.log(fontSize + 'em')
     const newFontSize = (zoom === 'zoomIn') ? fontSize + 0.5 : fontSize - 0.5
+    console.log(newFontSize + 'em')
     ReactGA.event({
       category: 'Interaction',
       action: 'Set font size to ' + newFontSize + 'em',
-      value: fontSize
+      value: newFontSize
     })
     this.setState({fontSize: newFontSize})
   }
