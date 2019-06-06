@@ -268,7 +268,7 @@ class App extends React.Component {
           action: 'Typed first word',
           value: 1
         })
-      } else if (newNumWordsTyped % 10 === 0) {
+      } else if (newNumWordsTyped % 10 === 0 && newNumWordsTyped !== 0) {
         ReactGA.event({
           category: 'Typing',
           action: 'Typed ' + newNumWordsTyped.toString() + ' words',
