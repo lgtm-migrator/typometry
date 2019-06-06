@@ -7,6 +7,7 @@ import { Paper, Popper, Fade, ClickAwayListener } from '@material-ui/core'
 import axios from 'axios'
 import * as constants from './constants'
 import WordStats from './WordStats'
+import ReactGA from 'react-ga'
 
 const Word = props => (
   <span
@@ -32,6 +33,10 @@ function WordMetadataPopup(props) {
   const id = open ? 'word-metadata-popper' : null
 
   function handleClick(event) {
+    ReactGA.event({
+      category: 'Interaction',
+      action: 'Viewed word stats for ' + props.text
+    })
     setAnchorEl(anchorEl ? null : event.currentTarget)
     getWordStats()
   }
