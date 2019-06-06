@@ -553,7 +553,7 @@ class App extends React.Component {
     })
     ReactGA.event({
       category: 'Interaction',
-      action: 'Changed mode to ' + mode
+      action: 'Changed mode to ' + name
     })
     this.clearWords()
     this.unlockTyping()
