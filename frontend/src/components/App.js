@@ -537,16 +537,13 @@ class App extends React.Component {
     console.log('zoomHandler')
     const fontSize = this.state.fontSize
     console.log(fontSize + 'em')
+    const newFontSize = (zoom === 'zoomIn') ? fontSize + 0.5 : fontSize - 0.5
     ReactGA.event({
       category: 'Interaction',
       action: 'Set font size to ' + fontSize + 'em',
       value: fontSize
     })
-    if (zoom === 'zoomIn') {
-      this.setState({fontSize: fontSize + 0.5})
-    } else {
-      this.setState({fontSize: fontSize - 0.5})
-    }
+    this.setState({fontSize: newFontSize})
   }
 
   handleModeChange(name) {
