@@ -540,7 +540,7 @@ class App extends React.Component {
     const newFontSize = (zoom === 'zoomIn') ? fontSize + 0.5 : fontSize - 0.5
     ReactGA.event({
       category: 'Interaction',
-      action: 'Set font size to ' + fontSize + 'em',
+      action: 'Set font size to ' + newFontSize + 'em',
       value: fontSize
     })
     this.setState({fontSize: newFontSize})
