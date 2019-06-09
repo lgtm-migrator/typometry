@@ -56,6 +56,7 @@ class SpeedTest extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      finalWPM: 0,
       timerStarted: false,
       testStarted: false,
       testComplete: false,
@@ -138,12 +139,14 @@ class SpeedTest extends Component {
   }
 
   finishTest() {
+    const { totalSeconds } = this.state
     this.setState({
       timerStarted: false,
       testStarted: false,
       testComplete: true,
       numWordsTyped: this.props.numWordsTyped,
-      numTypos: this.props.numTypos
+      numTypos: this.props.numTypos,
+      finalWPM: Math.round(this.props.numWordsTyped / totalSeconds * 60)
     })
     ci.clearCorrectingInterval(this.timer)
     this.props.showProgress(false)
@@ -159,7 +162,8 @@ class SpeedTest extends Component {
     const {
       numWordsTyped,
       numTypos,
-      totalSeconds
+      totalSeconds,
+      finalWPM
     } = this.state
 
     return (
@@ -171,7 +175,7 @@ class SpeedTest extends Component {
             transitionLeaveTimeout={300}>
             <TestResults
               key='testResults'
-              wordsPerMinute={Math.round(numWordsTyped / totalSeconds * 60)}
+              wordsPerMinute={finalWPM}
               accuracy={Math.round(numWordsTyped / (numWordsTyped + numTypos) * 100)}
               numTypos={numTypos}
               totalSeconds={totalSeconds} />
