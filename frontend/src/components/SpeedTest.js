@@ -6,6 +6,51 @@ import { Button } from '@material-ui/core'
 import * as ci from 'correcting-interval'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import ReactGA from 'react-ga'
+import AddIcon from '@material-ui/icons/Add'
+import RemoveIcon from '@material-ui/icons/Remove'
+import IconButton from '@material-ui/core/IconButton'
+
+function TimePicker(props) {
+  const { duration, setDuration } = props
+
+  function addTime() {
+    if (duration < 30) {
+      setDuration(duration + 5)
+    } else {
+      setDuration(duration + 30)
+    }
+  }
+
+  function subtractTime() {
+    if (duration <= 5) {
+      return
+    }
+    if (duration <= 30) {
+      setDuration(duration - 5)
+    } else {
+      setDuration(duration - 30)
+    }
+  }
+
+  function showMinutes() {
+    const minutes = Math.floor(duration / 60)
+    const seconds = duration % 60
+    const secondsString = seconds < 10 ? '0' + seconds.toString() : seconds.toString()
+    return (minutes.toString() + ':' + secondsString)
+  }
+
+  return (
+    <span className='TimePicker'>
+      <IconButton onClick={subtractTime}>
+        <RemoveIcon />
+      </IconButton>
+      {showMinutes()}
+      <IconButton onClick={addTime}>
+        <AddIcon />
+      </IconButton>
+    </span>
+  )
+}
 
 class SpeedTest extends Component {
   constructor(props) {
@@ -22,6 +67,11 @@ class SpeedTest extends Component {
     this.startTimer = this.startTimer.bind(this)
     this.beginTest = this.beginTest.bind(this)
     this.finishTest = this.finishTest.bind(this)
+    this.setDuration = this.setDuration.bind(this)
+  }
+
+  setDuration(duration) {
+    this.setState({totalSeconds: duration})
   }
 
   startTimer() {
@@ -130,9 +180,13 @@ class SpeedTest extends Component {
           ''
         }
         { !this.state.testStarted ?
-          <Button key='beginTest' onClick={this.beginTest}>
-            {this.state.testComplete ? 'Restart' : 'Start'}
-          </Button>
+          <div>
+            <TimePicker duration={totalSeconds} setDuration={this.setDuration} />
+            <br/>
+            <Button key='beginTest' onClick={this.beginTest}>
+              {this.state.testComplete ? 'Restart' : 'Start Speed Test'}
+            </Button>
+          </div>
           :
           <ReactCSSTransitionGroup
             transitionName='fade'
