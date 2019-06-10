@@ -656,79 +656,84 @@ class App extends React.Component {
 
     return (
       <div className='App'>
-        <AppMenu
-          zoomHandler = {this.handleZoomClick}
-          modeHandler = {this.handleModeChange}
-          longTextHandler = {this.handleLongText}
-          activeItem = {mode}
-          modeText = {modeText}
-          longText = {longText}
-          openSettings = {showSettings} />
-        <Paper
-          className={classes.root}>
-          <Grid>
-            <Grid item>
-              <Paper className={classes.words} elevation={4}>
-                { showProgress ?
-                  <Progress percent={progressPct} attached='top'  />
-                  :
-                  ''
-                }
-                { mode === 'speedTest' ?
-                  <SpeedTest
-                    words={wordsArray}
-                    currentWord={currentWord}
-                    typo={containsTypo}
-                    typoIndices={typoIndices}
-                    fontSize={fontSize}
-                    loading={hasPendingWordsRequest && wordsArray.length === 0}
-                    typedText={typedText}
-                    numTypos={numTypos}
-                    numWordsTyped={numWordsTyped}
-                    startFunction={this.startSpeedTest}
-                    endFunction={this.finishSpeedTest}
-                    showProgress={this.showProgress}
-                    updateProgress={this.updateProgress} />
-                  :
-                  <Fade in={true}>
-                    <WordsToType
-                      mode={mode}
-                      words={wordsArray}
-                      currentWord={currentWord}
-                      typo={containsTypo}
-                      typoIndices={typoIndices}
-                      fontSize={fontSize}
-                      loading={hasPendingWordsRequest && wordsArray.length === 0} />
-                  </Fade>
-                }
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper className={classes.input}>
-                <TypeInputBox
-                  onChange={this.handleChange}
-                  onKeyDown={this.handleKeyPress}
-                  value={typedText}
-                  inputRef={el => this.inputElement = el}/>
-              </Paper>
+        <Grid container justify='center' spacing={5}>
+          <Grid item sm={12} />
+          <Grid item sm={12} md={8}>
+            <AppMenu
+              zoomHandler = {this.handleZoomClick}
+              modeHandler = {this.handleModeChange}
+              longTextHandler = {this.handleLongText}
+              activeItem = {mode}
+              modeText = {modeText}
+              longText = {longText}
+              openSettings = {showSettings} />
+            <Paper
+              className={classes.root}>
+              <Grid>
+                <Grid item>
+                  <Paper className={classes.words} elevation={4}>
+                    { showProgress ?
+                      <Progress percent={progressPct} attached='top'  />
+                      :
+                      ''
+                    }
+                    { mode === 'speedTest' ?
+                      <SpeedTest
+                        words={wordsArray}
+                        currentWord={currentWord}
+                        typo={containsTypo}
+                        typoIndices={typoIndices}
+                        fontSize={fontSize}
+                        loading={hasPendingWordsRequest && wordsArray.length === 0}
+                        typedText={typedText}
+                        numTypos={numTypos}
+                        numWordsTyped={numWordsTyped}
+                        startFunction={this.startSpeedTest}
+                        endFunction={this.finishSpeedTest}
+                        showProgress={this.showProgress}
+                        updateProgress={this.updateProgress} />
+                      :
+                      <Fade in={true}>
+                        <WordsToType
+                          mode={mode}
+                          words={wordsArray}
+                          currentWord={currentWord}
+                          typo={containsTypo}
+                          typoIndices={typoIndices}
+                          fontSize={fontSize}
+                          loading={hasPendingWordsRequest && wordsArray.length === 0} />
+                      </Fade>
+                    }
+                  </Paper>
+                </Grid>
+                <Grid item>
+                  <Paper className={classes.input}>
+                    <TypeInputBox
+                      onChange={this.handleChange}
+                      onKeyDown={this.handleKeyPress}
+                      value={typedText}
+                      inputRef={el => this.inputElement = el}/>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Paper>
+            {exercises.length > 0 && mode === 'smartExercise' ?
+              <FingeringIndicator
+                text={exercises[0].text}
+                fingeringObject={exercises[0].fingering}
+                showWord={true}/>
+              :
+              ''
+            }
+            { mode === 'smartExercise' && exercises.length === 0 && !hasPendingWordsRequest ?
+              <div class='gatherData'>
+                More data needed for smart exercise. Continue typing...
+              </div>
+              :
+              ''
+            }
             </Grid>
           </Grid>
-        </Paper>
-        {exercises.length > 0 && mode === 'smartExercise' ?
-          <FingeringIndicator
-            text={exercises[0].text}
-            fingeringObject={exercises[0].fingering}
-            showWord={true}/>
-          :
-          ''
-        }
-        { mode === 'smartExercise' && exercises.length === 0 && !hasPendingWordsRequest ?
-          <div class='gatherData'>
-            More data needed for smart exercise. Continue typing...
-          </div>
-          :
-          ''
-        }
       </div>
     )
   }
