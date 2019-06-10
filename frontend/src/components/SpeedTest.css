@@ -17,5 +17,9 @@
 }
 
 .TimePicker {
-    font-size: 2em;
+    font-size: 3em;
+}
+
+.pre-test-container {
+    padding-top: 10px;
 }
