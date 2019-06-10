@@ -77,7 +77,7 @@ class Word(models.Model):
 class WordBigramWeight(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     bigram = models.ForeignKey(Bigram, on_delete=models.CASCADE)
-    weight = models.DecimalField(max_digits=5, decimal_places=5)
+    weight = models.DecimalField(max_digits=5, decimal_places=3)
 
     class Meta:
         unique_together = ('word', 'bigram')
