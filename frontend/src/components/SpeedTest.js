@@ -9,6 +9,7 @@ import ReactGA from 'react-ga'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
 import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 
 function TimePicker(props) {
   const { duration, setDuration } = props
@@ -184,12 +185,14 @@ class SpeedTest extends Component {
           ''
         }
         { !this.state.testStarted ?
-          <div>
+          <div className='pre-test-container'>
             <TimePicker duration={totalSeconds} setDuration={this.setDuration} />
             <br/>
-            <Button key='beginTest' onClick={this.beginTest}>
-              {this.state.testComplete ? 'Restart' : 'Start Speed Test'}
-            </Button>
+            <Tooltip title='Time will start when you begin typing'>
+              <Button key='beginTest' onClick={this.beginTest}>
+                {this.state.testComplete ? 'Restart' : 'Start Speed Test'}
+              </Button>
+            </Tooltip>
           </div>
           :
           <ReactCSSTransitionGroup
