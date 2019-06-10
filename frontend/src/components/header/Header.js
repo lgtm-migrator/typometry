@@ -4,6 +4,7 @@ import ProfileDropdown from './ProfileDropdown'
 import SettingsDialog from '../SettingsDialog'
 import { AppBar, Toolbar, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core'
+import LoginPopup from '../LoginPopup'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,7 +49,7 @@ function Header(props) {
               name={window.name}
               openSettings={handleOpenSettings}/>
             :
-            <Button className={classes.whiteText} href='/accounts/login'>Log in</Button>
+            <LoginPopup/>
           }
         </Toolbar>
       </AppBar>
