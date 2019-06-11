@@ -54,6 +54,12 @@ function LoginPopup(props) {
     setAnchorEl(null)
   }
 
+  function captureEnter() {
+    if (window.event.keyCode === 13) {
+      submitForm()
+    }
+  }
+
   function submitForm() {
     setStatus('loading')
     axios.post(endpoint, values)
@@ -85,7 +91,7 @@ function LoginPopup(props) {
             <Fade {...TransitionProps} timeout={350}>
               <Paper elevation={16}>
                 <Grid container justify='center' spacing={1}>
-                  <form className={classes.container}>
+                  <form className={classes.container} onKeyDown={captureEnter}>
                     <Grid item>
                       <Typography variant='h5' className={classes.typography}>
                         Log in
