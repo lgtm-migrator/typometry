@@ -82,7 +82,7 @@ function LoginPopup(props) {
         {({ TransitionProps }) => (
           <ClickAwayListener onClickAway={handleClickAway}>
             <Fade {...TransitionProps} timeout={350}>
-              <Paper>
+              <Paper elevation={16}>
                 <Grid container justify='center' spacing={1}>
                   <form className={classes.container}>
                     <Grid item>
