@@ -1,5 +1,6 @@
 import React from 'react'
 import { Avatar, Menu, MenuItem } from '@material-ui/core'
+import axios from 'axios'
 
 
 const options = [
@@ -20,7 +21,10 @@ function ProfileDropdown(props) {
       props.openSettings()
     }
     else if (event.target.id === 'logOut') {
-      window.location = '/accounts/logout'
+      const logoutEndpoint = '/rest-auth/logout/'
+      axios.post(logoutEndpoint).then(res => {
+        console.log(res.data)
+      })
     }
     setAnchorEl(null)
   }
