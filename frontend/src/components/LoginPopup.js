@@ -125,7 +125,7 @@ function LoginPopup(props) {
                         Log in
                       </Button>
                       { status === 'invalid-credentials' ?
-                      'Login failed'
+                        <Typography className={classes.typography}>Invalid credentials</Typography>
                         :
                       ''
                       }
