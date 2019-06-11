@@ -62,6 +62,7 @@ function LoginPopup(props) {
           setStatus('success')
           console.log('Login successful')
           handleClickAway()
+          window.location.reload()
         }
     })
       .catch(error => {

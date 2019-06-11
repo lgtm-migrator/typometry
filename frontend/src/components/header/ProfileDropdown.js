@@ -24,6 +24,7 @@ function ProfileDropdown(props) {
       const logoutEndpoint = '/rest-auth/logout/'
       axios.post(logoutEndpoint).then(res => {
         console.log(res.data)
+        window.location.reload()
       })
     }
     setAnchorEl(null)
