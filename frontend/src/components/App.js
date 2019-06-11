@@ -13,7 +13,6 @@ import * as constants from './constants'
 import ReactGA from 'react-ga'
 
 ReactGA.initialize('UA-106571309-3');
-ReactGA.pageview(window.location.pathname + window.location.search);
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
