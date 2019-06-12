@@ -1,6 +1,7 @@
 import React from 'react'
 import App from './App'
 import { ThemeProvider } from '@material-ui/styles'
+import ReactGA from 'react-ga'
 
 class ThemedApp extends React.Component {
   constructor(props) {
@@ -16,7 +17,10 @@ class ThemedApp extends React.Component {
 
   setUseDarkTheme(dark) {
     console.log('Use dark theme: ' + dark)
-    const { useDarkTheme } = window.appRef.state
+    ReactGA.event({
+      category: 'Interaction',
+      action: dark ? 'Enabled dark mode' : 'Disabled dark mode'
+    })
     window.dark_theme = dark
     window.appRef.setState({useDarkTheme: dark})
   }
