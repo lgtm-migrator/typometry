@@ -54,7 +54,6 @@
     "react-addons-css-transition-group": "^15.6.2",
     "react-ga": "^2.5.7",
     "react-helmet": "^5.2.1",
-    "semantic-ui-react": "^0.87.1",
     "tar": "^4.4.8",
     "yargs": "^13.2.4"
   }
