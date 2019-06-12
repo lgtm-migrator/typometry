@@ -37,6 +37,14 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       color: '#bbb'
     }
+  },
+  extraErrors: {
+    fontSize: '0.75em',
+    color: '#f00',
+    marginTop: theme.spacing(-1),
+    marginBottom: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   }
 }))
 
@@ -48,6 +56,10 @@ function LoginPopup(props) {
   const [values, setValues] = React.useState({
     username: '',
     password: ''
+  })
+  const [errors, setErrors] = React.useState({
+    username: null,
+    password: null
   })
 
   const handleChange = name => event => {
@@ -81,7 +93,8 @@ function LoginPopup(props) {
     })
       .catch(error => {
         setStatus('invalid-credentials')
-        console.log('Invalid credentials')
+        console.log(error.response.data)
+        setErrors(error.response.data)
       })
   }
 
@@ -117,7 +130,8 @@ function LoginPopup(props) {
                         value={values.username}
                         onChange={handleChange('username')}
                         margin='normal'
-                        error={status === 'invalid-credentials'}
+                        helperText={errors.username}
+                        error={Boolean(errors.username)}
                         variant='outlined' />
                     </Grid>
                     <Grid item>
@@ -129,16 +143,22 @@ function LoginPopup(props) {
                         onChange={handleChange('password')}
                         type='password'
                         margin='normal'
-                        error={status === 'invalid-credentials'}
+                        helperText={errors.password}
+                        error={Boolean(errors.password)}
                         variant='outlined' />
                     </Grid>
                     <Grid item>
                       <Button onClick={submitForm} variant='contained' color='primary' className={classes.submit}>
                         Log in
                       </Button>
-                      { status === 'invalid-credentials' ?
-                        <Typography className={classes.typography}>Invalid credentials</Typography>
-                        :
+                      { Boolean(errors.non_field_errors) ?
+                        <div>
+                          <br/>
+                          <Typography className={classes.extraErrors}>
+                            {errors.non_field_errors}
+                          </Typography>
+                          </div>
+                      :
                       ''
                       }
                     </Grid>
