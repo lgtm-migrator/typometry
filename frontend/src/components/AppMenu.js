@@ -123,31 +123,37 @@ function AppMenu(props) {
       <Toolbar variant='dense'>
         <ModeDropdown {...props}/>
         <div className={classes.spacer}/>
-        <IconButton
-          name='darkMode'
-          onClick={() => window.setDarkTheme(!window.dark_theme)}>
-          <Icon
-            path={ darkTheme ? mdiLightbulbOutline : mdiLightbulb }
-            color={ darkTheme ? '#fff' : '#000'}
-            size={1} />
-        </IconButton>
-        <IconButton
-          name='zoom in'
-          onClick={() => zoomHandler('zoomIn')}>
-          <Icon
-            color={ darkTheme ? '#fff' : '#000'}
-            path={mdiFormatFontSizeIncrease}
-            size={1} />
-        </IconButton>
-        <IconButton
-          edge='end'
-          name='zoom out'
-        onClick={() => zoomHandler('zoomOut')}>
-          <Icon
-            path={mdiFormatFontSizeDecrease}
-            color={ darkTheme ? '#fff' : '#000'}
-            size={1} />
-        </IconButton>
+        <Tooltip title='Toggle dark theme'>
+          <IconButton
+            name='darkMode'
+            onClick={() => window.setDarkTheme(!window.dark_theme)}>
+            <Icon
+              path={ darkTheme ? mdiLightbulb : mdiLightbulbOutline }
+              color={ darkTheme ? '#fff' : '#000'}
+              size={1} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title='Increase font size'>
+          <IconButton
+            name='zoom in'
+            onClick={() => zoomHandler('zoomIn')}>
+            <Icon
+              color={ darkTheme ? '#fff' : '#000'}
+              path={mdiFormatFontSizeIncrease}
+              size={1} />
+          </IconButton>
+          </Tooltip>
+        <Tooltip title='Decrease font size'>
+          <IconButton
+            edge='end'
+            name='zoom out'
+            onClick={() => zoomHandler('zoomOut')}>
+            <Icon
+              path={mdiFormatFontSizeDecrease}
+              color={ darkTheme ? '#fff' : '#000'}
+              size={1} />
+          </IconButton>
+        </Tooltip>
       </Toolbar>
     </AppBar>
   )
