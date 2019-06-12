@@ -1,16 +1,12 @@
 import React from 'react'
-import { Statistic } from 'semantic-ui-react'
+import Typography from '@material-ui/core/Typography'
 
 const TestResults = props => (
   <div>
-      <Statistic>
-        <Statistic.Value>{props.wordsPerMinute}</Statistic.Value>
-        <Statistic.Label>Words per minute</Statistic.Label>
-      </Statistic>
-      <Statistic>
-        <Statistic.Value>{props.accuracy + '%'}</Statistic.Value>
-        <Statistic.Label>Accuracy</Statistic.Label>
-      </Statistic>
+        <Typography>{props.wordsPerMinute}</Typography>
+        <Typography>Words per minute</Typography>
+        <Typography>{props.accuracy + '%'}</Typography>
+        <Typography>Accuracy</Typography>
   </div>
 )
 
