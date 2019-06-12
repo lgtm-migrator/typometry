@@ -19,6 +19,11 @@ const useStyles = makeStyles(theme => ({
   typography: {
     padding: theme.spacing(2)
   },
+  signUp: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(-0.5),
+    marginBottom: theme.spacing(-0.5)
+  },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
@@ -28,7 +33,10 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2)
   },
   whiteText: {
-    color: '#fff'
+    color: '#fff',
+    '&:hover': {
+      color: '#bbb'
+    }
   }
 }))
 
@@ -79,9 +87,10 @@ function LoginPopup(props) {
 
   const open = Boolean(anchorEl)
   const id = open ? 'login-popper' : null
+  const { openRegistration } = props
 
   return (
-    <div>
+    <span>
       <Button variant='text' onClick={handleClick} className={classes.whiteText}>
         Log in
       </Button>
@@ -96,6 +105,9 @@ function LoginPopup(props) {
                       <Typography variant='h5' className={classes.typography}>
                         Log in
                       </Typography>
+                      <Button className={classes.signUp} onClick={openRegistration}>
+                        Sign up
+                      </Button>
                     </Grid>
                     <Grid item>
                       <TextField
@@ -137,7 +149,7 @@ function LoginPopup(props) {
           </ClickAwayListener>
         )}
       </Popper>
-    </div>
+    </span>
   )
 }
 
