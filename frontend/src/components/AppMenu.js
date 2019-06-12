@@ -7,6 +7,9 @@ import { withStyles } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTheme } from '@material-ui/styles'
 import FormControl from '@material-ui/core/FormControl'
+import {Link} from 'react-router-dom'
+
+const AdapterLink = React.forwardRef((props, ref) => <Link innerRef={ref} {...props} />)
 
 const styles = theme => ({
   root: {
@@ -68,9 +71,9 @@ function ModeDropdown(props) {
             name: 'mode',
             id: 'modePicker'
           }}>
-          <MenuItem value='practice'>Random Words</MenuItem>
+          <MenuItem value='practice' component={AdapterLink} to='/practice'>Random Words</MenuItem>
           { window.is_logged_in ?
-            <MenuItem value='smartExercise'>Smart Exercise</MenuItem>
+            <MenuItem value='smartExercise' component={AdapterLink} to='/smart-exercise'>Smart Exercise</MenuItem>
             :
             <Tooltip title={'You must log in to enable smart exercises'}>
               <span>
@@ -78,7 +81,7 @@ function ModeDropdown(props) {
               </span>
             </Tooltip>
           }
-          <MenuItem value='speedTest'>Speed Test</MenuItem>
+          <MenuItem value='speedTest' component={AdapterLink} to='/speed-test'>Speed Test</MenuItem>
           {/*<MenuItem value='longText'>Long Texts</MenuItem>*/}
         </Select>
       </FormControl>
