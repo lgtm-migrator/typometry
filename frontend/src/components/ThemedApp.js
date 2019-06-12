@@ -1,7 +1,6 @@
 import React from 'react'
 import App from './App'
 import { ThemeProvider } from '@material-ui/styles'
-import {Button} from '@material-ui/core'
 
 class ThemedApp extends React.Component {
   constructor(props) {
