@@ -95,15 +95,6 @@ class SpeedTest extends Component {
         timeStarted,
       } = this.state
 
-      // Test for clock running ahead / behind
-      const currentTime = Date.now()
-      const elapsedTime = currentTime - timeStarted
-      let newElapsed = elapsedSeconds + 1
-      const offset = elapsedTime - (newElapsed * 1000)
-      let aheadBehind = offset < 0 ? 'ahead' : 'behind'
-      const printOffset = offset < 0 ? offset * -1 : offset
-      console.log('Running ' + printOffset + 'ms ' + aheadBehind)
-
       this.setState({
         elapsedSeconds: (newElapsed <= totalSeconds ? newElapsed : totalSeconds),
       })
