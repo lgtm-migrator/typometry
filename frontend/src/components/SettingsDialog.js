@@ -1,11 +1,8 @@
 import React from 'react'
 import {
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
-  DialogContentText,
-  Button,
   Switch,
   FormControlLabel,
   FormGroup
