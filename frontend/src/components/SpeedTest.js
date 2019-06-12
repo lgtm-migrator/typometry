@@ -4,12 +4,13 @@ import TestResults from './TestResults'
 import WordsToType from './WordsToType'
 import { Button } from '@material-ui/core'
 import * as ci from 'correcting-interval'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import ReactGA from 'react-ga'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
+import Grid from '@material-ui/core/Grid'
+import Divider from '@material-ui/core/Divider'
 
 function TimePicker(props) {
   const { duration, setDuration } = props
@@ -95,6 +96,8 @@ class SpeedTest extends Component {
         timeStarted,
       } = this.state
 
+      const newElapsed = elapsedSeconds + 1
+
       this.setState({
         elapsedSeconds: (newElapsed <= totalSeconds ? newElapsed : totalSeconds),
       })
@@ -160,29 +163,36 @@ class SpeedTest extends Component {
 
     return (
       <div className='SpeedTest'>
+        <Grid container justify='center' direction='column'>
         { this.state.testComplete ?
-          <TestResults
-            key='testResults'
-            wordsPerMinute={finalWPM}
-            accuracy={Math.round(numWordsTyped / (numWordsTyped + numTypos) * 100)}
-            numTypos={numTypos}
-            totalSeconds={totalSeconds} />
+          <Grid item>
+            <TestResults
+              key='testResults'
+              wordsPerMinute={finalWPM}
+              accuracy={Math.round(numWordsTyped / (numWordsTyped + numTypos) * 100)}
+              numTypos={numTypos}
+              totalSeconds={totalSeconds} />
+              <Divider variant='middle' />
+          </Grid>
           :
           ''
         }
         { !this.state.testStarted ?
-          <div className='pre-test-container'>
-            <TimePicker duration={totalSeconds} setDuration={this.setDuration} />
-            <br/>
-            <Tooltip title='Time will start when you begin typing'>
-              <Button key='beginTest' onClick={this.beginTest}>
-                {this.state.testComplete ? 'Restart' : 'Start Speed Test'}
-              </Button>
-            </Tooltip>
-          </div>
+          <Grid item>
+            <div className='pre-test-container'>
+              <TimePicker duration={totalSeconds} setDuration={this.setDuration} />
+              <br/>
+              <Tooltip title='Time will start when you begin typing'>
+                <Button key='beginTest' onClick={this.beginTest}>
+                  {this.state.testComplete ? 'Restart' : 'Start Speed Test'}
+                </Button>
+              </Tooltip>
+            </div>
+          </Grid>
           :
           <WordsToType key='wordsToType' {...this.props} />
         }
+        </Grid>
       </div>
     )
   }
