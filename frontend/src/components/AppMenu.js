@@ -2,7 +2,7 @@ import React from 'react'
 import './AppMenu.css'
 import {AppBar, Toolbar, IconButton, Select, MenuItem, Tooltip} from '@material-ui/core'
 import Icon from '@mdi/react'
-import { mdiFormatFontSizeDecrease, mdiFormatFontSizeIncrease } from '@mdi/js'
+import { mdiFormatFontSizeDecrease, mdiFormatFontSizeIncrease, mdiLightbulb, mdiLightbulbOutline } from '@mdi/js'
 import { withStyles } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTheme } from '@material-ui/styles'
@@ -124,12 +124,20 @@ function AppMenu(props) {
         <ModeDropdown {...props}/>
         <div className={classes.spacer}/>
         <IconButton
+          name='darkMode'
+          onClick={() => window.setDarkTheme(!window.dark_theme)}>
+          <Icon
+            path={ darkTheme ? mdiLightbulbOutline : mdiLightbulb }
+            color={ darkTheme ? '#fff' : '#000'}
+            size={1} />
+        </IconButton>
+        <IconButton
           name='zoom in'
           onClick={() => zoomHandler('zoomIn')}>
           <Icon
             color={ darkTheme ? '#fff' : '#000'}
             path={mdiFormatFontSizeIncrease}
-            size={1}/>
+            size={1} />
         </IconButton>
         <IconButton
           edge='end'
@@ -138,7 +146,7 @@ function AppMenu(props) {
           <Icon
             path={mdiFormatFontSizeDecrease}
             color={ darkTheme ? '#fff' : '#000'}
-            size={1}/>
+            size={1} />
         </IconButton>
       </Toolbar>
     </AppBar>

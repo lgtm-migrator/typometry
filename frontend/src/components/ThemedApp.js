@@ -17,6 +17,7 @@ class ThemedApp extends React.Component {
   setUseDarkTheme(dark) {
     console.log('Use dark theme: ' + dark)
     const { useDarkTheme } = window.appRef.state
+    window.dark_theme = dark
     window.appRef.setState({useDarkTheme: dark})
   }
 
