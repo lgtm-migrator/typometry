@@ -161,17 +161,12 @@ class SpeedTest extends Component {
     return (
       <div className='SpeedTest'>
         { this.state.testComplete ?
-          <ReactCSSTransitionGroup
-            transitionName='fade'
-            transitionEnterTimeout={300}
-            transitionLeaveTimeout={300}>
-            <TestResults
-              key='testResults'
-              wordsPerMinute={finalWPM}
-              accuracy={Math.round(numWordsTyped / (numWordsTyped + numTypos) * 100)}
-              numTypos={numTypos}
-              totalSeconds={totalSeconds} />
-          </ReactCSSTransitionGroup>
+          <TestResults
+            key='testResults'
+            wordsPerMinute={finalWPM}
+            accuracy={Math.round(numWordsTyped / (numWordsTyped + numTypos) * 100)}
+            numTypos={numTypos}
+            totalSeconds={totalSeconds} />
           :
           ''
         }
@@ -186,12 +181,7 @@ class SpeedTest extends Component {
             </Tooltip>
           </div>
           :
-          <ReactCSSTransitionGroup
-            transitionName='fade'
-            transitionEnterTimeout={300}
-            transitionLeaveTimeout={300}>
-            <WordsToType key='wordsToType' {...this.props} />
-          </ReactCSSTransitionGroup>
+          <WordsToType key='wordsToType' {...this.props} />
         }
       </div>
     )
