@@ -7,6 +7,7 @@ import SpeedTest from './SpeedTest'
 import AppMenu from './AppMenu'
 import axios from 'axios'
 import { Paper, Grid, Fade } from '@material-ui/core'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import { withStyles } from '@material-ui/core'
 import * as constants from './constants'
 import ReactGA from 'react-ga'
@@ -29,6 +30,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.secondaryPaper.primary.main
   },
   words: {
+    position: 'relative',
     padding: theme.spacing(1.5),
     marginBottom: theme.spacing(1.6),
     backgroundColor: theme.palette.primaryPaper.primary.main
@@ -36,6 +38,14 @@ const styles = theme => ({
   input: {
     padding: '-10px',
     backgroundColor: theme.palette.primaryPaper.primary.main
+  },
+  progressBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    borderTopLeftRadius: '3px',
+    borderTopRightRadius: '3px'
   }
 })
 
@@ -672,7 +682,7 @@ class App extends React.Component {
                 <Grid item>
                   <Paper className={classes.words} elevation={4}>
                     { showProgress ?
-                      <Progress percent={progressPct} attached='top'  />
+                      <LinearProgress className={classes.progressBar} variant='determinate' value={progressPct} />
                       :
                       ''
                     }

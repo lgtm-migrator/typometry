@@ -107,7 +107,7 @@ class SpeedTest extends Component {
       this.setState({
         elapsedSeconds: (newElapsed <= totalSeconds ? newElapsed : totalSeconds),
       })
-      this.props.updateProgress((elapsedSeconds + 1) / totalSeconds * 100 + 2)
+      this.props.updateProgress((elapsedSeconds) / totalSeconds * 100)
       if (elapsedSeconds >= totalSeconds) {
         this.finishTest()
       }
