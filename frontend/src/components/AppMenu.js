@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 function ModeDropdown(props) {
   const classes = useStyles()
   const [values, setValues] = React.useState({
-    mode: 'practice',
+    mode: props.activeItem,
     selectedText: 'metamorphosis'
   })
 
@@ -115,7 +115,6 @@ function AppMenu(props) {
     longTextHandler,
     classes,
     activeItem,
-    modeText,
     longText
   } = props
 

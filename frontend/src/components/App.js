@@ -52,6 +52,15 @@ const styles = theme => ({
 class App extends React.Component {
   constructor (props) {
     super(props)
+
+    let urlMode = 'practice'
+    const originalUrl = window.location.toString()
+    if (originalUrl.includes('speed-test')) {
+      urlMode = 'speedTest'
+    } else if (originalUrl.includes('smart-exercise')) {
+      urlMode = 'smartExercise'
+    }
+
     this.state = {
       text: '',
       wordsArray: [],
@@ -72,8 +81,7 @@ class App extends React.Component {
       bigramScores: [],
       wordScores: [],
       fontSize: 3,
-      mode: 'practice',
-      modeText: 'Random Words',
+      mode: urlMode,
       longText: '',
       longTextCurrentParagraph: 0,
       typingLocked: false,
@@ -650,7 +658,6 @@ class App extends React.Component {
       typoIndices,
       fontSize,
       mode,
-      modeText,
       hasPendingWordsRequest,
       numTypos,
       numWordsTyped,
@@ -673,7 +680,6 @@ class App extends React.Component {
               modeHandler = {this.handleModeChange}
               longTextHandler = {this.handleLongText}
               activeItem = {mode}
-              modeText = {modeText}
               longText = {longText}
               openSettings = {showSettings} />
             <Paper
