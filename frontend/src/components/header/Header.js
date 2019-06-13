@@ -50,15 +50,17 @@ function Header(props) {
     setShowRegistration(false)
   }
 
+  const { setDarkTheme } = props
+
   return (
     <div className={classes.root}>
-      <SettingsDialog open={showSettings} handleClose={handleCloseSettings} />
+      <SettingsDialog open={showSettings} handleClose={handleCloseSettings} setDarkTheme={setDarkTheme} />
       <RegistrationDialog open={showRegistration} handleClose={handleCloseRegistration} />
       <AppBar position='static' className={classes.header}>
         <Toolbar>
           <Button className={classes.whiteText} href='/'>Home</Button>
           <div className={classes.toolbarButtons}>
-            { props.loggedIn ?
+            { window.is_logged_in ?
               <ProfileDropdown
                 avatar={window.avatar_url}
                 name={window.name}

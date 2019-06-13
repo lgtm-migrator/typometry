@@ -8,17 +8,18 @@ import {
   FormGroup
 } from '@material-ui/core'
 
-function SettingsControls() {
+function SettingsControls(props) {
   const [state, setState] = React.useState({
     darkMode: window.dark_theme,
     secondThing: false
   })
+  const { setDarkTheme } = props
 
   const handleSwitchChange = name => event => {
     if (name === 'darkMode') {
       console.log('Setting dark mode: ' + event.target.checked)
       window.dark_theme = event.target.checked
-      window.setDarkTheme(event.target.checked)
+      setDarkTheme(event.target.checked)
     }
     setState({ ...state, [name]: event.target.checked })
   }
@@ -34,13 +35,13 @@ function SettingsControls() {
 }
 
 function SettingsDialog(props) {
-  const { open, handleClose } = props
+  const { open, handleClose, setDarkTheme } = props
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle id='settings-dialog-title'>Settings</DialogTitle>
       <DialogContent>
-        <SettingsControls/>
+        <SettingsControls setDarkTheme={setDarkTheme} />
       </DialogContent>
     </Dialog>
   )

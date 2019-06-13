@@ -2,6 +2,7 @@ import React from 'react'
 import App from './App'
 import { ThemeProvider } from '@material-ui/styles'
 import ReactGA from 'react-ga'
+import Header from './header/Header'
 
 class ThemedApp extends React.Component {
   constructor(props) {
@@ -11,8 +12,7 @@ class ThemedApp extends React.Component {
       darkTheme: props.darkTheme,
       useDarkTheme: props.useDarkTheme
     }
-    window.appRef = this
-    window.setDarkTheme = this.setUseDarkTheme.bind(this)
+    this.setUseDarkTheme = this.setUseDarkTheme.bind(this)
   }
 
   setUseDarkTheme(dark) {
@@ -22,7 +22,7 @@ class ThemedApp extends React.Component {
       action: dark ? 'Enabled dark mode' : 'Disabled dark mode'
     })
     window.dark_theme = dark
-    window.appRef.setState({useDarkTheme: dark})
+    this.setState({useDarkTheme: dark})
   }
 
   render() {
@@ -35,7 +35,8 @@ class ThemedApp extends React.Component {
             :
             lightTheme
         }>
-          <App/>
+          <Header setDarkTheme={this.setUseDarkTheme} />
+          <App setDarkTheme={this.setUseDarkTheme} />
         </ThemeProvider>
       </div>
     )

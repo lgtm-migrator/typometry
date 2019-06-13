@@ -672,10 +672,10 @@ class App extends React.Component {
       progressPct,
       exercises,
       longText,
-      showSettings
+      showSettings,
     } = this.state
 
-    const { classes, theme } = this.props
+    const { classes, setDarkTheme } = this.props
 
     return (
       <div className='App'>
@@ -686,6 +686,7 @@ class App extends React.Component {
               zoomHandler = {this.handleZoomClick}
               modeHandler = {this.handleModeChange}
               longTextHandler = {this.handleLongText}
+              setDarkTheme = {setDarkTheme}
               activeItem = {mode}
               longText = {longText}
               openSettings = {showSettings} />

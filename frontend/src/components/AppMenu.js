@@ -115,7 +115,8 @@ function AppMenu(props) {
     longTextHandler,
     classes,
     activeItem,
-    longText
+    longText,
+    setDarkTheme
   } = props
 
   const darkTheme = theme.palette.type === 'dark'
@@ -128,7 +129,7 @@ function AppMenu(props) {
         <Tooltip title='Toggle dark theme'>
           <IconButton
             name='darkMode'
-            onClick={() => window.setDarkTheme(!window.dark_theme)}>
+            onClick={() => setDarkTheme(!window.dark_theme)}>
             <Icon
               path={ darkTheme ? mdiLightbulb : mdiLightbulbOutline }
               color={ darkTheme ? '#fff' : '#000'}
