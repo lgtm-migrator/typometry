@@ -24,6 +24,7 @@
   <body>
   {% analytical_body_top %}
   <script>
+    window.messages = [];
     window.dark_theme = false;
     {% if request.user.is_authenticated %}
       window.is_logged_in = true;
@@ -56,16 +57,11 @@
     {% endblock %}
     {% block post_body %}
     {% endblock %}
-    </div>
+
   {% if messages %}
-    <div>
-      <strong>Messages:</strong>
-      <ul>
-        {% for message in messages %}
-          <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    </div>
+    {% for message in messages %}
+      <script>window.messages.push({ message: '{{ message }}' });</script>
+    {% endfor %}
   {% endif %}
 
   {% analytical_body_bottom %}

@@ -9,6 +9,7 @@ import axios from 'axios'
 import { Paper, Grid, Fade } from '@material-ui/core'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { withStyles } from '@material-ui/core'
+import Notification from './Notification'
 import * as constants from './constants'
 import ReactGA from 'react-ga'
 
@@ -95,7 +96,9 @@ class App extends React.Component {
       showProgress: false,
       progressPct: 0,
       exercises: [],
-      noMoreExercises: false
+      noMoreExercises: false,
+      notifications: window.messages || [],
+      showNotification: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -112,6 +115,35 @@ class App extends React.Component {
     this.showProgress = this.showProgress.bind(this)
     this.updateProgress = this.updateProgress.bind(this)
     this.handleLongText = this.handleLongText.bind(this)
+    this.dismissNotification = this.dismissNotification.bind(this)
+    this.addNotification = this.addNotification.bind(this)
+  }
+
+  dismissNotification () {
+    let newNotifications = [...this.state.notifications]
+    newNotifications.shift()
+    this.setState({showNotification: false})
+    let show = false
+    if (newNotifications.length > 0) {
+      show = true
+    }
+    const callbackRef = this
+    // Allow notification dismiss animation to complete before updating state
+    setTimeout(function () {
+      callbackRef.setState({
+        notifications: newNotifications,
+        showNotification: show
+      })
+    }, 400)
+  }
+
+  addNotification(notification) {
+    let newNotifications = [...this.state.notifications]
+    newNotifications.push(notification)
+    this.setState({
+      notifications: newNotifications,
+      showNotification: true
+    })
   }
 
   componentDidMount () {
@@ -673,6 +705,8 @@ class App extends React.Component {
       exercises,
       longText,
       showSettings,
+      notifications,
+      showNotification
     } = this.state
 
     const { classes, setDarkTheme } = this.props
@@ -680,6 +714,11 @@ class App extends React.Component {
     return (
       <div className='App'>
         <Grid container justify='center' spacing={5}>
+          { notifications.length > 0 ?
+            <Notification forceOpen={showNotification} onDismiss={this.dismissNotification} {...notifications[0]} />
+            :
+            ''
+          }
           <Grid item sm={12} />
           <Grid item sm={12} md={8}>
             <AppMenu
