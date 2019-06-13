@@ -62,10 +62,10 @@ class App extends React.Component {
         console.log('You sneaky ferret')
         window.location = constants.WEBSITE_API_URL + '/practice'
       } else {
-        urlMode = 'speedTest'
+        urlMode = 'smartExercise'
       }
-    } else if (originalUrl.includes('smart-exercise')) {
-      urlMode = 'smartExercise'
+    } else if (originalUrl.includes('speed-test')) {
+      urlMode = 'speedTest'
     }
 
     this.state = {
