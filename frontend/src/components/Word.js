@@ -12,7 +12,7 @@ import ReactGA from 'react-ga'
 const Word = props => (
   <span
     id={props.current ? 'currentWord' : null}
-    className={whichStyle(props) + ' ui simple'}>
+    className={whichStyle(props)}>
     {props.text}
   </span>
 )
