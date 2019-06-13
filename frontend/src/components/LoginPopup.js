@@ -1,6 +1,4 @@
 import React from 'react'
-import clsx from 'clsx'
-import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import Popper from '@material-ui/core/Popper'
 import Button from '@material-ui/core/Button'
