@@ -47,8 +47,8 @@ function WordMetadataPopup(props) {
 
   function getWordStats() {
     console.log('Requesting word stats...')
-    console.log('URL: ' + constants.WEBSITE_API_URL + '/words/stats/' + props.text)
-    axios.get(constants.WEBSITE_API_URL + '/words/stats/' + props.text)
+    console.log('URL: ' + constants.WEBSITE_API_URL + '/words/stats/' + props.text + '/')
+    axios.get(constants.WEBSITE_API_URL + '/words/stats/' + props.text + '/')
       .then(res => {
         console.log('Word stats fetched')
         setStatsObject(res.data)
