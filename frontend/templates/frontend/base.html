@@ -4,7 +4,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-  {% analytical_head_top %}
+    {% analytical_head_top %}
+    {% analytical_head_bottom %}
     <title>{% block head_title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />
@@ -12,14 +13,6 @@
     </style>
     {% block extra_head %}
     {% endblock %}
-  {% analytical_head_bottom %}
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-3183978059906512",
-        enable_page_level_ads: true
-      });
-    </script>
   </head>
   <body>
   {% analytical_body_top %}
