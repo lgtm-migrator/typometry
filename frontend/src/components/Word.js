@@ -12,7 +12,7 @@ import ReactGA from 'react-ga'
 const Word = props => (
   <span
     id={props.current ? 'currentWord' : null}
-    className={whichStyle(props)}>
+    className={whichStyle(props) + ' Word'}>
     {props.text}
   </span>
 )
@@ -121,7 +121,7 @@ const whichStyle = function (props) {
   } else if (typed && typo) {
     return 'typedTypo'
   }
-  return 'Word'
+  return ''
 }
 
 export default withStyles(styles, {withTheme: true})(WordMetadataPopup)

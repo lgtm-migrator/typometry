@@ -1,5 +1,5 @@
 .Word {
-
+    cursor: pointer;
 }
 .currentWord {
     background-color: azure;
