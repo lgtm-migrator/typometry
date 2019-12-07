@@ -1,6 +1,10 @@
 .Word {
     cursor: pointer;
 }
+.Word:hover {
+    border-radius: 7px;
+    box-shadow: 0 0 3px #6e6e6e;
+}
 .currentWord {
     background-color: azure;
     border-radius: 7px;
