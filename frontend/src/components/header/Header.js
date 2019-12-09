@@ -2,7 +2,7 @@ import React from 'react'
 import './Header.css'
 import ProfileDropdown from './ProfileDropdown'
 import SettingsDialog from '../SettingsDialog'
-import { AppBar, Toolbar, Button } from '@material-ui/core'
+import { AppBar, Toolbar, Button, Link } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core'
 import LoginPopup from '../LoginPopup'
 import RegistrationDialog from '../RegistrationDialog'
@@ -13,6 +13,14 @@ const useStyles = makeStyles(theme => ({
   },
   header: {
     backgroundColor: '#000'
+  },
+  headerTypometryLogo: {
+    color: '#fff',
+    fontFamily: 'garamond-premier-pro, serif',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    fontKerning: 'normal',
+    fontSize: '2em',
   },
   whiteText: {
     color: '#fff',
@@ -58,7 +66,7 @@ function Header(props) {
       <RegistrationDialog open={showRegistration} handleClose={handleCloseRegistration} />
       <AppBar position='static' className={classes.header}>
         <Toolbar>
-          <Button className={classes.whiteText} href='/'>Home</Button>
+          <Link variant='h3' className={classes.headerTypometryLogo}>Typometry</Link>
           <div className={classes.toolbarButtons}>
             { window.is_logged_in ?
               <ProfileDropdown
