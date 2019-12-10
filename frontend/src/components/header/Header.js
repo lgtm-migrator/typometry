@@ -21,6 +21,10 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 400,
     fontKerning: 'normal',
     fontSize: '2em',
+    '&:hover': {
+      color: '#bbb',
+      textDecoration: 'none'
+    }
   },
   whiteText: {
     color: '#fff',
@@ -66,7 +70,7 @@ function Header(props) {
       <RegistrationDialog open={showRegistration} handleClose={handleCloseRegistration} />
       <AppBar position='static' className={classes.header}>
         <Toolbar>
-          <Link variant='h3' className={classes.headerTypometryLogo}>Typometry</Link>
+          <Link variant='h3' href={'/'} className={classes.headerTypometryLogo}>Typometry</Link>
           <div className={classes.toolbarButtons}>
             { window.is_logged_in ?
               <ProfileDropdown
