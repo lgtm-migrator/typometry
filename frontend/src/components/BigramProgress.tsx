@@ -1,29 +1,32 @@
-import React from 'react'
-import { withStyles } from '@material-ui/core'
-import { useTheme } from '@material-ui/styles'
+import * as React from 'react'
+import { BigramScore } from './interfaces'
 
-const styles = theme => ({
+interface BigramProps {
+  bigramScore: BigramScore
+}
 
-})
+interface BigramProgressProps {
+  bigramScores: BigramScore[]
+}
 
-function IndividualBigramProgress(props) {
+const Bigram: React.FC<BigramProps> = (props) => (
+  <div className='bigram'>
+    { props.bigramScore.bigram }
+  </div>
+)
+
+const BigramProgress: React.FC<BigramProgressProps> = (props) => {
   return (
-    <div className='bigram'>bg</div>
+    <div>
+      {
+        props.bigramScores.map((bigramScore, index) => (
+          <div key={index}>
+            <Bigram bigramScore={bigramScore} />
+          </div>
+        ))
+      }
+    </div>
   )
 }
 
-function BigramProgress(props) {
-  const theme = useTheme()
-  const darkTheme = theme.palette.type === 'dark'
-  return (
-    {
-      props.bigrams.map((bigramScore, index) => (
-        <div key={index}>
-          <IndividualBigramProgress bigramScore={bigramScore} />
-        </div>
-      ))
-    }
-  )
-}
-
-export default withStyles(styles, {withTheme: true})(BigramProgress)
+export default BigramProgress
