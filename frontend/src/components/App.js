@@ -58,9 +58,7 @@ class App extends React.Component {
     const originalUrl = window.location.toString()
     if (originalUrl.includes('smart-exercise')) {
         window.location = constants.WEBSITE_API_URL + '/practice'
-      } else {
         urlMode = 'smartExercise'
-      }
     } else if (originalUrl.includes('speed-test')) {
       urlMode = 'speedTest'
     }
