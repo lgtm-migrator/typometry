@@ -4,7 +4,7 @@
   "description": "This repository contains the complete source for the Django backend, React frontend, and secret sauce of [typometry.io](https://typometry.io).",
   "main": "./dist/index.js",
   "scripts": {
-    "css": "copyfiles -u 3 frontend/src/components/**/*.css frontend/dist/components & copyfiles -u 2 frontend/src/*.css frontend/dist",
+    "css": "copyfiles -u 3 frontend/src/components/*.css frontend/src/components/**/*.css frontend/dist/components & copyfiles -u 2 frontend/src/*.css frontend/dist",
     "dev": "webpack --mode development ./frontend/dist/index.js --output ./frontend/static/frontend/main.js",
     "build": "webpack --mode production ./frontend/dist/index.js --output ./frontend/static/frontend/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
