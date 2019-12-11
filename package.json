@@ -2,10 +2,11 @@
   "name": "typometry",
   "version": "1.0.0",
   "description": "This repository contains the complete source for the Django backend, React frontend, and secret sauce of [typometry.io](https://typometry.io).",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "dev": "webpack --mode development ./frontend/src/index.js --output ./frontend/static/frontend/main.js",
-    "build": "webpack --mode production ./frontend/src/index.js --output ./frontend/static/frontend/main.js",
+    "css": "copyfiles -u 3 frontend/src/components/**/*.css frontend/dist/components & copyfiles -u 2 frontend/src/*.css frontend/dist",
+    "dev": "webpack --mode development ./frontend/dist/index.js --output ./frontend/static/frontend/main.js",
+    "build": "webpack --mode production ./frontend/dist/index.js --output ./frontend/static/frontend/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,6 +27,7 @@
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "copyfiles": "^2.1.1",
     "css-loader": "^1.0.1",
     "file-loader": "^3.0.1",
     "less": "^3.10.3",
