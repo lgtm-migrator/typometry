@@ -57,10 +57,6 @@ class App extends React.Component {
     let urlMode = 'practice'
     const originalUrl = window.location.toString()
     if (originalUrl.includes('smart-exercise')) {
-      console.log(window.is_logged_in)
-      if (!window.is_logged_in) {
-        urlMode = 'practice'
-        console.log('You sneaky ferret')
         window.location = constants.WEBSITE_API_URL + '/practice'
       } else {
         urlMode = 'smartExercise'

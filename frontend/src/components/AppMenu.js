@@ -39,11 +39,6 @@ function ModeDropdown(props) {
   })
 
   function handleChange(event) {
-    console.log('handleChange')
-    if (!window.is_logged_in && event.target.value === undefined) {
-      console.log('Clicked smart exercise but not logged in')
-      return // do nothing if disabled option selected
-    }
     setValues(oldValues => ({
       ...oldValues,
       [event.target.name]: event.target.value
@@ -72,15 +67,7 @@ function ModeDropdown(props) {
             id: 'modePicker'
           }}>
           <MenuItem value='practice' component={AdapterLink} to='/practice'>Random Words</MenuItem>
-          { window.is_logged_in ?
-            <MenuItem value='smartExercise' component={AdapterLink} to='/smart-exercise'>Smart Exercise</MenuItem>
-            :
-            <Tooltip title={'You must log in to enable smart exercises'}>
-              <span>
-                <MenuItem value='smartExercise' disabled>Smart Exercise</MenuItem>
-              </span>
-            </Tooltip>
-          }
+          <MenuItem value='smartExercise' component={AdapterLink} to='/smart-exercise'>Smart Exercise</MenuItem>
           <MenuItem value='speedTest' component={AdapterLink} to='/speed-test'>Speed Test</MenuItem>
           {/*<MenuItem value='longText'>Long Texts</MenuItem>*/}
         </Select>
