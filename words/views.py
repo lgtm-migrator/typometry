@@ -116,6 +116,35 @@ def smart_exercise(request):
         return JsonResponse(['Please', 'log', 'in!'], safe=False)
 
 
+def get_scores(request):
+    if not request.method == 'GET':
+        error = {"You've come to the wrong place."}
+        return Response(error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    # TODO: Make this language-agnostic
+    language = Language.objects.first()
+
+    if request.user.is_authenticated:
+        score_timeframe_days = 14
+        score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
+
+        top_113_bigrams = language.get_bigrams(113)
+        bigram_scores = BigramScore.objects.filter(user=request.user.profile,
+                                                   bigram__in=top_113_bigrams,
+                                                   date__gte=score_after_date)
+
+    else:
+        if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
+            print('No scores found for unauthenticated user')
+            request.session['bigram_scores'] = []
+        bigram_scores = request.session['bigram_scores']
+
+    response = {
+        'bigram_scores': bigram_scores
+    }
+    return JsonResponse(response, safe=False)
+
+
 class UserSettings(APIView):
     """
     Manages user settings for consistency across sessions
@@ -207,11 +236,11 @@ class GetWordStats(APIView):
                 frequency_class = 2
             elif relative_frequency > 1:
                 frequency_class = 3
-            elif relative_frequency > 1/5:
+            elif relative_frequency > 1 / 5:
                 frequency_class = 4
-            elif relative_frequency > 1/10:
+            elif relative_frequency > 1 / 10:
                 frequency_class = 5
-            elif relative_frequency > 1/50:
+            elif relative_frequency > 1 / 50:
                 frequency_class = 6
             else:
                 frequency_class = 7
@@ -249,7 +278,9 @@ class RecordScores(APIView):
             if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
                 request.session['bigram_scores'] = []
             request.session['bigram_scores'].extend(request.data['bigram_scores'])
-            return Response(request.data['word_scores'], status=status.HTTP_200_OK)
+            print(request.session['bigram_scores'])
+            request.session.modified = True  # Required to get sessions working in Firefox for some reason
+            return Response(request.session['bigram_scores'], status=status.HTTP_200_OK)
         else:
             # User is logged in, store scores in their profile
             today = datetime.date.today()
