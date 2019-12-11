@@ -2,10 +2,10 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(t|j)sx?$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "awesome-typescript-loader"
         }
       },
       {
@@ -13,5 +13,6 @@ module.exports = {
 	use: [ 'style-loader', 'css-loader' ]
       }
     ]
-  }
+  },
+  devtool: "source-map"
 };
