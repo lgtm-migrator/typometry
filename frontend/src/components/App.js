@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core'
 import Notification from './Notification'
 import * as constants from './constants'
 import ReactGA from 'react-ga'
+import BigramProgress from './BigramProgress'
 
 ReactGA.initialize('UA-106571309-3');
 
@@ -686,6 +687,7 @@ class App extends React.Component {
     const {
       typedText,
       wordsArray,
+      bigramScores,
       containsTypo,
       currentWord,
       typoIndices,
@@ -773,6 +775,11 @@ class App extends React.Component {
                 </Grid>
               </Grid>
             </Paper>
+            {exercises.length === 0 && mode === 'smartExercise' ?
+              <BigramProgress bigramScores={bigramScores} />
+              :
+              ''
+            }
             {exercises.length > 0 && mode === 'smartExercise' ?
               <FingeringIndicator
                 text={exercises[0].text}
