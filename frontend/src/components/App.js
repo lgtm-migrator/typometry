@@ -789,7 +789,7 @@ class App extends React.Component {
               ''
             }
             { mode === 'smartExercise' && exercises.length === 0 && !hasPendingWordsRequest ?
-              <div class='gatherData'>
+              <div className='gatherData'>
                 More data needed for smart exercise. Continue typing...
               </div>
               :
