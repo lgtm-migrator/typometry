@@ -1,15 +1,8 @@
-@font-face {
-    font-family: 'mononoki', monospace;
-    src: url('/static/fonts/mononoki-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-         url('/static/fonts/mononoki-Regular.woff2') format('woff2'), /* Super Modern Browsers */
-         url('/static/fonts/mononoki-Regular.woff') format('woff'), /* Pretty Modern Browsers */
-         url('/static/fonts/mononoki-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
-    font-weight: normal;
-    font-style: normal;
-}
-
 .bigram-progress {
-    font-size: 2em;
+    font-size: 1.5em;
     font-family: mononoki, monospace;
-    color: #0f0f0f;
+    color: #000;
+    border-radius: 4px;
+    background-color: #dddddd;
+    margin: 0.1em;
 }
