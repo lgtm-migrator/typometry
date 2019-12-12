@@ -10,22 +10,22 @@ interface BigramProgressProps {
 }
 
 const Bigram: React.FC<BigramProps> = (props) => (
-  <div className='bigram'>
+  <span className='bigram-progress'>
     { props.bigramScore.bigram }
-  </div>
+  </span>
 )
 
 const BigramProgress: React.FC<BigramProgressProps> = (props) => {
   return (
-    <div>
+    <span>
       {
         props.bigramScores.map((bigramScore, index) => (
-          <div key={index}>
+          <span key={index}>
             <Bigram bigramScore={bigramScore} />
-          </div>
+          </span>
         ))
       }
-    </div>
+    </span>
   )
 }
 
