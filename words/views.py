@@ -32,88 +32,99 @@ def smart_exercise(request):
     in the selected language, returns a list of the most popular words in that language to gather data. Otherwise,
     attempts to identify weaknesses in the user's typing and delivers a personalized exercise to rectify.
     """
+
+    def get_user_insufficient_data_bigrams(_request, _language):
+        minimum_trials = 4
+        top_113_bigrams = _language.get_bigrams(113)
+
+        # Is user logged in?
+        if _request.user.is_authenticated:
+            score_timeframe_days = 14
+            score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
+            sufficient_data_bigrams = BigramScore.objects.filter(user=user.profile,
+                                                                 bigram__in=top_113_bigrams,
+                                                                 count__gte=minimum_trials,
+                                                                 date__gte=score_after_date)
+            sufficient_data_bigrams = [bigram.bigram.bigram for bigram in sufficient_data_bigrams]
+
+        else:  # Guest, use session scores
+            if 'bigram_scores' not in _request.session or not isinstance(_request.session['bigram_scores'], list):
+                print('No scores found for unauthenticated user')
+                _request.session['bigram_scores'] = []
+                _request.session.modified = True  # Required to get sessions working in Firefox for some reason
+            user_bigram_scores = _request.session['bigram_scores']
+            sufficient_data_bigrams = [bigram_score['bigram'] for bigram_score in user_bigram_scores
+                                       if bigram_score['count'] >= minimum_trials]
+
+        insufficient_data_bigrams = \
+            [bigram.bigram for bigram in top_113_bigrams if bigram.bigram not in sufficient_data_bigrams]
+
+        return insufficient_data_bigrams
+
     if not request.method == 'GET':
         error = {"You've come to the wrong place."}
         return Response(error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     # TODO: Make this language-agnostic
     language = Language.objects.first()
+    user = request.user
+    insufficient_data_bigrams = get_user_insufficient_data_bigrams(request, language)
 
-    # Is user logged in?
-    if request.user.is_authenticated:
-        user = request.user
-        minimum_trials = 4
-        score_timeframe_days = 14
-        score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
+    if len(insufficient_data_bigrams) > 0:
+        practice_words = []
+        insufficient_data_bigrams = insufficient_data_bigrams[:15]
+        for bigram in insufficient_data_bigrams:
+            practice_words.extend(language.get_samples_for_bigram(bigram, 5))
+        print(practice_words)
+        print(str(len(practice_words)) + ' words remain')
+        print('Insufficient bigram data for smart exercise')
+        if len(practice_words) < 20:
+            practice_words *= 3
 
-        top_113_bigrams = language.get_bigrams(113)
-        sufficient_data_bigrams = BigramScore.objects.filter(user=user.profile,
-                                                             bigram__in=top_113_bigrams,
-                                                             count__gte=minimum_trials,
-                                                             date__gte=score_after_date)
-        sufficient_data_bigrams = [bigram.bigram.bigram for bigram in sufficient_data_bigrams]
-        insufficient_data_bigrams = \
-            [bigram.bigram for bigram in top_113_bigrams if bigram.bigram not in sufficient_data_bigrams]
-
-        if len(insufficient_data_bigrams) > 0:
-            practice_words = []
-            insufficient_data_bigrams = insufficient_data_bigrams[:15]
-            for bigram in insufficient_data_bigrams:
-                practice_words.extend(language.get_samples_for_bigram(bigram, 5))
-            print(practice_words)
-            print(str(len(practice_words)) + ' words remain')
-            print('Insufficient bigram data for smart exercise')
-            if len(practice_words) < 20:
-                practice_words *= 3
-
-            response = {
-                'type': 'gatherData',
-                'words': practice_words
-            }
-            return JsonResponse(response, safe=False)
-
-        else:
-            # Identify weaknesses in user's typing
-            print('Creating smart exercise')
-
-            # Get typing info from the last 14 days
-            top_n = 113  # Top 113 bigrams represent 80% of bigrams by usage in US English
-            recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
-            recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
-
-            q1, q3 = np.percentile(list(recent_scores.values()), [25, 75])
-            iqr = q3 - q1
-            upper_bound = q3 + (1.5 * iqr)
-
-            # Create bigram exercise
-            practice_bigrams = [bigram for bigram, speed in recent_scores.items() if speed > upper_bound]
-            print('Found ' + str(len(practice_bigrams)) + ' bigrams to be practiced')
-            practice_bigrams = practice_bigrams[:7]
-
-            exercises = []
-
-            for bigram in practice_bigrams:
-                exercises.append({
-                    'text': bigram,
-                    'fingering': fingering.get_fingering(bigram),
-                    'words': language.get_samples_for_bigram(bigram, 30)
-                })
-
-            if not exercises:
-                response = {
-                    'type': 'noExercise'
-                }
-                return JsonResponse(response, safe=False)
-
-            response = {
-                'type': 'bigramExercise',
-                'exercises': exercises
-            }
-            return JsonResponse(response, safe=False)
+        response = {
+            'type': 'gatherData',
+            'words': practice_words
+        }
+        return JsonResponse(response, safe=False)
 
     else:
-        # User not logged in
-        return JsonResponse(['Please', 'log', 'in!'], safe=False)
+        # Identify weaknesses in user's typing
+        print('Creating smart exercise')
+
+        # Get typing info from the last 14 days
+        top_n = 113  # Top 113 bigrams represent 80% of bigrams by usage in US English
+        recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
+        recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
+
+        q1, q3 = np.percentile(list(recent_scores.values()), [25, 75])
+        iqr = q3 - q1
+        upper_bound = q3 + (1.5 * iqr)
+
+        # Create bigram exercise
+        practice_bigrams = [bigram for bigram, speed in recent_scores.items() if speed > upper_bound]
+        print('Found ' + str(len(practice_bigrams)) + ' bigrams to be practiced')
+        practice_bigrams = practice_bigrams[:7]
+
+        exercises = []
+
+        for bigram in practice_bigrams:
+            exercises.append({
+                'text': bigram,
+                'fingering': fingering.get_fingering(bigram),
+                'words': language.get_samples_for_bigram(bigram, 30)
+            })
+
+        if not exercises:
+            response = {
+                'type': 'noExercise'
+            }
+            return JsonResponse(response, safe=False)
+
+        response = {
+            'type': 'bigramExercise',
+            'exercises': exercises
+        }
+        return JsonResponse(response, safe=False)
 
 
 def get_scores(request):
