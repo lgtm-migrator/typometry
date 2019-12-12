@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { BigramScore } from './interfaces'
+import './BigramProgress.css'
 
 interface BigramProps {
   bigramScore: BigramScore
