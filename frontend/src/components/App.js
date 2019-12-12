@@ -775,16 +775,16 @@ class App extends React.Component {
                 </Grid>
               </Grid>
             </Paper>
-            {exercises.length === 0 && mode === 'smartExercise' ?
-              <BigramProgress bigramScores={bigramScores} />
-              :
-              ''
-            }
             {exercises.length > 0 && mode === 'smartExercise' ?
               <FingeringIndicator
                 text={exercises[0].text}
                 fingeringObject={exercises[0].fingering}
                 showWord={true}/>
+              :
+              ''
+            }
+            {exercises.length === 0 && mode === 'smartExercise' ?
+              <BigramProgress bigramScores={bigramScores} />
               :
               ''
             }
