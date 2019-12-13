@@ -194,6 +194,27 @@ class GetScores(APIView):
             return Response('Invalid request', status.HTTP_400_BAD_REQUEST)
 
 
+class GetTopBigrams(APIView):
+    """
+    Returns top N bigrams from given language
+    """
+
+    def get(self, request, *args, **kwargs):
+
+        # TODO: Make this language-agnostic
+        language = Language.objects.first()
+        top_n = kwargs.get('top_n', None)
+        if type(top_n) != int or top_n <= 0:
+            return Response('Invalid request', status.HTTP_400_BAD_REQUEST)
+
+        top_n_bigrams = language.get_bigrams(top_n)
+        top_n_bigrams = [bigram.bigram for bigram in top_n_bigrams]
+        response = {
+            'bigrams': top_n_bigrams
+        }
+        return JsonResponse(response, safe=False)
+
+
 class UserSettings(APIView):
     """
     Manages user settings for consistency across sessions
