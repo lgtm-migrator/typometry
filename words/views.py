@@ -147,9 +147,10 @@ class GetScores(APIView):
                 score_timeframe_days = 14
                 score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
 
-                bigram_scores = BigramScore.objects.filter(user=request.user.profile,
-                                                           bigram__in=top_n_bigrams,
-                                                           date__gte=score_after_date)
+                bigram_scores = list(BigramScore.objects.filter(user=request.user.profile,
+                                                                bigram__in=top_n_bigrams,
+                                                                date__gte=score_after_date)
+                                     .values('bigram', 'average_time', 'count'))
 
             else:
                 if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
@@ -171,9 +172,10 @@ class GetScores(APIView):
                 score_timeframe_days = 14
                 score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
 
-                word_scores = WordScore.objects.filter(user=request.user.profile,
-                                                       word__in=top_n_words,
-                                                       date__gte=score_after_date)
+                word_scores = list(WordScore.objects.filter(user=request.user.profile,
+                                                            word__in=top_n_words,
+                                                            date__gte=score_after_date)
+                                   .values('word', 'average_time', 'count'))
 
             else:
                 if 'word_scores' not in request.session or not isinstance(request.session['word_scores'], list):
