@@ -207,8 +207,8 @@ class GetTopBigrams(APIView):
         if type(top_n) != int or top_n <= 0:
             return Response('Invalid request', status.HTTP_400_BAD_REQUEST)
 
-        top_n_bigrams = language.get_bigrams(top_n)
-        top_n_bigrams = [bigram.bigram for bigram in top_n_bigrams]
+        top_n_bigrams = language.get_bigram_entries(top_n)
+        top_n_bigrams = [bigram.bigram.bigram for bigram in top_n_bigrams]
         response = {
             'bigrams': top_n_bigrams
         }
