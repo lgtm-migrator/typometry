@@ -142,8 +142,8 @@ class GetScores(APIView):
             return Response('Invalid request', status.HTTP_400_BAD_REQUEST)
 
         if request_type == 'bigram':
-            top_n_bigrams = language.get_bigrams(top_n)
-            top_n_bigrams = [bigram.bigram for bigram in top_n_bigrams]
+            top_n_bigrams = language.get_bigram_entries(top_n)
+            top_n_bigrams = [bigram.bigram.bigram for bigram in top_n_bigrams]
             if request.user.is_authenticated:
                 score_timeframe_days = 14
                 score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
@@ -167,8 +167,8 @@ class GetScores(APIView):
             return JsonResponse(response, safe=False)
 
         elif request_type == 'word':
-            top_n_words = language.get_words(top_n)
-            top_n_words = [word.text for word in top_n_words]
+            top_n_words = language.get_word_entries(top_n)
+            top_n_words = [word.word.text for word in top_n_words]
             if request.user.is_authenticated:
                 score_timeframe_days = 14
                 score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
