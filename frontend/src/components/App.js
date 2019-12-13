@@ -93,13 +93,15 @@ class App extends React.Component {
       exercises: [],
       noMoreExercises: false,
       notifications: window.messages || [],
-      showNotification: false
+      showNotification: false,
+      topBigrams: []
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.updateCurrentWord = this.updateCurrentWord.bind(this)
     this.handleZoomClick = this.handleZoomClick.bind(this)
+    this.getTopBigrams = this.getTopBigrams.bind(this)
     this.handleModeChange = this.handleModeChange.bind(this)
     this.resetStats = this.resetStats.bind(this)
     this.clearWords = this.clearWords.bind(this)
@@ -596,6 +598,19 @@ class App extends React.Component {
     this.setState({fontSize: newFontSize})
   }
 
+  getTopBigrams() {
+    console.log('Requesting top bigrams from API')
+    let top_n = 113
+    let endpoint = '/words/top/' +  top_n.toString() + '/'
+    axios.get(constants.WEBSITE_API_URL + endpoint)
+      .then(res => {
+        console.log('Fetch complete')
+          this.setState({
+            topBigrams: res.data,
+          })
+      })
+  }
+
   handleModeChange(name) {
     this.setState({
       mode: name,
@@ -609,6 +624,9 @@ class App extends React.Component {
     this.unlockTyping()
     this.showProgress(false)
     this.updateProgress(0)
+    if (name === 'smartExercise') {
+      this.getTopBigrams()
+    }
   }
 
   handleLongText(name) {
