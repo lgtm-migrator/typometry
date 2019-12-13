@@ -131,6 +131,7 @@ class GetScores(APIView):
     """
     Takes requests for user scores
     """
+
     def get(self, request, *args, **kwargs):
 
         # TODO: Make this language-agnostic
