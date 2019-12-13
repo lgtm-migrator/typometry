@@ -94,7 +94,8 @@ class App extends React.Component {
       noMoreExercises: false,
       notifications: window.messages || [],
       showNotification: false,
-      topBigrams: []
+      topBigrams: [],
+      topBigramScores: []
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -102,6 +103,7 @@ class App extends React.Component {
     this.updateCurrentWord = this.updateCurrentWord.bind(this)
     this.handleZoomClick = this.handleZoomClick.bind(this)
     this.getTopBigrams = this.getTopBigrams.bind(this)
+    this.getTopBigramScores = this.getTopBigramScores.bind(this)
     this.handleModeChange = this.handleModeChange.bind(this)
     this.resetStats = this.resetStats.bind(this)
     this.clearWords = this.clearWords.bind(this)
@@ -192,8 +194,10 @@ class App extends React.Component {
   reportScores () {
     const {
       wordScores,
-      bigramScores
+      bigramScores,
+      mode
     } = this.state
+    let callbackRef = this
     // Deep-copy from state
     let alteredWordScores = JSON.parse(JSON.stringify(wordScores))
     let alteredBigramScores = JSON.parse(JSON.stringify(bigramScores))
@@ -222,6 +226,9 @@ class App extends React.Component {
     .then(function (response) {
       console.log('Received response')
       console.log(response)
+      if (mode === 'smartExercise') {
+        callbackRef.getTopBigramScores()
+      }
     })
     .catch(function (error) {
       console.log(error)
@@ -606,7 +613,20 @@ class App extends React.Component {
       .then(res => {
         console.log('Fetch complete')
           this.setState({
-            topBigrams: res.data,
+            topBigrams: res.data.bigrams,
+          })
+      })
+  }
+
+  getTopBigramScores() {
+    console.log('Requesting scores from API')
+    let top_n = 113
+    let endpoint = '/words/scores/bigram/' +  top_n.toString() + '/'
+    axios.get(constants.WEBSITE_API_URL + endpoint)
+      .then(res => {
+        console.log('Fetch complete')
+          this.setState({
+            topBigramScores: res.data.bigram_scores,
           })
       })
   }
@@ -626,6 +646,7 @@ class App extends React.Component {
     this.updateProgress(0)
     if (name === 'smartExercise') {
       this.getTopBigrams()
+      this.getTopBigramScores()
     }
   }
 
@@ -705,7 +726,8 @@ class App extends React.Component {
     const {
       typedText,
       wordsArray,
-      bigramScores,
+      topBigrams,
+      topBigramScores,
       containsTypo,
       currentWord,
       typoIndices,
@@ -802,7 +824,7 @@ class App extends React.Component {
               ''
             }
             {exercises.length === 0 && mode === 'smartExercise' ?
-              <BigramProgress bigramScores={bigramScores} />
+              <BigramProgress bigramScores={topBigramScores} topBigrams={topBigrams} />
               :
               ''
             }
