@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from words.serializers import WordScoreSerializer, BigramScoreSerializer
-from words.models import BigramScore, LongText
+from words.models import BigramScore, WordScore, LongText
 import datetime
 import numpy as np
 import json
@@ -127,33 +127,68 @@ def smart_exercise(request):
         return JsonResponse(response, safe=False)
 
 
-def get_scores(request):
-    if not request.method == 'GET':
-        error = {"You've come to the wrong place."}
-        return Response(error, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+class GetScores(APIView):
+    """
+    Takes requests for user scores
+    """
+    def get(self, request, *args, **kwargs):
 
-    # TODO: Make this language-agnostic
-    language = Language.objects.first()
+        # TODO: Make this language-agnostic
+        language = Language.objects.first()
+        request_type = kwargs.get('type', None)
+        top_n = kwargs.get('top_n', None)
+        if type(top_n) != int or top_n <= 0:
+            return Response('Invalid request', status.HTTP_400_BAD_REQUEST)
 
-    if request.user.is_authenticated:
-        score_timeframe_days = 14
-        score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
+        if request_type == 'bigram':
+            top_n_bigrams = language.get_bigrams(top_n)
+            top_n_bigrams = [bigram.bigram for bigram in top_n_bigrams]
+            if request.user.is_authenticated:
+                score_timeframe_days = 14
+                score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
 
-        top_113_bigrams = language.get_bigrams(113)
-        bigram_scores = BigramScore.objects.filter(user=request.user.profile,
-                                                   bigram__in=top_113_bigrams,
-                                                   date__gte=score_after_date)
+                bigram_scores = BigramScore.objects.filter(user=request.user.profile,
+                                                           bigram__in=top_n_bigrams,
+                                                           date__gte=score_after_date)
 
-    else:
-        if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
-            print('No scores found for unauthenticated user')
-            request.session['bigram_scores'] = []
-        bigram_scores = request.session['bigram_scores']
+            else:
+                if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
+                    print('No scores found for unauthenticated user')
+                    request.session['bigram_scores'] = []
+                bigram_scores = request.session['bigram_scores']
+                bigram_scores = [bigram_score for bigram_score in bigram_scores
+                                 if bigram_score['bigram'] in top_n_bigrams]
 
-    response = {
-        'bigram_scores': bigram_scores
-    }
-    return JsonResponse(response, safe=False)
+            response = {
+                'bigram_scores': bigram_scores
+            }
+            return JsonResponse(response, safe=False)
+
+        elif request_type == 'word':
+            top_n_words = language.get_words(top_n)
+            top_n_words = [word.text for word in top_n_words]
+            if request.user.is_authenticated:
+                score_timeframe_days = 14
+                score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
+
+                word_scores = WordScore.objects.filter(user=request.user.profile,
+                                                       word__in=top_n_words,
+                                                       date__gte=score_after_date)
+
+            else:
+                if 'word_scores' not in request.session or not isinstance(request.session['word_scores'], list):
+                    print('No scores found for unauthenticated user')
+                    request.session['word_scores'] = []
+                word_scores = request.session['word_scores']
+                word_scores = [word_score for word_score in word_scores if word_score['word'] in top_n_words]
+
+            response = {
+                'word_scores': word_scores
+            }
+            return JsonResponse(response, safe=False)
+
+        else:
+            return Response('Invalid request', status.HTTP_400_BAD_REQUEST)
 
 
 class UserSettings(APIView):
