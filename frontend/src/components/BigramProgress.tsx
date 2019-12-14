@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { BigramScore } from './interfaces'
 import './BigramProgress.css'
+import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core'
 
 interface BigramProps {
   bigramScore: BigramScore
@@ -11,31 +12,97 @@ interface BigramProgressProps {
   topBigrams: string[]
 }
 
-const Bigram: React.FC<BigramProps> = (props) => (
-  <span className='bigram-progress'>
-    { props.bigramScore.bigram }
-  </span>
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    bigramProgressContainer: {
+      margin: '4px'
+    },
+    bigramProgress0: {
+      backgroundColor: '#ddd',
+      fontSize: '1.5em',
+      fontFamily: 'mononoki, monospace',
+      color: '#000',
+      borderRadius: '4px'
+    },
+    bigramProgress1: {
+      backgroundColor: '#bbf',
+      fontSize: '1.5em',
+      fontFamily: 'mononoki, monospace',
+      color: '#000',
+      borderRadius: '4px'
+    },
+    bigramProgress2: {
+      backgroundColor: '#aaf',
+      fontSize: '1.5em',
+      fontFamily: 'mononoki, monospace',
+      color: '#000',
+      borderRadius: '4px'
+    },
+    bigramProgress3: {
+      backgroundColor: '#88f',
+      fontSize: '1.5em',
+      fontFamily: 'mononoki, monospace',
+      color: '#000',
+      borderRadius: '4px'
+    },
+    bigramProgress4: {
+      backgroundColor: '#8f8',
+      fontSize: '1.5em',
+      fontFamily: 'mononoki, monospace',
+      color: '#000',
+      borderRadius: '4px'
+    }
+  })
 )
 
+const Bigram: React.FC<BigramProps> = (props) => {
+  const classes = useStyles()
+
+  const whichStyle = (score: BigramScore) => {
+    switch (score.count) {
+      case 0:
+        return classes.bigramProgress0
+      case 1:
+        return classes.bigramProgress1
+      case 2:
+        return classes.bigramProgress2
+      case 3:
+        return classes.bigramProgress3
+      default:
+        return classes.bigramProgress4
+    }
+  }
+
+  return (
+    <span className={whichStyle(props.bigramScore)}>
+    { props.bigramScore.bigram.replace(' ', '␣') }
+    </span>
+  )
+}
+
 const BigramProgress: React.FC<BigramProgressProps> = (props) => {
-  // Deep copy scores
-  let scoresCopy: BigramScore[] = JSON.parse(JSON.stringify(props.bigramScores))
+  const classes = useStyles()
+
+  let displayedScores: BigramScore[] = []
   let scoredBigrams = props.bigramScores.map((bigramScore) => bigramScore.bigram)
   for (let i = 0; i < props.topBigrams.length; i++) {
-    if (!scoredBigrams.includes(props.topBigrams[i])) {
-      scoresCopy.push({avg_time: 0, count: 0, bigram: props.topBigrams[i]})
+    let bigramIndex = scoredBigrams.findIndex(bigram => bigram === props.topBigrams[i])
+    if (bigramIndex !== -1) {
+      displayedScores.push(props.bigramScores[bigramIndex])
+    } else {
+      displayedScores.push({avg_time: 0, count: 0, bigram: props.topBigrams[i]})
     }
   }
   return (
-    <span>
+    <Grid container justify='space-between'>
       {
-        scoresCopy.map((bigramScore, index) => (
-          <span key={index}>
+        displayedScores.map((bigramScore, index) => (
+          <Grid item key={index} className={classes.bigramProgressContainer}>
             <Bigram bigramScore={bigramScore} />
-          </span>
+          </Grid>
         ))
       }
-    </span>
+    </Grid>
   )
 }
 
