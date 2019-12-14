@@ -53,8 +53,8 @@ def smart_exercise(request):
                 _request.session['bigram_scores'] = []
                 _request.session.modified = True  # Required to get sessions working in Firefox for some reason
             user_bigram_scores = _request.session['bigram_scores']
-            sufficient_data_bigrams = [bigram_score['bigram'] for bigram_score in user_bigram_scores
-                                       if bigram_score['count'] >= minimum_trials]
+            sufficient_data_bigrams = {bigram_score['bigram'] for bigram_score in user_bigram_scores
+                                       if bigram_score['count'] >= minimum_trials}
 
         insufficient_data_bigrams = \
             [bigram.bigram for bigram in top_113_bigrams if bigram.bigram not in sufficient_data_bigrams]
