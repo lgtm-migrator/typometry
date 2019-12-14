@@ -45,7 +45,7 @@ def smart_exercise(request):
                                                                  bigram__in=top_113_bigrams,
                                                                  count__gte=minimum_trials,
                                                                  date__gte=score_after_date)
-            sufficient_data_bigrams = [bigram.bigram.bigram for bigram in sufficient_data_bigrams]
+            sufficient_data_bigrams = {bigram.bigram.bigram for bigram in sufficient_data_bigrams}
 
         else:  # Guest, use session scores
             if 'bigram_scores' not in _request.session or not isinstance(_request.session['bigram_scores'], list):
