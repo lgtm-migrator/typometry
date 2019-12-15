@@ -34,7 +34,7 @@ def smart_exercise(request):
     """
 
     def get_user_insufficient_data_bigrams(_request, _language):
-        minimum_trials = 4
+        minimum_trials = 3
         top_113_bigrams = _language.get_bigrams(113)
 
         # Is user logged in?
@@ -72,7 +72,9 @@ def smart_exercise(request):
 
     if len(insufficient_data_bigrams) > 0:
         practice_words = []
-        insufficient_data_bigrams = insufficient_data_bigrams[:15]
+        # Give exercises based on the rarest bigrams first -- the common ones will fill out naturally. This should
+        # speed up the process of gathering data for a new user.
+        insufficient_data_bigrams = insufficient_data_bigrams[-15:]
         for bigram in insufficient_data_bigrams:
             practice_words.extend(language.get_samples_for_bigram(bigram, 5))
         print(practice_words)

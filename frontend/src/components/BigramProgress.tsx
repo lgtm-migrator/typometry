@@ -39,13 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: '4px'
     },
     bigramProgress3: {
-      backgroundColor: '#88f',
-      fontSize: '1.5em',
-      fontFamily: 'mononoki, monospace',
-      color: '#000',
-      borderRadius: '4px'
-    },
-    bigramProgress4: {
       backgroundColor: '#8f8',
       fontSize: '1.5em',
       fontFamily: 'mononoki, monospace',
@@ -66,10 +59,8 @@ const Bigram: React.FC<BigramProps> = (props) => {
         return classes.bigramProgress1
       case 2:
         return classes.bigramProgress2
-      case 3:
-        return classes.bigramProgress3
       default:
-        return classes.bigramProgress4
+        return classes.bigramProgress3
     }
   }
 
