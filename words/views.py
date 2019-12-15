@@ -96,12 +96,13 @@ def smart_exercise(request):
         recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
         recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
 
-        q1, q3 = np.percentile(list(recent_scores.values()), [25, 75])
+        recent_scores_times = [score['weighted_avg'] for score in recent_scores.values()]
+        q1, q3 = np.percentile(recent_scores_times, [25, 75])
         iqr = q3 - q1
         upper_bound = q3 + (1.5 * iqr)
 
         # Create bigram exercise
-        practice_bigrams = [bigram for bigram, speed in recent_scores.items() if speed > upper_bound]
+        practice_bigrams = [bigram for bigram, score in recent_scores.items() if score['weighted_avg'] > upper_bound]
         print('Found ' + str(len(practice_bigrams)) + ' bigrams to be practiced')
         practice_bigrams = practice_bigrams[:7]
 
@@ -146,12 +147,14 @@ class GetScores(APIView):
             top_n_bigrams = [bigram.bigram.bigram for bigram in top_n_bigrams]
             if request.user.is_authenticated:
                 score_timeframe_days = 14
-                score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
-
-                bigram_scores = list(BigramScore.objects.filter(user=request.user.profile,
-                                                                bigram__in=top_n_bigrams,
-                                                                date__gte=score_after_date)
-                                     .values('bigram', 'average_time', 'count'))
+                bigram_scores = request.user.profile.get_recent_scores(score_timeframe_days,
+                                                                       word_score=False,
+                                                                       top_n=top_n)
+                bigram_scores = [{
+                    'bigram': score[0],
+                    'average_time': score[1]['average_time'],
+                    'count': score[1]['count']}
+                    for score in bigram_scores.items()]
 
             else:
                 if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):

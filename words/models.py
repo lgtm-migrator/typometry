@@ -285,7 +285,10 @@ class Profile(models.Model):
                 scores = np.multiply(scores, weights)
             scores *= counts
             score_sum = sum(scores)
-            combined_scores[word] = score_sum / total_trials
+            combined_scores[word] = {
+                'average_time': score_sum / total_trials,
+                'count': total_trials
+            }
 
         return combined_scores
 
