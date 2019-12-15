@@ -96,13 +96,13 @@ def smart_exercise(request):
         recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
         recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
 
-        recent_scores_times = [score['weighted_avg'] for score in recent_scores.values()]
+        recent_scores_times = [score['average_time'] for score in recent_scores.values()]
         q1, q3 = np.percentile(recent_scores_times, [25, 75])
         iqr = q3 - q1
         upper_bound = q3 + (1.5 * iqr)
 
         # Create bigram exercise
-        practice_bigrams = [bigram for bigram, score in recent_scores.items() if score['weighted_avg'] > upper_bound]
+        practice_bigrams = [bigram for bigram, score in recent_scores.items() if score['average_time'] > upper_bound]
         print('Found ' + str(len(practice_bigrams)) + ' bigrams to be practiced')
         practice_bigrams = practice_bigrams[:7]
 
