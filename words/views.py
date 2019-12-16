@@ -93,10 +93,14 @@ def smart_exercise(request):
         # Identify weaknesses in user's typing
         print('Creating smart exercise')
 
-        # Get typing info from the last 14 days
-        top_n = 113  # Top 113 bigrams represent 80% of bigrams by usage in US English
-        recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
-        recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
+        if request.user.is_authenticated:
+            # Get typing info from the last 14 days
+            top_n = 113  # Top 113 bigrams represent 80% of bigrams by usage in US English
+            recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
+            recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
+        else:
+            recent_scores = request.session['bigram_scores']
+            recent_scores = {score['bigram']: score for score in recent_scores}
 
         recent_scores_times = [score['average_time'] for score in recent_scores.values()]
         q1, q3 = np.percentile(recent_scores_times, [25, 75])
@@ -205,7 +209,6 @@ class GetTopBigrams(APIView):
     """
 
     def get(self, request, *args, **kwargs):
-
         # TODO: Make this language-agnostic
         language = Language.objects.first()
         top_n = kwargs.get('top_n', None)
@@ -352,8 +355,22 @@ class RecordScores(APIView):
 
             if 'bigram_scores' not in request.session or not isinstance(request.session['bigram_scores'], list):
                 request.session['bigram_scores'] = []
-            request.session['bigram_scores'].extend(request.data['bigram_scores'])
-            print(request.session['bigram_scores'])
+            new_scores = request.data['bigram_scores']
+            old_scores = request.session['bigram_scores']
+            score_manifest = {score['bigram']: score for score in old_scores}
+            for score in new_scores:
+                if score['bigram'] in score_manifest.keys():
+                    old_score = score_manifest[score['bigram']]
+                    score_manifest[score['bigram']] = {
+                        'bigram': score['bigram'],
+                        'average_time': (score['average_time'] * score['count']) +
+                                        (old_score['average_time'] * old_score['count']) /
+                                        (old_score['count'] + score['count']),
+                        'count': old_score['count'] + score['count']
+                    }
+                else:
+                    score_manifest[score['bigram']] = score
+            request.session['bigram_scores'] = [score_manifest[key] for key in score_manifest.keys()]
             request.session.modified = True  # Required to get sessions working in Firefox for some reason
             return Response(request.session['bigram_scores'], status=status.HTTP_200_OK)
         else:
