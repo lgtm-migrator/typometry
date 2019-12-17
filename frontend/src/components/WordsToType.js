@@ -20,6 +20,7 @@ const WordsToType = props => (
             <WordMetadataPopup
               key={index+word}
               text={word}
+              typedText={index === props.currentWord ? props.typedText : ''}
               typed={index < props.currentWord}
               typo={props.typoIndices.includes(index)}
               containsTypo={props.typo}

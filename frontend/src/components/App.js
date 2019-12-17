@@ -796,6 +796,7 @@ class App extends React.Component {
                           mode={mode}
                           words={wordsArray}
                           currentWord={currentWord}
+                          typedText={typedText}
                           typo={containsTypo}
                           typoIndices={typoIndices}
                           fontSize={fontSize}

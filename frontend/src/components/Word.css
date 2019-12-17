@@ -16,6 +16,10 @@
     box-shadow: 0 0 3px red;
 }
 
+.typoText {
+    color: #d00
+}
+
 .currentWord-dark {
     background-color: #475866;
     border-radius: 7px;

@@ -9,13 +9,42 @@ import * as constants from './constants'
 import WordStats from './WordStats'
 import ReactGA from 'react-ga'
 
-const Word = props => (
-  <span
-    id={props.current ? 'currentWord' : null}
-    className={whichStyle(props) + ' Word'}>
-    {props.text}
-  </span>
-)
+const Word = props => {
+  let firstDifferenceIndex = 0
+  let lastDifferenceIndex = 0
+  if (props.current) {
+    if (props.containsTypo) {
+      for (let i = 0; i < props.text.length; i++) {
+        if (props.text[i] !== props.typedText[i]) {
+          firstDifferenceIndex = i
+          break
+        }
+      }
+      if (firstDifferenceIndex === -1) {
+        lastDifferenceIndex = firstDifferenceIndex
+      } else {
+        lastDifferenceIndex = props.typedText.length - 1
+      }
+      if (lastDifferenceIndex > props.text.length) lastDifferenceIndex = firstDifferenceIndex
+    }
+  }
+  let textBeforeTypo = props.text.slice(0, firstDifferenceIndex)
+  let textWithinTypo = props.text.slice(firstDifferenceIndex, lastDifferenceIndex + 1)
+  let textAfterTypo = props.text.slice(lastDifferenceIndex + 1, props.text.length)
+  if (!props.containsTypo || !props.current) {
+    textBeforeTypo = ''
+    textWithinTypo = ''
+    textAfterTypo = props.text
+  }
+  return (
+    <span
+      className={whichStyle(props) + ' Word'}>
+      <span>{textBeforeTypo}</span>
+      <span className='typoText'>{textWithinTypo}</span>
+      <span id={props.current ? 'currentWord' : null}>{textAfterTypo}</span>
+    </span>
+  )
+}
 
 const styles = theme => ({
   root: {
