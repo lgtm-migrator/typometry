@@ -74,9 +74,9 @@ def smart_exercise(request):
         practice_words = []
         # Give exercises based on the rarest bigrams first -- the common ones will fill out naturally. This should
         # speed up the process of gathering data for a new user.
-        insufficient_data_bigrams = insufficient_data_bigrams[-25:]
+        insufficient_data_bigrams = insufficient_data_bigrams[-20:]
         for bigram in insufficient_data_bigrams:
-            practice_words.extend(language.get_samples_for_bigram(bigram, 2))
+            practice_words.extend(language.get_samples_for_bigram(bigram, 3))
         print(practice_words)
         print(str(len(practice_words)) + ' words remain')
         print('Insufficient bigram data for smart exercise')
