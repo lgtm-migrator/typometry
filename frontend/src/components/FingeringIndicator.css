@@ -4,6 +4,7 @@
     top:0;
     align-content: center;
     align-items: center;
+    max-height: 450px;
 }
 
 .hands {
