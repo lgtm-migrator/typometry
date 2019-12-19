@@ -36,13 +36,14 @@ def smart_exercise(request):
     def get_user_insufficient_data_bigrams(_request, _language):
         minimum_trials = 3
         top_113_bigrams = _language.get_bigrams(113)
+        filtered_bigrams = top_113_bigrams.exclude(bigram__contains=' ')
 
         # Is user logged in?
         if _request.user.is_authenticated:
             score_timeframe_days = 14
             score_after_date = datetime.date.today() - datetime.timedelta(days=score_timeframe_days)
             sufficient_data_bigrams = BigramScore.objects.filter(user=user.profile,
-                                                                 bigram__in=top_113_bigrams,
+                                                                 bigram__in=filtered_bigrams,
                                                                  count__gte=minimum_trials,
                                                                  date__gte=score_after_date)
             sufficient_data_bigrams = {bigram.bigram.bigram for bigram in sufficient_data_bigrams}
@@ -57,7 +58,7 @@ def smart_exercise(request):
                                        if bigram_score['count'] >= minimum_trials}
 
         insufficient_data_bigrams = \
-            [bigram.bigram for bigram in top_113_bigrams if bigram.bigram not in sufficient_data_bigrams]
+            [bigram.bigram for bigram in filtered_bigrams if bigram.bigram not in sufficient_data_bigrams]
 
         return insufficient_data_bigrams
 
@@ -93,14 +94,22 @@ def smart_exercise(request):
         # Identify weaknesses in user's typing
         print('Creating smart exercise')
 
+        # TODO: Make this switch user-settable
+        filter_spaces = True
+
         if request.user.is_authenticated:
             # Get typing info from the last 14 days
             top_n = 113  # Top 113 bigrams represent 80% of bigrams by usage in US English
-            recent_scores = user.profile.get_recent_scores(14, word_score=False, top_n=top_n)
-            recent_scores = {bigram: time for bigram, time in recent_scores.items() if bigram[0] != ' '}
+            recent_scores = user.profile.get_recent_scores(14,
+                                                           word_score=False,
+                                                           top_n=top_n,
+                                                           filter_spaces=filter_spaces)
         else:
             recent_scores = request.session['bigram_scores']
-            recent_scores = {score['bigram']: score for score in recent_scores}
+            if filter_spaces:
+                recent_scores = {score['bigram']: score for score in recent_scores if ' ' not in score['bigram']}
+            else:
+                recent_scores = {score['bigram']: score for score in recent_scores}
 
         recent_scores_times = [score['average_time'] for score in recent_scores.values()]
         q1, q3 = np.percentile(recent_scores_times, [25, 75])
@@ -215,8 +224,13 @@ class GetTopBigrams(APIView):
         if type(top_n) != int or top_n <= 0:
             return Response('Invalid request', status.HTTP_400_BAD_REQUEST)
 
+        # TODO: Make this switch user settable
+        filter_spaces = True
+
         top_n_bigrams = language.get_bigram_entries(top_n)
         top_n_bigrams = [bigram.bigram.bigram for bigram in top_n_bigrams]
+        if filter_spaces:
+            top_n_bigrams = [bigram for bigram in top_n_bigrams if ' ' not in bigram]
         response = {
             'bigrams': top_n_bigrams
         }

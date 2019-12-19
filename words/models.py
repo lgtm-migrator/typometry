@@ -218,7 +218,8 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user) + '\'s profile'
 
-    def get_recent_scores(self, days: int, word_score: bool = True, weight_by_date: bool = True, top_n = None):
+    def get_recent_scores(self, days: int, word_score: bool = True, weight_by_date: bool = True, top_n: int = None,
+                          filter_spaces: bool = True):
 
         def get_weight(date: datetime.date):
             num_days = (datetime.date.today() - date).days
@@ -264,6 +265,8 @@ class Profile(models.Model):
                                             .order_by('bigram__bigramentry__rank')
             else:
                 scores = BigramScore.objects.filter(user=self, date__gte=min_date).order_by('bigram__bigramentry__rank')
+            if filter_spaces:
+                scores = scores.exclude(bigram__contains=' ')
             for score in scores:
                 if not min_time < score.average_time < max_time:
                     continue
