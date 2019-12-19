@@ -377,8 +377,8 @@ class RecordScores(APIView):
                     old_score = score_manifest[score['bigram']]
                     score_manifest[score['bigram']] = {
                         'bigram': score['bigram'],
-                        'average_time': (score['average_time'] * score['count']) +
-                                        (old_score['average_time'] * old_score['count']) /
+                        'average_time': ((score['average_time'] * score['count']) +
+                                         (old_score['average_time'] * old_score['count'])) /
                                         (old_score['count'] + score['count']),
                         'count': old_score['count'] + score['count']
                     }
