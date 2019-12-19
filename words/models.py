@@ -266,7 +266,7 @@ class Profile(models.Model):
             else:
                 scores = BigramScore.objects.filter(user=self, date__gte=min_date).order_by('bigram__bigramentry__rank')
             if filter_spaces:
-                scores = scores.exclude(bigram__contains=' ')
+                scores = scores.exclude(bigram__bigram__contains=' ')
             for score in scores:
                 if not min_time < score.average_time < max_time:
                     continue
