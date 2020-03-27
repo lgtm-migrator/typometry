@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
+import * as React from 'react'
+import { useState } from 'react'
 import App from './App'
 import { ThemeProvider } from '@material-ui/styles'
-import ReactGA from 'react-ga'
+import * as ReactGA from 'react-ga'
 import Header from './header/Header'
 import { useMediaQuery } from '@material-ui/core'
-import typometryTheme from 'typometryTheme'
-import typometryThemeDark from 'typometryThemeDark'
+import typometryTheme from './typometryTheme'
+import typometryThemeDark from './typometryThemeDark'
 
 function ThemedApp (props) {
   if (localStorage.getItem('useDarkTheme') === null) {
-    localStorage.setItem('useDarkTheme', useMediaQuery('(prefers-color-scheme: dark)'))
+    localStorage.setItem('useDarkTheme', useMediaQuery('(prefers-color-scheme: dark)') ? 'true' : 'false')
   }
-  const [useDarkTheme, setUseDarkTheme] = useState(localStorage.getItem('useDarkTheme'))
+  const [useDarkTheme, setUseDarkTheme] = useState(localStorage.getItem('useDarkTheme') === 'true')
   console.log('Use dark theme is ' + useDarkTheme)
 
   function setUseDarkThemeWithEvent (dark) {
