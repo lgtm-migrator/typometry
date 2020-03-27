@@ -10,6 +10,7 @@ function ThemedApp (props) {
     localStorage.setItem('useDarkTheme', useMediaQuery('(prefers-color-scheme: dark)'))
   }
   const [useDarkTheme, setUseDarkTheme] = useState(localStorage.getItem('useDarkTheme'))
+  console.log('Use dark theme is ' + useDarkTheme)
 
   function setUseDarkThemeWithEvent (dark) {
     console.log('Use dark theme: ' + dark)
