@@ -17,6 +17,7 @@ function ThemedApp (props) {
       category: 'Interaction',
       action: dark ? 'Enabled dark mode' : 'Disabled dark mode'
     })
+    localStorage.setItem('useDarkTheme', dark)
     setUseDarkTheme(dark)
   }
 
