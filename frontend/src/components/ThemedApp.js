@@ -21,7 +21,6 @@ class ThemedApp extends React.Component {
       category: 'Interaction',
       action: dark ? 'Enabled dark mode' : 'Disabled dark mode'
     })
-    window.dark_theme = dark
     this.setState({useDarkTheme: dark})
   }
 

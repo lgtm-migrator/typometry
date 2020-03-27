@@ -18,7 +18,6 @@
   {% analytical_body_top %}
   <script>
     window.messages = [];
-    window.dark_theme = false;
     {% if request.user.is_authenticated %}
       window.is_logged_in = true;
       const parser = new DOMParser
