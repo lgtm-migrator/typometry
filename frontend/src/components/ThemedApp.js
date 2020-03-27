@@ -3,14 +3,18 @@ import App from './App'
 import { ThemeProvider } from '@material-ui/styles'
 import ReactGA from 'react-ga'
 import Header from './header/Header'
+import { useMediaQuery } from '@material-ui/core'
 
 class ThemedApp extends React.Component {
   constructor(props) {
+    if (localStorage.getItem('useDarkTheme') === null) {
+      localStorage.setItem('useDarkTheme', useMediaQuery('(prefers-color-scheme: dark)'))
+    }
     super(props)
     this.state = {
       lightTheme: props.lightTheme,
       darkTheme: props.darkTheme,
-      useDarkTheme: props.useDarkTheme
+      useDarkTheme: localStorage.getItem('useDarkTheme')
     }
     this.setUseDarkTheme = this.setUseDarkTheme.bind(this)
   }

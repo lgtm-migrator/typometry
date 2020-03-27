@@ -6,14 +6,12 @@ import * as serviceWorker from './serviceWorker'
 import typometryTheme from './components/typometryTheme'
 import typometryThemeDark from './components/typometryThemeDark'
 import { BrowserRouter } from 'react-router-dom'
-import { useMediaQuery } from '@material-ui/core'
 
 ReactDOM.render(
   <BrowserRouter>
     <ThemedApp
       lightTheme={typometryTheme}
       darkTheme={typometryThemeDark}
-      useDarkTheme={useMediaQuery('(prefers-color-scheme: dark)')}
     />
   </BrowserRouter>
   , document.getElementById('app'))
