@@ -116,7 +116,7 @@ function AppMenu(props) {
         <Tooltip title='Toggle dark theme'>
           <IconButton
             name='darkMode'
-            onClick={() => setDarkTheme(!window.dark_theme)}>
+            onClick={() => setDarkTheme(!darkTheme)}>
             <Icon
               path={ darkTheme ? mdiLightbulb : mdiLightbulbOutline }
               color={ darkTheme ? '#fff' : '#000'}
