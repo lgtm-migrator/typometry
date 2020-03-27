@@ -5,7 +5,7 @@ import ReactGA from 'react-ga'
 import Header from './header/Header'
 import { useMediaQuery } from '@material-ui/core'
 
-const ThemedApp = (props) => {
+function ThemedApp (props) {
   if (localStorage.getItem('useDarkTheme') === null) {
     localStorage.setItem('useDarkTheme', useMediaQuery('(prefers-color-scheme: dark)'))
   }
