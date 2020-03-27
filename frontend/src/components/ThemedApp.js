@@ -4,6 +4,8 @@ import { ThemeProvider } from '@material-ui/styles'
 import ReactGA from 'react-ga'
 import Header from './header/Header'
 import { useMediaQuery } from '@material-ui/core'
+import typometryTheme from 'typometryTheme'
+import typometryThemeDark from 'typometryThemeDark'
 
 function ThemedApp (props) {
   if (localStorage.getItem('useDarkTheme') === null) {
@@ -26,9 +28,9 @@ function ThemedApp (props) {
     <div>
       <ThemeProvider theme={
         useDarkTheme ?
-          props.darkTheme
+          typometryThemeDark
           :
-          props.lightTheme
+          typometryTheme
       }>
         <Header setDarkTheme={setUseDarkThemeWithEvent} />
         <App setDarkTheme={setUseDarkThemeWithEvent} />
