@@ -55,11 +55,12 @@ class App extends React.Component {
   constructor (props) {
     super(props)
 
-    let urlMode = 'practice'
+    let urlMode = 'smartExercise'
     const originalUrl = window.location.toString()
     if (originalUrl.includes('smart-exercise')) {
-        window.location = constants.WEBSITE_API_URL + '/practice'
-        urlMode = 'smartExercise'
+      urlMode = 'smartExercise'
+    } else if (originalUrl.includes('practice')) {
+      urlMode = 'practice'
     } else if (originalUrl.includes('speed-test')) {
       urlMode = 'speedTest'
     }
