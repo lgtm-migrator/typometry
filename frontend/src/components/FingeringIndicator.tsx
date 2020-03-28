@@ -1,12 +1,17 @@
 import * as React from 'react'
 import './FingeringIndicator.css'
 import FingeringText from './FingeringText'
-import { Fade } from '@material-ui/core'
+import { Fade, Theme } from '@material-ui/core'
 import { useTheme } from '@material-ui/styles'
 
 
-function FingeringIndicator(props) {
-  const theme = useTheme()
+interface FingeringIndicatorProps {
+  showWord: boolean
+  fingeringObject: any
+}
+
+const FingeringIndicator: React.FC<FingeringIndicatorProps> = (props) => {
+  const theme: Theme = useTheme()
   const darkTheme = theme.palette.type === 'dark'
   return (
     <Fade in>
@@ -14,7 +19,7 @@ function FingeringIndicator(props) {
         <div className={darkTheme ? 'hands-dark' : 'hands'}>
           {
             props.showWord ?
-              <FingeringText {...props} />
+              <FingeringText fingeringObject={props.fingeringObject} />
               :
               ''
           }
