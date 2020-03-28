@@ -2,7 +2,7 @@ import * as React from 'react'
 import './FingeringIndicator.css'
 
 interface FingeringTextProps {
-  standAlone: boolean
+  standAlone?: boolean
   fingeringObject: any
 }
 
