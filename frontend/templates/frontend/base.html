@@ -3,59 +3,61 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
-    {% analytical_head_top %}
-    {% analytical_head_bottom %}
-    <title>{% block head_title %}{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />
-    <style>
-    </style>
-    {% block extra_head %}
-    {% endblock %}
-  </head>
-  <body>
-  {% analytical_body_top %}
-  <script>
-    window.messages = [];
-    {% if request.user.is_authenticated %}
-      window.is_logged_in = true;
-      const parser = new DOMParser
-      const parse = parser.parseFromString("{% avatar_url user %}", 'text/html')
-      const decodedURL = parse.body.textContent;
-      window.avatar_url = decodedURL;
-      {% if request.user.socialaccount_set.all|length > 0 %}
-      window.avatar_url = "{{ request.user.socialaccount_set.first.get_avatar_url|safe }}";
-      window.name = "{{ request.user.get_full_name }}";
-      {% else %}
-      window.name = "{{ request.user.username|title }}";
-      {% endif %}
+<head>
+  {% analytical_head_top %}
+  {% analytical_head_bottom %}
+  <title>{% block head_title %}{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description"
+        content="Test your typing speed and get personalized typing exercises generated for your unique typing style.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />
+  <style>
+  </style>
+  {% block extra_head %}
+  {% endblock %}
+</head>
+<body>
+{% analytical_body_top %}
+<script>
+  window.messages = []
+  {% if request.user.is_authenticated %}
+    window.is_logged_in = true
+    const parser = new DOMParser
+    const parse = parser.parseFromString("{% avatar_url user %}", 'text/html')
+    const decodedURL = parse.body.textContent
+    window.avatar_url = decodedURL
+    {% if request.user.socialaccount_set.all|length > 0 %}
+      window.avatar_url = "{{ request.user.socialaccount_set.first.get_avatar_url|safe }}"
+      window.name = "{{ request.user.get_full_name }}"
     {% else %}
-      window.is_logged_in = false;
+      window.name = "{{ request.user.username|title }}"
+    {% endif %}
+  {% else %}
+    window.is_logged_in = false
   {% endif %}
 
-  </script>
-    {% block pre_body %}
-    {% endblock %}
-    {% block body %}
+</script>
+{% block pre_body %}
+{% endblock %}
+{% block body %}
 
-    {% block content %}
-    {% endblock %}
+  {% block content %}
+  {% endblock %}
 
-    <script src="{% static "frontend/main.js" %}"></script>
+  <script src="{% static "frontend/main.js" %}"></script>
 
-    {% endblock %}
-    {% block extra_body %}
-    {% endblock %}
-    {% block post_body %}
-    {% endblock %}
+{% endblock %}
+{% block extra_body %}
+{% endblock %}
+{% block post_body %}
+{% endblock %}
 
-  {% if messages %}
-    {% for message in messages %}
-      <script>window.messages.push({ message: '{{ message }}' });</script>
-    {% endfor %}
-  {% endif %}
+{% if messages %}
+  {% for message in messages %}
+    <script>window.messages.push({ message: '{{ message }}' })</script>
+  {% endfor %}
+{% endif %}
 
-  {% analytical_body_bottom %}
-  </body>
+{% analytical_body_bottom %}
+</body>
 </html>
