@@ -5,7 +5,8 @@ const typometryThemeDark = createMuiTheme({
     type: 'dark',
     primary: {
       main: '#2A2A2A',
-      background: '#1a1a1a'
+      background: '#1a1a1a',
+      contrastText: '#fff'
     },
     primaryPaper: {
       primary: {
