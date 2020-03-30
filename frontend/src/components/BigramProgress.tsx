@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { BigramScore } from './interfaces'
-import './BigramProgress.css'
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core'
 
 interface BigramProps {
