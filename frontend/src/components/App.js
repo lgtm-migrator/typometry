@@ -50,6 +50,7 @@ const styles = theme => ({
     borderTopRightRadius: '3px'
   },
   gatherData: {
+    color: theme.palette.primary.contrastText,
     margin: '1em',
     fontFamily: 'mononoki, monospace',
     fontSize: '1.5em'
