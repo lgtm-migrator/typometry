@@ -48,6 +48,11 @@ const styles = theme => ({
     width: '100%',
     borderTopLeftRadius: '3px',
     borderTopRightRadius: '3px'
+  },
+  gatherData: {
+    margin: '1em',
+    fontFamily: 'mononoki, monospace',
+    fontSize: '1.5em'
   }
 })
 
@@ -831,7 +836,7 @@ class App extends React.Component {
               ''
             }
             { mode === 'smartExercise' && exercises.length === 0 && !hasPendingWordsRequest ?
-              <div className='gatherData'>
+              <div className={classes.gatherData}>
                 More data needed for smart exercise. Continue typing...
               </div>
               :
