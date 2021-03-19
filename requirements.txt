@@ -13,7 +13,7 @@ django-avatar==4.1.0
 django-cors-headers==2.4.0
 django-extensions==2.1.7
 django-rest-auth==0.9.5
-djangorestframework==3.9.4
+djangorestframework==3.11.2
 idna==2.7
 kiwisolver==1.1.0
 matplotlib==3.0.3
